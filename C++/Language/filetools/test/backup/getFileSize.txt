@@ -1,0 +1,4 @@
+getFileSize
+hello
+world
+time: 2019.12.15

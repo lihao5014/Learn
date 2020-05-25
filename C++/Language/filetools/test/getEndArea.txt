@@ -1,0 +1,7 @@
+getEndArea
+hello
+world
+weekend
+time: 2019.12.15
+hello
+world

@@ -1,0 +1,4 @@
+copy_by_fgetc("test/fgetc.txt","test/fputc.txt")
+fgetc
+fputc
+hello world

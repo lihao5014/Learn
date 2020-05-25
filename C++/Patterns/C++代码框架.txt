@@ -1,0 +1,30 @@
+---------1.头文件格式----------
+
+#ifndef _
+#define 
+
+#include 
+
+class 
+{
+public:
+
+protected:
+
+private:
+
+};
+
+#endif  //
+
+
+---------2.主程序格式----------
+
+#include 
+
+int main()
+{
+	
+	
+	return 0;
+}

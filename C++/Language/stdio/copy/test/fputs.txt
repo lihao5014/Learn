@@ -1,0 +1,4 @@
+copy_by_fgets("test/fgets.txt","test/fputs.txt")
+fgets
+fputs
+hello world

@@ -1,0 +1,4 @@
+stdio.h: fgetc test
+time : 2019-11-27
+hello world
+
