@@ -17,6 +17,10 @@
 
 #endif是判断语句结束标志，Makefile中条件判断的结束都要有结束标志。
 
+foo := hello
+bar := world
+
+#var变量是全局的，后面的修过也会影响前面的代码
 var := true
 
 #判断变量是否等于某个值
@@ -33,6 +37,16 @@ ifneq '$(var)' "true"
 	@echo var is not true
 else
 	@echo var is true
+endif
+
+ifeq "$(var)" "true"
+if_equal:
+	@echo var = $(var)
+	@echo foo = $(foo)
+else
+if_not_equal:
+	@echo var != $(var)
+	@echo bar = ${bar}
 endif
 
 #判断变量是否定义或者为空
@@ -55,7 +69,7 @@ else
 endif
 
 #判断是否编译为动态库标志，相当于C语言中的编译宏
-is_shared_library := true
+is_shared_library :=
 
 CC := gcc
 AR := ar
@@ -87,7 +101,7 @@ main.exe:main.o libprime.a
 	del /f lib\libprime.dll bin\libprime.dll
 
 libprime.a:prime.o
-	ar rcs -o lib/$@ $<
+	ar rcs -o lib/$@ build/$<
 
 endif
 
@@ -103,4 +117,7 @@ clean:
 run:
 	bin/main.exe
 
-.PHONY:equal not_equal define not_define clean run
+.PHONY:equal not_equal if_equal if_not_equal define not_define clean run
+
+#Makefile中条件表达式中不能使用自动变量，自动变量在规则命令执行时才有效，更不能将一个完整的条件判断语句，
+#分卸在两个不同的Makefile文件中。在一个Makefile文件中使用指示符include包含另外一个Makefile文件。
