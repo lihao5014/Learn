@@ -1,0 +1,2 @@
+Makefile contains test
+subdir has a bar.txt file

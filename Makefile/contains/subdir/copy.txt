@@ -1,0 +1,2 @@
+Makefile contains test
+current dir has a bar.txt file
