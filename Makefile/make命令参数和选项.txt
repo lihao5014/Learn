@@ -1,0 +1,73 @@
+1.在执行make命令时，有的时候需要加上参数选项来保证程序的执行。比如只打印命令但不执行使用的参数是-n，
+  还有只执命令不打印命令的参数选项是-s，包含其它文件的路径参数选项是-include等等。
+  
+2.make可以使用的参数选项以及它们的功能：
+（1）-b、-m：忽略提供其他版本make的兼容性。
+
+（2）-B、--always-make：强制重建所有的规则目标，不根据规则的依赖描述决定是否重建目标文件。
+
+（3）-C DIR、--directory=DIR：在读取Makefile之前，进入到目录DIR，然后执行make。当存在多个-C"选项的时候，
+	 make的最终工作目录是第一个目录的相对路径。
+	 
+（4）-d：make在执行的过程中打印出所有的调试信息，包括make认为那些文件需要重建，那些文件需要比较最后的修改时间、
+	 比较的结果，重建目标是用的命令，遗憾规则等等。使用-d选项我们可以看到make构造依赖关系链、重建目标过程中的所有的信息。
+	 
+（5）--debug[=OPTIONS]：make执行时输出调试信息，可以使用OPTIONS控制调试信息的级别。默认是OPTIONS=b ，
+	 OPTIONS"的可值为以下这些，首字母有效：all、basic、verbose、implicit、jobs、makefile。
+	 
+（6）-e、--enveronment-overrides：使用环境变量定义覆盖Makefile中的同名变量定义。
+
+（7）-f=FILE、--file=FILE、--makefile=FILE：指定文件FILE为make执行的Makefile文件。
+
+（8）-p、--help：打印帮助信息。
+
+（9）-i、--ignore-errors：执行过程中忽略规则命令执行的错误。
+
+（10）-I DIR、--include-dir=DIR：指定包含Makefile文件的搜索目录，在Makefile中出现另一个include文件时，
+	  将在DIR目录下搜索。多个-i指定目录时，搜索目录按照指定的顺序进行。
+	  
+（11）-j [JOBS]、--jobs[=JOBS]：可指定同时执行的命令数目，在没有-j的情况下，执行的命令数目将是系统允许的最大可能数目，
+	  存在多个-j目标时，最后一个目标指定的JOBS数有效。
+	  
+（12）-k、--keep-going：执行命令错误时不终止make的执行，make尽最大可能执行所有的命令，直至出现知名的错误才终止。
+
+（13）-l load、--load-average=[=LOAD]、--max-load[=LOAD]：告诉make在存在其他任务执行的时候，如果系统负荷超过LOAD，
+	  不在启动新的任务。如果没有指定LOAD的参数  -l选项将取消之前-l指定的限制。
+	  
+（14）-n、--just-print、--dry-run：只打印执行的命令，但是不执行命令。
+
+（15）-o FILE、--old-file=FILE、--assume-old=FILE：指定FILE文件不需要重建，即使是它的依赖已经过期；
+	  同时不重建此依赖文件的任何目标。注意：此参数不会通过变量MAKEFLAGS传递给子目录进程。
+
+（16）-p、--print-date-base：命令执行之前，打印出make读取的Makefile的所有数据，同时打印出make的版本信息。
+	  如果只需要打印这些数据信息，可以使用make -qp命令，查看make执行之前预设的规则和变量，可使用命令make -p -f /dev/null。
+	  
+（17）-q、-question：称为询问模式，不运行任何的命令，并且无输出。make只返回一个查询状态。返回状态0表示没有目标表示重建，
+	  返回状态1表示存在需要重建的目标，返回状态2表示有错误发生。
+	  
+（18）-r、--no-builtin-rules：取消所有的内嵌函数的规则，不过你可以在Makefile中使用模式规则来定义规则。
+	  同时选项-r会取消所有后缀规则的隐含后缀列表，同样我们可以在Makefile中使用.SUFFIXES，定义我们的后缀名的规则。
+	  -r选项不会取消make内嵌的隐含变量。
+	  
+（19）-R、--no-builtin-variabes：取消make内嵌的隐含变量，不过我们可以在Makefile中明确定义某些变量。
+	  注意-R和-r选项同时打开，因为没有了隐含变量，所以隐含规则将失去意义。
+	  
+（20）-s、--silent、--quiet：取消命令执行过程中的打印。
+
+（21）-S、--no-keep-going、--stop：取消-k的选项在递归的make过程中，子make通过MAKEFLAGS变量继承了上层的命令行选项那个。
+	  我们可以在子make中使用-S选项取消上层传递的-k选项，或者取消系统环境变量MAKEFLAGS中-k选项。
+	  
+（22）-t、--touch：和Linux的touch命令实现功能相同，更新所有的目标文件的时间戳到当前系统时间。防止make对所有过时目标文件的重建。
+
+（23）-v、--version：查看make的版本信息。
+
+（24）-w、--print-directory：在make进入一个子目录读取Makefile之前打印工作目录，这个选项可以帮助我们调试Makefile，
+      跟踪定位错误。使用-C选项时默认打开这个选项。
+	  
+（25）--no-print-directory：取消-w选项。可以是用在递归的make调用的过程中 ，取消-C参数的默认打开-w的功能。
+
+（26）-W FILE、--what-if=FILE、--new-file=FILE、--assume-file=FILE：设定文件FILE的时间戳为当前的时间，
+	  但不更改文件实际的最后修改时间。此选项主要是为了实现对所有依赖于文件FILE的目标的强制重建。
+	  
+（27）--warn-undefined-variables：在发现Makefile中存在没有定义的变量进行引用时给出告警信息。
+	  此功能可以帮助我们在调试一个存在多级嵌套变量引用的复杂Makefile。但是建议在书写的时候尽量避免超过三级以上的变量嵌套引用。
