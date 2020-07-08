@@ -3,13 +3,17 @@
 #所以就需要在不同的模块中分别对它们的规则进行描述，也就是每一个模块都编写一个Makefile文件，这样不仅方便管理，
 #而且可以迅速发现模块中的问题。这样我们只需要控制其他模块中的Makefile就可以实现总体的控制，这就是make的嵌套执行。
 
-.PHONY:all clean
-
 TARGET := bin/main.exe
 
 CINCLUDE := -I include
 OBJ := build/main.o
 LIBS := lib/libcopy.a
+
+#有伪目标all之后，.PHONY要放在变量之后
+.PHONY:all clean
+
+#运行make命令时，默认执行的是Makefile文件中创建第一个目标体的命令。即执行编译动作而不是clean或run。
+all:$(TARGET)
 
 #Makefile中嵌套执行make的方法有两种：cd subdir&&make 和 make -C subdir。
 _CHANGE_WAY_ :=

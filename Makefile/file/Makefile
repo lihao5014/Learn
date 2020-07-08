@@ -22,7 +22,7 @@ run:
 #	函数的功能是从文件名序列names中取出目录部分，如果names中没有“/”，取出的值为“./”。
 #	返回值为目录部分，即最后一个反斜杠之前的部分。如果没有反斜杠将返回“./”。
 
-files := file/fileopt.h main.c test/text.txt aaa.txt bbb
+files := file/fileopt.h main.c test/text.txt file/test/aaa.txt bbb
 paths := $(dir ${files})
 aquire_path:
 	@echo files is: $(files)
