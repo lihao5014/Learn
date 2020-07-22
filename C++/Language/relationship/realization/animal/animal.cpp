@@ -30,7 +30,7 @@ public:
 private:
 	virtual void run()
 	{
-		
+		cout<<"bird can't run"<<endl;
 	}
 };
 
@@ -44,7 +44,7 @@ public:
 private:
 	void fly()override
 	{
-
+		cout<<"animal can't fly"<<endl;
 	}
 };
 
@@ -57,7 +57,7 @@ int main()
 {
 	Move* p = new Bird;
 	p->fly();
-	p->run();
+	p->run();                           //基类调用派生类中的虚函数时，其访问权限为基类中虚函数的访问权限
 	if(p != nullptr)
 	{
 		delete p;
@@ -67,10 +67,10 @@ int main()
 	Bird* pbrid = new Bird();
 	pbrid->fly();
 	// pbrid->run();          //私有成员不可以调用
-	FREE(pbrid);
+	myFree(&pbrid);
 	
 	Move* q = new Animal();
-	q->fly();
+	q->fly();                          //尽管Animal类中的fly()函数是private，但是通过Move类指针访问时，其权限为基类中的public
 	q->run();
 	FREE(p);
 	

@@ -49,7 +49,7 @@ Engine::Engine(const Engine& other)
 		}
 		
 		strcpy(brand,other.brand);
-	}	
+	}
 }
 
 Engine::~Engine()

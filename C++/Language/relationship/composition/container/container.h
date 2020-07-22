@@ -15,7 +15,7 @@ public:
 	void display()const;
 private:
 	int size;
-	Component component;
+	Component component;        //类中没有成员指针，所以不需要写析构函数
 };
 
 Container::Container(int size,const int id,const string& name)

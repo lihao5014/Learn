@@ -50,7 +50,7 @@ int main()
 	p->fly();
 	if(p != nullptr)
 	{
-		delete p;
+		delete p;                          //new和delete不仅可以开辟或释放内存，还会自动调用构造和析构函数
 		p = nullptr;
 	}
 	
@@ -75,12 +75,12 @@ void myFree(void** pp)
 		*pp = nullptr;
 	}
 }
-#else
+#else 
 void myFree(void* ptr)
 {
 	if(ptr != nullptr)
 	{
-		free(ptr);
+		free(ptr);                   //malloc和free函数，只会开辟或释放内存，不会调用构造函数或析构函数
 		ptr = nullptr;
 	}	
 }	

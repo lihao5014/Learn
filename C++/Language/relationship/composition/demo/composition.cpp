@@ -114,7 +114,6 @@ Test::Test(const Test& other)
 }
 #endif
 
-
 void Test::setSample(int index,const Sample& sample)
 {
 	if(index < 0 || index >= SIZE)

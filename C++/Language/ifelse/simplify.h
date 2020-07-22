@@ -38,6 +38,7 @@ void use_continue(data_t value);        //使用continue语句，去掉else
 data_t use_switch(data_t x,data_t y, Option opt);        //使用switch语句代替if else
 data_t use_operator(data_t value);                       //使用三目运算符，去掉else
 
+data_t variable(data_t x,data_t y,data_t z);             //使用临时变量，去掉else
 void front(data_t value,data_t *num);                    //使用将else中的语句前置，去掉else
 void merge(data_t value,data_t num);                     //使用合并if判断的方法，去掉else
 

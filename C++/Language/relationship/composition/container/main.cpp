@@ -1,4 +1,5 @@
 #include "container.h"
+#include "subassembly.h"
 
 int main()
 {
@@ -7,6 +8,15 @@ int main()
 	
 	container.setSize(20);
 	container.display();
+	
+	{
+		Subassembly subassembly(50.567,123456,"unit");
+		subassembly.print();	
+	}
+	
+	Component component(8751,"element");
+	Subassembly subassembly(48.45,component);
+	subassembly.print();
 	
 	return 0;
 }

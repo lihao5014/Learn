@@ -11,6 +11,7 @@ class Component
 public:
 	Component();
 	Component(int id,const string& name);
+	Component(const Component& other);       //不写拷贝构造函数，编译器会生成一个默认的浅拷贝构造函数
 	
 	void setID(const int id);
 	int getID()const;
@@ -32,6 +33,12 @@ Component::Component()
 
 Component::Component(int id,const string& name)
 	:id(id),name(name)
+{
+	
+}
+
+Component::Component(const Component& other)
+	:id(other.id),name(other.name)
 {
 	
 }

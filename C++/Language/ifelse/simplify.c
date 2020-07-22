@@ -217,6 +217,43 @@ data_t use_operator(data_t value)
 #endif
 
 #ifndef _CHANGE_WAY_
+data_t variable(data_t x,data_t y,data_t z)
+{
+	if(x <= y)
+	{
+		if(y >= z)
+		{
+			return y;
+		}
+		return z;
+	}
+	else
+	{
+		if(x >= z)
+		{
+			return x;
+		}
+		return z;
+	}
+}
+#else
+data_t variable(data_t x,data_t y,data_t z)
+{
+	data_t max = x;
+	if(y > max)
+	{
+		max = y;
+	}
+	
+	if(z > max)
+	{
+		max = z;
+	}
+	return max;
+}
+#endif
+
+#ifndef _CHANGE_WAY_
 void front(data_t value,data_t *num)
 {
 	if(value > THRESHOLD)
