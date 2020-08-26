@@ -13,7 +13,7 @@ typedef int data_t;
 class Sample
 {
 public:
-	/* explicit */ Sample():data(0){};                            //默认构造函数
+	/* explicit */ Sample():data(0){};                            //默认构造函数。explicit用于指定带有一个参数的构造函数禁用隐藏式类型转换，强制实行显式类型转换。
 	/* explicit */ Sample(const data_t data):data(data){};
 	
 	/* explicit */ Sample(const Sample& other):data(other.data){};    //拷贝构造函数最好不加explicit，因为return返回Sample会隐式调用拷贝构造函数
