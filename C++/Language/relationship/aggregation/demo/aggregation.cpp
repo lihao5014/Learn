@@ -420,13 +420,13 @@ static void Example_test()
 		example1.detail();
 
 #ifdef _UNSAFETY_
-		example1.release();    //调用release函数将Example构造函数中new出来的堆空间释放掉了以后，psample1指针就变为了野指针。
+		example1.release();     //调用release函数将Example构造函数中new出来的堆空间释放掉了以后，psample1指针就变为了野指针。
 		psample1->show();       //野指针继续读取，软件不会崩溃，但读取的数据无意义。
 		
 		psample1->setData(58);    //野指针继续写入，软件可能会崩溃。
 		psample1->show();
 		
-		delete psample1;        //野指针多次delete，软件也可能会崩溃。
+		delete psample1;          //野指针多次delete，软件也可能会崩溃。
 		psample1 = nullptr;
 #else
 		example1.release();
