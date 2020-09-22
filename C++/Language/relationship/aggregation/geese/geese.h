@@ -1,17 +1,14 @@
 #ifndef _GEESE_H
 #define _GEESE_H
 
-#include "goose.h"
 #include <list>
 #include <string>
-
-using std::list;
-using std::string;
+#include "goose.h"
 
 class Geese
 {
 public:
-	Geese(const string departure,const string& destination);
+	Geese(const std::string departure,const std::string& destination);
 	
 	void addGoose(const Goose& goose);
 	void removeGoose(const Goose& goose);
@@ -21,9 +18,9 @@ private:
 	Geese(const Goose& other);
 	Goose operator =(const Goose& other);
 	
-	string departure;
-	string destination;
-	list<Goose> members;     //能存储在list容器中的类必须重载等号==运算符
+	std::string departure;
+	std::string destination;
+	std::list<Goose> members;     //能存储在list容器中的类必须重载等号==运算符
 };
 
 #endif //_GEESE_H

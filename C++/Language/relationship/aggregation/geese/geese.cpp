@@ -26,5 +26,6 @@ void Geese::display()const
 	for(;citer != members.cend();++citer)
 	{
 		cout<<"goose: "<<citer->getNumber()<<" fly from "<<departure<<" to "<<destination<<endl;
+		citer->show();
 	}
 }
