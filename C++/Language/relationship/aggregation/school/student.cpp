@@ -46,7 +46,7 @@ Student::Student(const Student& other)
 }
 
 //只有指针读写时需要做判空操作，指针delete或者free都不需要做判空操作。
-//因为野指针name == nullptr不能排除；nullptr指针可以delete或free程序不会崩溃。
+//因为野指针使用name == nullptr不能排除；nullptr指针可以delete或free程序不会崩溃。
 Student::~Student()
 {
 	delete[] name;
@@ -110,13 +110,13 @@ int Student::getAge()const
 	return age;
 }
 
-void Student::show()const
+void Student::info()const
 {
 	if(name == nullptr)        //只有指针读写时需要做判空操作，指针delete或者free都不需要做判空操作。
 	{                          //因为野指针name == nullptr不能排除；nullptr指针可以delete或free程序不会崩溃。
-		printf("show error: name is nullptr");
+		printf("info error: name is nullptr");
 		return ;
 	}
 	
-	printf("name =%s, age =%d\n",name,age);
+	printf("Student: name =%s, age =%d\n",name,age);
 }

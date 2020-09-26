@@ -17,7 +17,7 @@ public:
 	void setAge(const int age);
 	int getAge()const;
 	
-	void show()const;
+	void info()const;
 private:
 	char *name;
 	int age;

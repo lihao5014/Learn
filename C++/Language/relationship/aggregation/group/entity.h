@@ -11,6 +11,7 @@ class Entity
 public:
 	Entity(const char* name);
 	Entity(const Entity& other);
+	virtual ~Entity();              //类中只要使用了指针成员变量，一般都需要使用析构函数来释放内存
 	
 	Entity& operator =(const Entity& other);
 	bool operator ==(const Entity& other);
@@ -41,6 +42,11 @@ Entity::Entity(const Entity& other)
 	:Entity(other.name)                    //委托构造函数
 { 
 
+}
+
+Entity::~Entity()
+{
+	free(name);
 }
 
 Entity& Entity::operator =(const Entity& other)
