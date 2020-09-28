@@ -44,7 +44,7 @@ private:
 
 Group::Group(const string& number)
 	:number(number)
-	,elements{nullptr}
+	,elements{nullptr,nullptr,nullptr,nullptr}
 {
 	
 }

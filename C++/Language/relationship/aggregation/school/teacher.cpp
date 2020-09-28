@@ -23,6 +23,8 @@ Teacher& Teacher::operator =(const Teacher& other)
 {
 	sex = other.sex;
 	title = other.title;
+	
+	return *this;
 }
 
 bool Teacher::operator ==(const Teacher& other)
@@ -52,5 +54,6 @@ string Teacher::getTitle()const
 
 void Teacher::show()const
 {
-	cout<<"Teacher: sex ="<<sex<<" ,title ="<<title<<endl;
+	string strSex = (sex == GIRL) ? "girl" : "boy";
+	cout<<"Teacher: sex ="<<strSex<<" ,title ="<<title<<endl;
 }

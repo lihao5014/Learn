@@ -4,15 +4,15 @@
 #include <string>
 #include <array>
 
-#define GRADE_COUNT 3     //每个学校最多具有的年级数
+#define GRADE_COUNT 3     //每个学校最多具有的3个年级
 
 class Grade;              //前置声明，以防止头文件重复包含。或将头文件的#include移动到源文件中。
 
-class School
+class School              //因为School对象不再放在list，array等容器中，所以不需要重载=和==运算符
 {
 public:
 	School(const std::string& address);
-	School(const other& other);
+	School(const School& other);
 	virtual ~School();
 	
 	void setAddress(const std::string& address);

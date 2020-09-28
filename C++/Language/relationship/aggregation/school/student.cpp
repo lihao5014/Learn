@@ -57,6 +57,8 @@ Student& Student::operator =(const Student& other)
 	assert(other.name != nullptr);
 	assert(other.age >= 0);
 	
+	delete[] name;             //重新为name分配内存前，先将原来name指针指向的释放掉，以免造成内存泄漏问题
+	
 	int len = strlen(other.name) + 1;
 	name = new char[len];
 	memcpy(name,other.name,len);

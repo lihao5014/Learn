@@ -19,7 +19,7 @@ public:
 	bool operator ==(const Teacher& other);
 	
 	void setSex(const Sex_t& sex);
-	Sex_t getSex())const;
+	Sex_t getSex()const;
 	
 	void setTitle(const std::string& title);
 	std::string getTitle()const;
