@@ -3,9 +3,9 @@
 #include <QLineEdit>
 #include <QHBoxLayout>
 #include <QVBoxLayout>
-#include "view.h"
+#include "calculatorUi.h"
 
-View::View(const QString& title,QWidget *parent)
+CalculatorUi::CalculatorUi(const QString& title,QWidget *parent)
 	:QWidget(parent)
 {
 	setWindowTitle(title);
@@ -13,32 +13,22 @@ View::View(const QString& title,QWidget *parent)
 	init();
 }
 
-View::~View()
+CalculatorUi::~CalculatorUi()
 {
 	
 }
 
-QString View::getRadius()const
+QString CalculatorUi::getRadius()const
 {
 	return radiusLineEdit->text();
 }
 
-void View::setArea(const QString& area)
+void CalculatorUi::setArea(const QString& area)
 {
 	resultLabel->setText(area);
 }
 
-void View::on_calculateBtn_clicked()
-{
-	emit calculated();
-}
-
-void View::on_radiusLineEdit_returnPressed()
-{
-	emit calculated();
-}
-
-void View::init()
+void CalculatorUi::init()
 {
 	QLabel *radiusLabel = new QLabel("radius:",this);
 	radiusLineEdit = new QLineEdit(this);
@@ -77,6 +67,6 @@ void View::init()
 	
 	setLayout(mainLayout);
 
-	connect(radiusLineEdit,SIGNAL(returnPressed()),this,SLOT(on_calculateBtn_clicked()));
-	connect(calculateBtn,SIGNAL(clicked()),this,SLOT(on_radiusLineEdit_returnPressed()));
+	connect(radiusLineEdit,SIGNAL(returnPressed()),this,SIGNAL(calculated()));
+	connect(calculateBtn,SIGNAL(clicked()),this,SIGNAL(calculated()));
 }
