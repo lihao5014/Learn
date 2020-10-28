@@ -114,5 +114,8 @@ int main()
 		cout<< e <<endl;
 	}
 	
+	SubClass subobject1("this is a object",15);
+	subobject1.show();
+	
 	return 0;
 }

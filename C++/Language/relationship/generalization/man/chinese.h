@@ -3,7 +3,7 @@
 
 #include "man.h"
 
-class Chinese:public Man
+class Chinese:public Man   //使用纯虚函数来实现类之间的泛化关系
 {
 public:
 	Chinese(const std::string name):Man(name){};

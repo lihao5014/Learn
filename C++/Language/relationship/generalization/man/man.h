@@ -11,10 +11,7 @@ public:
 	Man(const Man& other):name(other.name){};
 	virtual ~Man(){};
 	
-	virtual void sayHello()
-	{
-		std::cout<<"Man "<<name<<": say hello"<<std::endl;
-	}
+	virtual void sayHello() = 0;         //Man类是一个带有纯虚函数的抽象类
 protected:
 	std::string name;
 };

@@ -81,7 +81,7 @@ void myFree(void* ptr)
 	if(ptr != nullptr)
 	{
 		free(ptr);                   //malloc和free函数，只会开辟或释放内存，不会调用构造函数或析构函数
-		ptr = nullptr;
+		ptr = nullptr;               //因为函数传参是指针类型，所以并不能将传入的实参设置为nullptr。
 	}	
 }	
 #endif
