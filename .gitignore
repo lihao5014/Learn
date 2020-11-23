@@ -6,6 +6,8 @@
 *.lo
 *.o
 *.obj
+*.i
+*.s
 
 # Precompiled Headers
 *.gch
@@ -30,3 +32,26 @@
 *.exe
 *.out
 *.app
+
+# Qt-es
+*.qmake.cache
+*.qmake.stash
+*.pro.user
+*.pro.user.*
+*.qbs.user
+*.qbs.user.*
+*.moc
+moc_*.cpp
+moc_*.h
+qrc_*.cpp
+ui_*.h
+*build-*
+*.Debug
+*.Release
+Makefile
+
+# VS-es
+.vs
+x64
+Debug
+Release
