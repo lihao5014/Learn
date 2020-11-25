@@ -17,10 +17,11 @@
 
 #include <cstdio>
 #include <cstdlib>
+#include <string>
 #include <iostream>
 
 #define _UNSAFETY_
-// #undef _UNSAFETY_
+#undef _UNSAFETY_
 
 #define _ERROR_
 #undef _ERROR_
@@ -218,21 +219,69 @@ private:
 	double size;        //现代C++中不推荐使用裸指针，应该用智能指针来代替裸指针。
 };
 
+class Foobar
+{
+public:
+	Foobar(const string& name):psample(nullptr),name(name){}           //因为Foobar对象中的psample指针指向的堆对象，都是手动调用createSample()方法创建的。
+	Foobar(const Foobar& other):psample(nullptr),name(other.name){}    //所以拷贝构造时psample指针初始化为nullptr。因此拷贝构造创建出来的对象与other对象不完全相同。
+	
+	virtual ~Foobar()             //如果没有调用release()函数提前释放psample指针的内存空间，
+	{                             //最后都可以由析构函数释放psample指针指向的堆内存空间，以保证不会造成内存泄漏问题。
+		if(psample != nullptr)
+		{
+			delete psample;
+			psample = nullptr;
+		}
+	}
+	
+	Sample* createSample(int data)    //如果createSample()方法返回的Sample指针释放了new出来堆内存。就会造成Foobar类中的成员指针psampe变为野指针。
+	{                                 //这样再调用release()方法或者析构函数的话，就会造成野指针多次delete掉，软件可能会崩溃。
+		psample = new Sample(data);   //每个Foobar对象最好只调用一次createSample()方法，因为Foobar的release()方法和析构函数只能释放一次createSample()方法创建的堆对象。
+		return psample;               //如果多次调用createSample()方法，则会造成多次new出来的多个Sample堆对象，无人释放内存从而造成内存泄漏问题，必须由用户手动delete释放它们的内存。
+	}
+	
+	void release()                //release()成员函数可以在Foobar对象生命周期结束以前，提前释放psample指针指向的堆内存空间，
+	{                             //这样可以减少Foobar对象长时间存在时，程序过程中不必要的内存开销。至少可以回收一部分内存给操作系统。
+		if(psample != nullptr)
+		{
+			delete psample;
+			psample = nullptr;
+		}
+	}
+	
+	void setName(const string& name){this->name = name;}
+	string getName()const{return name;}
+	
+	void reveal()const
+	{
+		if(psample != nullptr)
+		{
+			psample->show();
+		}
+		cout<<"name ="<<name<<endl;
+	}
+private:
+	Sample* psample;
+	string name;
+};
+
 static void delete_pointer();
 static void delete_wild_pointer();
 
-static void Sample_test();
+static void Demo_test();
 static void Test_test();
 static void Example_test();
+static void Foobar_test();
 
 int main(int argc,char* argv[])
 {
 	delete_pointer();
 	delete_wild_pointer();
 	
-	Sample_test();
+	Demo_test();
 	Test_test();
 	Example_test();
+	Foobar_test();
 	
 	return 0;
 }
@@ -301,7 +350,7 @@ void delete_wild_pointer()
 	delete q;           //C++语言规定nullptr指针可以delete，且软件会正常运行。
 }
 
-static void Sample_test()
+static void Demo_test()
 {
 	Sample sample(31);       //一般栈对象出了变量作用域，会自动调用析构函数释放栈空间内存。
 	sample.show();           //所以栈对象内存空间不能使用delete手动释放，这样会造成一个栈变量内存空间被释放两次问题。
@@ -433,4 +482,60 @@ static void Example_test()
 		psample1 = nullptr;
 #endif
 	}
+}
+
+void Foobar_test()
+{
+	Foobar foo("foo");
+	foo.reveal();
+	
+	Sample* psample = foo.createSample(60);
+	foo.setName("foo");
+	if(psample != nullptr)      //在使用一个裸指针以前，都对其进行是否等于nullptr判断是一个好的编程习惯。
+	{                           //可以有效的防止nullptr指针访问导致的软件崩溃问题。
+		psample->show();
+	}
+	foo.reveal();
+	
+	Foobar bar(foo);     //虽然调用了Foobar类的拷贝构造函数，但是foo和bar对象并不是完全相同。
+	bar.reveal();        //因为拷贝构造函数并没有按照生成对象与拷贝对象完全相同的方式去实现。
+
+#ifdef _UNSAFETY_
+	delete psample;      //psample指针将createSample()函数中new出来的堆内存空间释放掉了以后，会造成Foobar中的psample指针变为野指针。
+	psample = nullptr;   //因为在Foobar类的析构函数中，不能通过psample != nullptr判断一个指针是否为野指针，所以造成Foobar对象销毁时会导致野指针多次delete问题。
+#else
+	foo.release();       //因为release()方法中已经将Foobar类中new出来的Sample堆对象释放掉了，此时Foobar类外的psample指针还指向内存被销毁了的堆空间。
+	psample = nullptr;   //psample指针就变为了野指针，通过将其设置为nullptr以后，可以防止接下来程序继续访问psample野指针。
+#endif
+
+	bar.setName("bar");
+	psample = bar.createSample(61);
+	psample->setData(62);
+	if(psample != nullptr)      //在C/C++中通过释放指针后马上将其设置为nullptr和访问指针前先进行是否等于nullptr判断，
+	{                           //可以有效的避免野指针或空指针访问所造成的多次释放和软件崩溃等问题。
+		psample->show();
+	}
+	bar.reveal();
+
+#ifdef _UNSAFETY_
+	bar.createSample(63);
+	bar.setName("bar1");
+	bar.reveal();
+	
+	bar.createSample(64);      //多次调用createSample()方法new出来的堆内存空间没有被释放，造成内存泄漏问题。
+	bar.setName("bar2");
+	bar.reveal();
+#else
+	delete psample;
+	psample = nullptr;      //将一个指针delete以后马上将其设置为nullptr是一个好的编程习惯。这样可以避免delete后的指针变为野指针，导致野指针访问或多次delete释放等问题。
+	bar.createSample(63);   //在C/C++中可以判断一个原始指针是否为空指针，但是没有任何办法判断一个原始指针是否为野指针还是正常指针。
+	bar.setName("bar1");
+	bar.reveal();
+	
+	delete psample;
+	psample = nullptr;
+	bar.createSample(64);      //多次调用createSample()方法new出来的堆内存空间没有被释放，造成内存泄漏问题。
+	bar.setName("bar2");
+	bar.reveal();
+#endif
 }
