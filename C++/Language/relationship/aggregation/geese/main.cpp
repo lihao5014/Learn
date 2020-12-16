@@ -19,7 +19,8 @@ int main(int argc,char* argv[])
 	goose3.addFeather(new Feather("blue"));
 	
 	Goose goose4("004");
-	goose4.addFeather(new Feather("black"));
+	Feather* pfeather = new Feather("black");
+	goose4.addFeather(pfeather);
 	goose4.addFeather(new Feather("black"));
 	goose4.addFeather(new Feather("black"));
 	goose4.addFeather(new Feather("black"));
@@ -46,6 +47,15 @@ int main(int argc,char* argv[])
 	
 	goose5 = goose4;
 	goose5.show();
+	
+	goose4.removeFeather(pfeather);     //goose4中移除了pfeather指针，那个Goose类的析构函数就不能释放
+	goose4.show();
+	
+	if(pfeather != nullptr)
+	{
+		delete pfeather;
+		pfeather = nullptr;
+	}
 	
 	return 0;
 }

@@ -53,8 +53,8 @@ string School::getAddress()const
 
 void School::addGrade(const Grade* pgrade)
 {
-	if(pgrade == nullptr)       //不加pgrade == nullptr判断也没有关系，不会导致软件崩溃，因为School构造函数也将grades数组初始化为nulltr
-	{                           //只是加上可以减少接下来的无效循环。
+	if(pgrade == nullptr)       //不加pgrade == nullptr判断也没有关系，不会导致软件崩溃，
+	{                           //因为School构造函数也将grades数组初始化为nulltr，只是加上可以减少接下来的无效循环。
 		return ;
 	}
 	
@@ -62,7 +62,7 @@ void School::addGrade(const Grade* pgrade)
 	{
 		if(grades.at(i) == nullptr)
 		{
-			grades.at(i) = new Grade(*pgrade);
+			grades.at(i) = new Grade(*pgrade);   //使用深拷贝实现addGrade()方法，所以传入的Grade实参指针的内存需要由用户手动释放。
 			return ;
 		}
 	}

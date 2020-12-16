@@ -4,6 +4,9 @@
 #include "school.h"
 #include "debug.h"
 
+#define _ERROR_
+#undef _ERROR_
+
 int main(int argc,char** argv)
 {
 	Student student1("amy",25);
@@ -51,10 +54,25 @@ int main(int argc,char** argv)
 	pgrade2->addClazz(pclazz4);    //因为grade1已经托管了pclazz2的内存，所以pgrade2不能再添加pclazz2指针
 	pgrade2->print();
 	cout<<endl;
-	
+
 	School school1("Beijing");
-	school1.addGrade(new Grade(grade1));
-	school1.addGrade(pgrade2);
+#ifdef _ERROR_
+	//因为addGrade()方法是使用深拷贝实现的，所以School类析构时只释放addGrade()方法中new出来的Grade对象。
+	//而不会管理调用addGrade()方法时，传入的实参Grade指针的内存释放。
+	school1.addGrade(new Grade(grade1));     //会造成new出来的临时Grade对象的内存没有被释放。
+	school1.addGrade(pgrade2);               //会造成pgrade2指针的内存没有被释放，从而引起内存泄漏问题。
+#else
+	Grade* ptempGrade = new Grade(grade1);
+	school1.addGrade(ptempGrade);            //因为addGrade()方法使用深拷贝实现，所以调用addGrade()方法时避免传入临时指针。
+	delete ptempGrade;
+	
+	school1.addGrade(pgrade2);    //调用addGrade()方法以后，最好及时释放Grade实参指针的内存，以免引起内存泄漏问题。
+	if(pgrade2 != nullptr)
+	{
+		delete pgrade2;
+		pgrade2 = nullptr;
+	}
+#endif
 	school1.detail();
 	cout<<endl;
 	

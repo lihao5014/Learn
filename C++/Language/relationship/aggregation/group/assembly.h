@@ -167,6 +167,7 @@ void Assembly::removeEntity(Entity* pentity)     //每次删除vector中所有�
 		{
 			delete *iter;
 			*iter = nullptr;
+			entitys.erase(iter++);    //将内存释放掉了的Entity指针从vector容器中移除掉，以减小vector容器的大小。
 		}
 		++iter;
 	}

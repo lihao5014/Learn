@@ -11,6 +11,9 @@
 #define _ERROR_
 #undef _ERROR_
 
+#define _BAD_IDEA_
+#undef _BAD_IDEA_
+
 #define SafeDelete(ptr)            \
 	do{                            \
 		if(ptr != nullptr)         \
@@ -51,7 +54,8 @@ Goose::Goose(const Goose& other)
 	memset(number,0,len);
 	memcpy(number,other.number,len);
 	
-	clearFeatherList(feathers);
+	//因为拷贝构造的Goose对象还没有生成，所以feathers容器中肯定是没有内容，不需要做清空操作。
+	// clearFeatherList(feathers);
 	
 	list<Feather*>::const_iterator citer = other.feathers.cbegin();
 	while(citer != other.feathers.cend())
@@ -95,14 +99,18 @@ Goose& Goose::operator =(const Goose& other)
 	number = new char[len];
 	memset(number,0,len);
 	strcpy(number,other.number);
-	
+
+#ifndef _CHANGE_WAY_
 	list<Feather*>::iterator iter = feathers.begin();
 	while(iter != feathers.end())
 	{
 		delete *iter;             //当容器中的一个元素被删除时，指向该元素后续的迭代器变得无效。利用了后置自增运算符在运算结束之后会给变量重新赋值的特点，
 		feathers.erase(iter++);   //把迭代器的值重新赋值为了原先的值加一。删除节点的前先对迭代器进行后移的操作，因此其他元素不会失效。
 	}
-	
+#else
+	clearFeatherList(feathers);
+#endif
+
 	for(const auto pfeather: other.feathers)
 	{
 		feathers.push_back(new Feather(*pfeather));
@@ -161,7 +169,7 @@ const char* Goose::getNumber()const
 	return number;
 }
 
-void Goose::addFeather(Feather* pfeather)
+void Goose::addFeather(Feather* pfeather)   //使用浅拷贝实现的addFeather()方法，使用过程中需要注意是否会造成野指针或者内存泄漏等问题
 {
 	if(pfeather == nullptr)
 	{
@@ -172,9 +180,10 @@ void Goose::addFeather(Feather* pfeather)
 	feathers.push_back(pfeather);
 }
 
-void Goose::removeFeather(Feather* pfeather)
-{
-	if(pfeather == nullptr)
+#ifdef _BAD_IDEA_
+void Goose::removeFeather(Feather* pfeather)   //只能移除那些传入的pfeather与feathers列表中存放的指针地址完全相同的指针。
+{                                              //这就意味着用户使用addFeather()方法将pfeather指针添加到feathers列表中时，
+	if(pfeather == nullptr)                    //还需要一直保存pfeather指针的指向，因为在removeFeather()方法中还需要用到。
 	{
 		cout<<"removeFeather error: pfeather is nullptr"<<endl;
 		return ;
@@ -182,6 +191,34 @@ void Goose::removeFeather(Feather* pfeather)
 	
 	feathers.remove(pfeather);
 }
+#else
+void Goose::removeFeather(Feather* pfeather)
+{
+	if(nullptr == pfeather)
+	{
+		cout<<"removeFeather error: pfeather is nullptr"<<endl;
+		return ;
+	}
+	
+	list<Feather*>::iterator iter = feathers.begin();
+	while(iter != feathers.end())
+	{
+		if(*iter != nullptr && *iter == pfeather)
+		{
+			feathers.erase(iter++);     //只将pfeather指针从feathers列表中移除，但不释放pfeather指针的内存。
+			continue;                   //将pfeather指针内存释放工作交给Goose类外的用户去做。因为如果removeFeather()
+		}                               //方法中将形参pfeather指针释放了以后，则实参pfeather指针就会变为野指针。
+		
+		if(*iter != nullptr && **iter == *pfeather)
+		{
+			delete *iter;
+			*iter = nullptr;
+			feathers.erase(iter++);    //将内存被释放掉了的Feather指针从list容器中移除掉，以减少list容器的大小。
+		}
+		iter++;
+	}
+}	
+#endif
 
 void Goose::show()const
 {

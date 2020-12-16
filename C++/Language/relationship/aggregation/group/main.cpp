@@ -53,6 +53,7 @@ int main(void)
 	Element *pelement4 = new Element(40);
 	group.addElement(pelement4);
 	SafeDelete(pelement4);
+	group.removeEntity(entity1);
 	group.print();
 	
 	Element* pelement = assembly.getElement(0);

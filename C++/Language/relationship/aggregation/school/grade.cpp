@@ -114,8 +114,8 @@ void Grade::addClazz(Clazz* pclazz)
 		if(clazzs[i] == nullptr)
 		{
 			Debug("break point3");
-			clazzs[i] = pclazz;
-			return ;                //一个只添加一个pclazz指针
+			clazzs[i] = pclazz;     //使用浅拷贝实现addClazz方法，所以传入的Clazz实参指针的内存释放由Grade类来自动管理，而不需要由用户来手动管理
+			return ;                //一次只添加一个pclazz指针
 		}
 	}
 }   
