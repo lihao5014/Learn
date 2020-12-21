@@ -55,3 +55,8 @@ Makefile
 x64
 Debug
 Release
+
+# CSharp
+
+# Java
+*.class

@@ -5,10 +5,10 @@ using System;
 
 namespace PointApplication
 {
-	public class Point
-	{
-		private double x;        //C#中变量命名使用小驼峰
-		private double y;
+	public class Point        //命名空间中的类声明时只可以具有public或internal访问权限，
+	{                         //默认是internal访问级别，但类中类是可以使用private修饰符。
+		private double x;
+		private double y;       //C#中变量命名使用小驼峰
 		
 		public Point(double x,double y)
 		{
@@ -50,7 +50,7 @@ namespace PointApplication
 	
 	public class PointDemo
 	{
-		static void Main(string[] args)
+		public static void Main(string[] args)
 		{
 			Point point = new Point(4,5);   //C#中类是引用类型，所以实体化类对象都必须使用new运算符，
 			point.Show();

@@ -2,7 +2,7 @@ using System;    /*using关键字用在程序中包含System命名空间*/
 
 namespace HelloWorldApplication      /*一个namespace里包含一系列的类*/
 {
-	class HelloWorld
+	class HelloWorld                 //C#与Java不同的是，文件名可以不同于类的名称
 	{
 		static void Main(string[] args)       //注意C#中Main函数必须大写，Main方式是所有C#程序的入口点
 		{

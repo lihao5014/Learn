@@ -31,7 +31,7 @@ namespace RectangleApplication
 	
 	class ExecuteRectangle
 	{
-		static void Main(string[] args)
+		public static void Main(string[] args)      //C#中Main函数可以不用加public权限，但Java中main函数必须加public权限
 		{
 			Rectanle rectangle = new Rectanle();
 			rectangle.AcceptDetail();
