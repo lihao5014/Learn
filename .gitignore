@@ -33,6 +33,11 @@
 *.out
 *.app
 
+# CSharp
+
+# Java
+*.class
+
 # Qt-es
 *.qmake.cache
 *.qmake.stash
@@ -56,7 +61,5 @@ x64
 Debug
 Release
 
-# CSharp
-
-# Java
-*.class
+# Source Insight4-es
+*.si4project
