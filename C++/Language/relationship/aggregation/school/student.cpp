@@ -1,7 +1,7 @@
+#include "student.h"    //C++源文件中头文件包含顺序：源文件对应的头文件，C标准库头文件，C++标准库头文件，第三方库头文件，本项目内编写的头文件。
 #include <cstdio>
 #include <cstring>
 #include <cassert>
-#include "student.h"
 
 Student::Student(const char* name,const int age)
 {
@@ -67,6 +67,8 @@ Student& Student::operator =(const Student& other)
 	return *this;
 }
 
+//因为Student类的构造函数，赋值运算符和setName方法已经保证了，name成员指针不可能为空。
+//所以重载等于运算符时，other.name指针可以不用再做判空处理。
 bool Student::operator ==(const Student& other)const
 {
 	if(age == other.age && strcmp(name,other.name) == 0)

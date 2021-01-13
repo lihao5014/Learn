@@ -1,5 +1,5 @@
-#include <iostream>
 #include "teacher.h"
+#include <iostream>
 
 using std::string;
 using std::cout;

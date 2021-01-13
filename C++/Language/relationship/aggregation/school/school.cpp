@@ -1,5 +1,5 @@
-#include <iostream>
 #include "school.h"
+#include <iostream>
 #include "grade.h"
 
 using namespace std;

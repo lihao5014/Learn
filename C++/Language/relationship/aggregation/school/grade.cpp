@@ -1,5 +1,5 @@
-#include <iostream>
 #include "grade.h"
+#include <iostream>
 #include "clazz.h"
 #include "debug.h"
 

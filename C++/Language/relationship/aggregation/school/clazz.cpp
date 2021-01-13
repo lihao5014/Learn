@@ -1,6 +1,6 @@
-#include <iostream>
-#include <cstdlib>
 #include "clazz.h"
+#include <cstdlib>
+#include <iostream>
 
 using std::string;
 using std::list;
