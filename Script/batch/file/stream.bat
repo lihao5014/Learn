@@ -2,8 +2,8 @@
 rem stdin标准输入，重定向时也可以使用数字0表示。
 rem stdout标准输出，重定向时也可以使用数字1表示。
 rem stderr错误输出，重定向时也可以使用数字2表示。
-rem >重定向符，例如：dir > dir.txt,生成一个新文件dir.txt，并将dit命令打印出来的文件或者目录列表输出到dit.txt文件中。
-rem >>重定向符，例如：dir >> dir.txt,将dit命令打印出来的文件或者目录列表输出到dit.txt文件中,如果dir.txt文件存在则添加，否则新建dir.txt文件。
+rem >重定向符，例如：dir > dir.txt,生成一个新文件dir.txt，并将dir命令打印出来的文件或者目录列表输出到dir.txt文件中。
+rem >>重定向符，例如：dir >> dir.txt,将dir命令打印出来的文件或者目录列表输出到dir.txt文件中,如果dir.txt文件存在则添加，否则新建dir.txt文件。
 rem <将某一文件作为内容输入
 
 dir > dir.txt
