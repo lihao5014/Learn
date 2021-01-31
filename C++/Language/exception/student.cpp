@@ -47,7 +47,7 @@ Student::~Student()
 
 void Student::setData(const char* str,const int num)
 {
-	if(number < 0 || number > 9999){
+	if(num < 0 || num > 9999){
 		throw name;
 	}
 	
@@ -73,7 +73,7 @@ const char* Student::getName()const
 
 void Student::setNumber(const int num)
 {
-	if(number < 0 || number > 9999){
+	if(num < 0 || num > 9999){
 		throw name;
 	}
 	
@@ -113,7 +113,6 @@ operator >>(istream &is,Student& stud)
 int main()
 {
 	Student stud("amy",456);
-	
 	stud.display();
 	
 	try{
