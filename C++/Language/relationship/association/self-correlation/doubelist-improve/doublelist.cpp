@@ -8,7 +8,7 @@
 // #undef _DEBUG_
 
 #define _CHANGE_WAY_
-// #undef _CHANGE_WAY_
+#undef _CHANGE_WAY_
 
 #ifdef _DEBUG_
 #define BreakPoint(index)   \
@@ -37,6 +37,8 @@ DoubleList::DoubleList()
 		m_pheadNode->prev = nullptr;     //Ê¹ÓÃnew²Ù×÷·ûÉêÇë¶ÑÄÚ´æ¿Õ¼äÊ±£¬¿ÉÒÔ²»ÓÃ¶ÔnewÔËËã·ûµÄ·µ»ØÖµ×öÅĞ¿Õ´¦Àí¡£ÒòÎªnewÔËËã·ûÉêÇëÄÚ´æ¿Õ¼äÊ§°ÜÊ±£¬
 		m_pheadNode->data = 0;           //»áÖ±½ÓÅ×³östd::bad_allocÒì³£¡£µ«Ê¹ÓÃmallocº¯ÊıÉêÇë¶ÑÄÚ´æÊ±£¬ĞèÒª¶Ômallocº¯ÊıµÄ·µ»ØÖµ×öÅĞ¿Õ´¦Àí¡£
 		m_pheadNode->next = nullptr;  //C++ÖĞÊ¹ÓÃnewÔËËã·ûÉêÇë¶ÑÄÚ´æ¿Õ¼äÊ±£¬Ò»°ã²»×öÒì³£²¶»ñ´¦Àí¡£
+		
+		m_ptailNode = m_pheadNode;   //ĞÂ¹¹½¨µÄË«ÏòÁ´±í£¬ÓÉÓÚ»¹Ã»ÓĞÍùÆäÖĞÌí¼ÓĞÂ½Úµã£¬ËùÒÔÎ²½ÚµãºÍÍ·½áµãÖ¸ÏòÏàÍ¬µÄÎ»ÖÃ¡£
 	}
 	catch(const std::bad_alloc& e)
 	{
@@ -67,12 +69,20 @@ DoubleList::DoubleList(const DoubleList& other)
 		pnode->next = pnewNode;        //Á´±íÖĞµÄ×îºóÒ»¸ö½ÚµãÖ¸ÏòĞÂ´´½¨µÄ½Úµã
 		pnode = pnode->next;           //ÈÃµ±Ç°Á´±íµÄ½ÚµãÖ¸ÕëÏòÏÂÒ»¸ö½ÚµãÒÆ¶¯£¬¼´ÒÆÏò¸Õ¸Õ²åÈëµÄĞÂ½Úµã
 	}
+	
+	m_ptailNode = pnode;    //±£´æË«ÏòÁ´±íÎ²½ÚµãµÄÎ»ÖÃ£¬ÒÔ·½±ã·´Ïò±éÀú
 }
 
 DoubleList::~DoubleList()
 {
 	clear();           //½«Ë«ÏòÁ´±íÖĞµÄ½ÚµãÇå¿Õ£¬Ö»±£ÁôÍ·½áµã¡£
-	delete m_pheadNode;    //ÊÍ·ÅÍ·½áµãÄÚ´æ
+	
+	if(m_pheadNode != nullptr)
+	{
+		delete m_pheadNode;    //ÊÍ·ÅÍ·½áµãÄÚ´æ
+		m_pheadNode = nullptr;
+	}
+	m_ptailNode = m_pheadNode;   //Î²½ÚµãÖ»ÊÇÒ»¸ö±êÊ¶Ö¸Õë£¬²»ÏñÍ·½áµãÒ»ÑùÎªÆä¿ª±ÙÁËÄÚ´æ¿Õ¼äµÄ¡£Î²½ÚµãÃ»ÓĞ¿ª±ÙÄÚ´æ¿Õ¼ä£¬ËùÒÔÎö¹¹Ê±×ÔÈ»Ò²²»ĞèÒªdelete¡£
 }
 
 DoubleList& DoubleList::operator =(const DoubleList& other)
@@ -95,6 +105,7 @@ DoubleList& DoubleList::operator =(const DoubleList& other)
 		pnode = pnode->next;           //ÈÃµ±Ç°Á´±íµÄ½ÚµãÖ¸ÕëÏòÏÂÒ»¸ö½ÚµãÒÆ¶¯£¬¼´ÒÆÏò¸Õ¸Õ²åÈëµÄĞÂ½Úµã
 	}
 	
+	m_ptailNode = pnode;
 	return *this;
 }
 
@@ -154,6 +165,9 @@ void DoubleList::init(int size,const data_t data)
 			m_pheadNode->next->prev = pnewNode;
 		}
 		m_pheadNode->next = pnewNode;      //Í·½áµãµÄºóĞøÖ¸ÏòĞÂ´´½¨µÄ½Úµã
+		
+		if(m_length == size + 1)
+			m_ptailNode = pnewNode;      //ĞÂ´´½¨µÄ½Úµã´ÓÁ´±íÍ··½ÏòÒÀ´Î²åÈëµÄ»°£¬ÄÇÃ´µÚÒ»¸ö²åÈëµÄĞÂ½¨½Úµã¾ÍÊÇÎ²½Úµã¡£
 	}
 }
 #else
@@ -179,6 +193,8 @@ void DoubleList::init(int size,const data_t data)
 		pnode->next = pnewNode;      //Á´±íÖĞ×îºóÒ»¸ö½ÚµãµÄºóĞøÖ¸ÏòĞÂ´´½¨µÄ½Úµã
 		pnode = pnode->next;        //ÈÃÁ´±íµÄ½ÚµãÖ¸ÕëÏòÁ´±íÖĞµÄÏÂÒ»¸ö½ÚµãÒÆ¶¯£¬¼´ÒÆÏò¸Õ¸Õ²åÈëµÄĞÂ½Úµã
 	}
+	
+	m_ptailNode = pnode;
 }
 #endif
 
@@ -197,19 +213,19 @@ int DoubleList::length()
 }
 
 void DoubleList::append(const data_t data)
-{
-	Node *pnode = m_pheadNode;
-	while(pnode->next != nullptr)    //½«pnode½ÚµãÖ¸ÕëÒÆ¶¯µ½Á´±íÖĞ×îºóÒ»¸ö½ÚµãµÄÎ»ÖÃÉÏ
-	{
-		pnode = pnode->next;
-	}
-	
+{	
 	Node *pnewNode = new Node;       //´´½¨ĞÂµÄ½Úµã£¬²¢½«Æä³õÊ¼»¯
-	pnewNode->prev = pnode;
+	pnewNode->prev = m_ptailNode;
 	pnewNode->data = data;
 	pnewNode->next = nullptr;
 	
-	pnode->next = pnewNode;      //½«ĞÂ´´½¨µÄ½Úµã½ÓÈëÔ­À´µÄÁ´±íÖĞ
+	m_ptailNode->next = pnewNode;      //½«ĞÂ´´½¨µÄ½Úµã½ÓÈëÔ­À´µÄÁ´±íÖĞ
+#ifndef _CHANGE_WAY_
+	m_ptailNode = m_ptailNode->next;
+#else
+	m_ptailNode = pnewNode;     //½«Î²½ÚµãÉèÖÃÎªĞÂ×·¼ÓµÄ½Úµã
+#endif
+
 	m_length++;
 }
 
@@ -220,6 +236,11 @@ void DoubleList::prepend(const data_t data)
 	pnewNode->data = data;
 	pnewNode->next = m_pheadNode->next;
 	
+	if(m_length == 0)      //Èç¹û×·¼Ó½ÚµãÒÔÇ°£¬Á´±íÎª¿Õ£¬ÄÇÃ´ĞÂ×î½üµÄ½Úµã¾ÍÊÇÎ²½Úµã
+	{
+		m_ptailNode = pnewNode;
+	}
+	
 	if(m_pheadNode->next != nullptr)
 	{
 		m_pheadNode->next->prev = pnewNode;
@@ -228,10 +249,17 @@ void DoubleList::prepend(const data_t data)
 	++m_length;
 }
 
+#ifndef _CHANGE_WAY_
 bool DoubleList::insert(int pos,const data_t data)
 {
 	if(pos < 0 || pos > m_length)
 		return false;
+
+#ifndef _CHANGE_WAY_
+	bool isInsertAtTail = (pos == m_length) ? true : false;  //Èç¹ûÖ»ĞèÒªÌõ¼şÔËËã·û½á¹û·µ»ØboolÖµÊ±£¬?Óë:¿ÉÒÔÊ¡ÂÔ²»Ğ´
+#else
+	bool isInsertAtTail = (pos == m_length);
+#endif
 	
 	Node *pnode = m_pheadNode;   //Èç¹ûÒªÔöÉ¾Á´±íÖĞµÄ½Úµã£¬ÄÇÃ´½ÚµãÖ¸Õë±ØĞë´ÓÍ·½áµãÎ»ÖÃ¿ªÊ¼±éÀú¡£
 	while(pos--)
@@ -249,15 +277,65 @@ bool DoubleList::insert(int pos,const data_t data)
 		pnode->next->prev = pnewNode;    //Ë«ÏòÁ´±íÓëµ¥ÏòÁ´±í²»Í¬£¬ÔöÉ¾½ÚµãÊ±£¬²»½öÒª´¦ÀíºóĞøÁ¬½ÓÎÊÌâ£¬Ò²ĞèÒª´¦ÀíÇ°ÇıÁ¬½ÓÎÊÌâ¡£
 	}
 	pnode->next = pnewNode;
+	
+	if(isInsertAtTail)      //Èç¹ûĞÂ²åÈëµÄ½ÚµãÎª´ÓË«ÏòÁ´±íµÄÎ²²¿²åÈë£¬ÄÇÃ´Î²½ÚµãÖ¸ÕëĞèÒªÒÆ¶¯µ½ĞÂ²åÈëµÄ½ÚµãÉÏ¡£
+	{                       //Èç¹ûĞÂ²åÈëµÄ½Úµã²»ÊÇ´ÓÁ´±íµÄÎ²²¿²åÈë£¬ÄÇÃ´m_ptailNodeÖ¸Õë²»ĞèÒª×öÈÎºÎÒÆ¶¯¡£
+		m_ptailNode = m_ptailNode->next;
+	}
+	
 	m_length++;
 	return true;
 }
+#else
+bool DoubleList::insert(int pos,const data_t data)
+{
+	if(pos < 0 || pos > m_length)
+		return false;
+
+	int count = pos;             //¶¨ÒåÒ»¸öĞÂµÄcount±äÁ¿£¬ÊÇÎªÁËÈÃinsertº¯Êı´«ÈëµÄpos²ÎÊı±£³Ö²»±ä¡£
+	Node *pnode = m_pheadNode;   //Èç¹ûÒªÔöÉ¾Á´±íÖĞµÄ½Úµã£¬ÄÇÃ´½ÚµãÖ¸Õë±ØĞë´ÓÍ·½áµãÎ»ÖÃ¿ªÊ¼±éÀú¡£
+	while(count--)
+	{
+		pnode = pnode->next;      //½«½ÚµãÖ¸ÕëÒÆ¶¯µ½Òª²åÈëÎ»ÖÃµÄÇ°Ò»¸ö½ÚµãÉÏ¡£
+	}
+	
+	Node *pnewNode = new Node;
+	pnewNode->prev = pnode;
+	pnewNode->data = data;
+	pnewNode->next = pnode->next;
+	
+	if(pnode->next != nullptr)
+	{
+		pnode->next->prev = pnewNode;    //Ë«ÏòÁ´±íÓëµ¥ÏòÁ´±í²»Í¬£¬ÔöÉ¾½ÚµãÊ±£¬²»½öÒª´¦ÀíºóĞøÁ¬½ÓÎÊÌâ£¬Ò²ĞèÒª´¦ÀíÇ°ÇıÁ¬½ÓÎÊÌâ¡£
+	}
+	pnode->next = pnewNode;
+	
+	if(pos == m_length)     //Èç¹ûĞÂ²åÈëµÄ½ÚµãÎª´ÓË«ÏòÁ´±íµÄÎ²²¿²åÈë£¬ÄÇÃ´Î²½ÚµãÖ¸ÕëĞèÒªÒÆ¶¯µ½ĞÂ²åÈëµÄ½ÚµãÉÏ¡£
+	{                       //Èç¹ûĞÂ²åÈëµÄ½Úµã²»ÊÇ´ÓÁ´±íµÄÎ²²¿²åÈë£¬ÄÇÃ´m_ptailNodeÖ¸Õë²»ĞèÒª×öÈÎºÎÒÆ¶¯¡£
+		m_ptailNode = pnewNode;
+	}
+	
+	m_length++;
+	return true;
+}
+#endif
 
 #ifndef _CHANGE_WAY_
 bool DoubleList::remove(int pos)
 {
 	if(pos < 0 || pos >= m_length)
 		return false;
+	
+	if(pos == m_length - 1)
+	{
+		m_ptailNode = m_ptailNode->prev;     //Èç¹ûÒÆ³ıµÄÎ»ÖÃÊÇÎ²½Úµã£¬ÄÇÃ´Î²½ÚµãÖ¸ÕëĞèÒªÏòÇ°Í·½áµã·½ÏòÒÆ¶¯Ò»¸ö½Úµã
+		                                    //Èç¹ûÒÆ³ıµÄÎ»ÖÃ²»ÊÇÎ²½Úµã£¬ÄÇÃ´m_ptailNodeÖ¸Õë²»ĞèÒª×öÈÎºÎÒÆ¶¯¡£
+		delete m_ptailNode->next;
+		m_ptailNode->next = nullptr;
+		
+		--m_length;
+		return true;
+	}
 	
 	Node *pnode = m_pheadNode;
 	while(pos--)
@@ -283,6 +361,17 @@ bool DoubleList::remove(int pos)
 {
 	if(pos < 0 || pos >= m_length)
 		return false;
+	
+	if(pos == m_length - 1)
+	{
+		m_ptailNode = m_ptailNode->prev;     //Èç¹ûÒÆ³ıµÄÎ»ÖÃÊÇÎ²½Úµã£¬ÄÇÃ´Î²½ÚµãÖ¸ÕëĞèÒªÏòÇ°Í·½áµã·½ÏòÒÆ¶¯Ò»¸ö½Úµã
+		                                    //Èç¹ûÒÆ³ıµÄÎ»ÖÃ²»ÊÇÎ²½Úµã£¬ÄÇÃ´m_ptailNodeÖ¸Õë²»ĞèÒª×öÈÎºÎÒÆ¶¯¡£
+		delete m_ptailNode->next;
+		m_ptailNode->next = nullptr;
+		
+		m_length--;
+		return true;
+	}
 	
 	Node *pnode = m_pheadNode;
 	while(pos--)
@@ -316,6 +405,11 @@ bool DoubleList::remove(const data_t data)
 	{
 		if(pnode->next->data == data)
 		{
+			if(pnode->next == m_ptailNode)    //Èç¹ûÒÆ³ıµÄ½Úµã°üº¬ÁËÎ²½Úµã£¬ÄÇÃ´Î²½ÚµãÖ¸ÕëÏÈÏòÇ°ÒÆ¶¯Ò»¸ö½Úµã¡£
+			{
+				m_ptailNode = m_ptailNode->prev;
+			}
+			
 			Node *qnode = pnode->next->next;     //±£´æĞèÒªÉ¾³ı½ÚµãµÄºóĞø
 			if(qnode != nullptr)
 			{
@@ -353,6 +447,11 @@ bool DoubleList::remove(const data_t data)
 			continue;
 		}
 		
+		if(qnode == m_ptailNode)
+		{
+			m_ptailNode = pnode;
+		}
+		
 		pnode->next = qnode->next;
 		if(qnode->next != nullptr)
 		{
@@ -376,9 +475,13 @@ void DoubleList::popFront()
 	if(m_length < 1)   //Á´±íÖĞÃ»ÓĞÄÚÈİ£¬×ÔÈ»Ò²²»ÄÜÔÙµ¯³ö½ÚµãÁË
 		return ;
 	
+	if(m_length == 1)   //Èç¹ûË«ÏòÁ´±íÖĞÖ»ÓĞÒ»¸ö½ÚµãÊ±£¬ÄÇÃ´µ¯³öÁ´±íÇ°ÃæµÄ½ÚµãÖµ£¬Î²½ÚµãÖ¸ÕëĞèÒªÏòÇ°ÒÆ¶¯µ½Í·½áµãÎ»ÖÃÉÏ¡£
+	{
+		m_ptailNode = m_ptailNode->prev;
+	}
+	
 	Node* pnode = m_pheadNode->next;   //»ñÈ¡Òªµ¯³öµÄ½Úµã
 	m_pheadNode->next = pnode->next;
-	
 	if(pnode->next != nullptr)
 	{
 		pnode->next->prev = m_pheadNode;     //ÒÆ³ı½ÚµãÊ±£¬´¦ÀíÁ´±íÖĞ½ÚµãµÄÇ°ÇıÁ¬½ÓÎÊÌâ
@@ -392,6 +495,11 @@ void DoubleList::popFront()
 {
 	if(m_length < 1)   //Á´±íÖĞÃ»ÓĞÄÚÈİ£¬×ÔÈ»Ò²²»ÄÜÔÙµ¯³ö½ÚµãÁË
 		return ;
+
+	if(m_length == 1)   //Èç¹ûË«ÏòÁ´±íÖĞÖ»ÓĞÒ»¸ö½ÚµãÊ±£¬ÄÇÃ´µ¯³öÁ´±íÇ°ÃæµÄ½ÚµãÖµ£¬Î²½ÚµãÖ¸ÕëĞèÒªÏòÇ°ÒÆ¶¯µ½Í·½áµãÎ»ÖÃÉÏ¡£
+	{
+		m_ptailNode = m_pheadNode;
+	}
 	
 	Node* pnode = m_pheadNode->next->next;   //»ñÈ¡Òªµ¯³ö½ÚµãµÄºóĞø
 	if(pnode != nullptr)
@@ -405,39 +513,17 @@ void DoubleList::popFront()
 }
 #endif
 
-#ifndef _CHANGE_WAY_
 void DoubleList::popBack()
 {
 	if(m_length < 1)   //Á´±íÖĞÃ»ÓĞÄÚÈİ£¬×ÔÈ»Ò²²»ÄÜÔÙµ¯³ö½ÚµãÁË
 		return ;
+
+	m_ptailNode = m_ptailNode->prev;   //ÒòÎªÎ²½Úµã»á±»µ¯³ö£¬ËùÒÔÏÈ½«Î²½ÚµãÖ¸ÕëÏòÇ°ÒÆ¶¯Ò»¸ö½Úµã¡£
 	
-	Node *pnode = m_pheadNode;
-	while(pnode->next->next != nullptr)
-	{
-		pnode = pnode->next;     //½«½ÚµãÖ¸ÕëÒÆ¶¯µ½Î²½ÚµãµÄÇ°Ò»¸ö½ÚµãÉÏ
-	}
-	
-	delete pnode->next;
-	pnode->next = nullptr;   //½«Î²½ÚµãÒÆ³ıÒÔºó£¬ÒÔÇ°µÄµ¹ÊıµÚ¶ş¸ö½Úµã¾Í±äÎªÁËÎ²½Úµã£¬ËùÒÔ²»ĞèÒªÔÙ´¦ÀíÎ²½ÚµãµÄÇ°ÇıÁ¬½ÓÎÊÌâ¡£
+	delete m_ptailNode->next;
+	m_ptailNode->next = nullptr;   //½«Î²½ÚµãÒÆ³ıÒÔºó£¬ÒÔÇ°µÄµ¹ÊıµÚ¶ş¸ö½Úµã¾Í±äÎªÁËÎ²½Úµã£¬ËùÒÔ²»ĞèÒªÔÙ´¦ÀíÎ²½ÚµãµÄÇ°ÇıÁ¬½ÓÎÊÌâ¡£
 	m_length--;
 }
-#else
-void DoubleList::popBack()
-{
-	if(m_length < 1)   //Á´±íÖĞÃ»ÓĞÄÚÈİ£¬×ÔÈ»Ò²²»ÄÜÔÙµ¯³ö½ÚµãÁË
-		return ;
-	
-	Node *pnode = m_pheadNode;
-	while(pnode->next!= nullptr)
-	{
-		pnode = pnode->next;     //½«½ÚµãÖ¸ÕëÒÆ¶¯µ½Î²½ÚµãÉÏ
-	}
-	
-	pnode->prev->next = nullptr;
-	delete pnode;
-	--m_length;
-}
-#endif
 
 #ifndef _CHANGE_WAY_
 void DoubleList::clear()       //clear()Çå¿ÕÁ´±í·½·¨ÖĞ£¬¿ÉÒÔ²»ÓÃÃ¿É¾³ıÒ»¸ö½Úµã£¬´¦ÀíºóĞø½ÚµãµÄÇ°ÇıÎÊÌâ¡££¬
@@ -454,6 +540,7 @@ void DoubleList::clear()       //clear()Çå¿ÕÁ´±í·½·¨ÖĞ£¬¿ÉÒÔ²»ÓÃÃ¿É¾³ıÒ»¸ö½Úµã£¬
 		pnode = qnode;
 	}
 	
+	m_ptailNode = m_pheadNode;
 	m_pheadNode->next = nullptr;
 	m_length = 0;
 }
@@ -463,12 +550,7 @@ void DoubleList::clear()     //clear()Çå¿ÕÁ´±í·½·¨ÖĞ£¬¿ÉÒÔ²»ÓÃÃ¿É¾³ıÒ»¸ö½Úµã£¬´¦
 	if(m_length == 0)
 		return ;
 	
-	Node *pnode = m_pheadNode;       //Èç¹ûÒªÔöÉ¾Á´±íÖĞµÄ½Úµã£¬ÄÇÃ´½ÚµãÖ¸Õë±ØĞë´ÓÍ·½áµãÎ»ÖÃ¿ªÊ¼±éÀú¡£
-	while(pnode->next != nullptr)
-	{
-		pnode = pnode->next;
-	}
-	
+	Node *pnode = m_ptailNode;
 	Node *qnode = nullptr;
 	while(pnode->prev != nullptr)       //´ÓºóÍùÇ°ÒÀ´ÎÏú»ÙË«ÏòÁ´±íÖĞ±£´æµÄ½Úµã
 	{
@@ -477,6 +559,7 @@ void DoubleList::clear()     //clear()Çå¿ÕÁ´±í·½·¨ÖĞ£¬¿ÉÒÔ²»ÓÃÃ¿É¾³ıÒ»¸ö½Úµã£¬´¦
 		pnode = qnode;
 	}
 	
+	m_ptailNode = m_pheadNode;
 	m_pheadNode->next = nullptr;
 	m_length = 0;
 }
@@ -502,13 +585,7 @@ data_t& DoubleList::back()
 		exit(-1);
 	}
 	
-	Node *pnode = m_pheadNode->next;
-	for(int i=1;i<m_length;++i)
-	{
-		pnode = pnode->next;
-	}
-	
-	return pnode->data;
+	return m_ptailNode->data;
 }
 
 //º¯ÊıÉè¼ÆµÄÈı¶ÎÊ½£ºÊäÈë²ÎÊı¼ì²â£¬º¯ÊıÊäÈë´¦ÀíºÍ·µ»ØÖµÊä³ö¡£
@@ -607,30 +684,27 @@ void DoubleList::reverse()   //Î²½ÚµãÍùÍ·½áµã·½ÏòÒÀ´ÎÒÆ¶¯£¬´Ó¶øÊµÏÖµ¹ĞòÅÅÁĞ
 	if(m_length < 2)
 		return ;
 	
-	Node *pnode = m_pheadNode;
-	while(pnode->next != nullptr)
-	{
-		pnode = pnode->next;        //½«pnode½ÚµãÖ¸ÕëÒÆ¶¯µ½Î²½ÚµãÉÏ
-	}
-	
-	Node *qnode = pnode->prev;      //½«qnode½ÚµãÖ¸ÕëÖ¸ÏòÎ²½ÚµãµÄÇ°Ò»¸ö½ÚµãÉÏ
-	Node *rnode = m_pheadNode;
+	Node *pnode = nullptr;            
+	Node *qnode = m_pheadNode;
+	Node* const ptailNode = m_pheadNode->next;     //±£´æµ¹ĞòÇ°Á´±íÖĞÍ·½áµãºóµÄµÚÒ»¸ö½Úµã£¬ÒòÎªËüÔÚÅÅĞòÒÔºó½«±äÎªÎ²½Úµã¡£
 	for(int i=m_length -1;i>0;--i)
 	{
-		pnode->next = rnode->next;
-		pnode->prev = rnode;
-		qnode->next = nullptr;     //Î²½ÚµãÍùÁ´±íÍ··½Ïò²åÈëÁËÒÔºó£¬qnode¾Í±äÎªÁËÎ²½Úµã
+		pnode = m_ptailNode;                //½«pnode½ÚµãÖ¸ÕëÒÆ¶¯µ½Î²½ÚµãÉÏ
+		m_ptailNode = m_ptailNode->prev;    //½«Î²½ÚµãÖ¸ÕëÏòÇ°ÒÆ¶¯Ò»¸ö½Úµã
+		m_ptailNode->next = nullptr;        //ÒÔÇ°µÄµ¹ÊıµÚ¶ş¸ö½Úµã±äÎªÁËÎ²½Úµã£¬²¢½«ÒÔÇ°µÄÎ²½Úµã´ÓË«ÏòÁ´±íÖĞ¶Ï¿ª£¬±äÎª¹ÂÁ¢½Úµã¡£
 		
-		if(rnode->next != nullptr)
+		pnode->next = qnode->next;
+		pnode->prev = qnode;
+		
+		if(qnode->next != nullptr)
 		{
-			rnode->next->prev = pnode;
+			qnode->next->prev = pnode;
 		}
-		rnode->next = pnode;       //½«Î²½ÚµãÒÆ¶¯µ½Í·½áµãºóµÄÒ»¸ö½ÚµãÎ»ÖÃÉÏ
-		rnode = rnode->next;       //½«rnode½ÚµãÖ¸ÕëÒÆ¶¯µ½¸Õ²åÈëµÄ½ÚµãÉÏ
-		
-		pnode = qnode;
-		qnode = qnode->prev;
+		qnode->next = pnode;       //½«Î²½ÚµãÒÆ¶¯µ½Í·½áµãºóµÄÒ»¸ö½ÚµãÎ»ÖÃÉÏ
+		qnode = qnode->next;       //½«qnode½ÚµãÖ¸ÕëÒÆ¶¯µ½¸Õ²åÈëµÄ½ÚµãÉÏ
 	}
+	
+	m_ptailNode = ptailNode;
 }
 #elif 1
 void DoubleList::reverse()     //Í·½áµãºóµÄµÚÒ»¸ö½ÚµãÍùÎ²½Úµã·½ÏòÒÆ¶¯´Ó¶øÊµÏÖµ¹ĞòÅÅÁĞ
@@ -638,13 +712,9 @@ void DoubleList::reverse()     //Í·½áµãºóµÄµÚÒ»¸ö½ÚµãÍùÎ²½Úµã·½ÏòÒÆ¶¯´Ó¶øÊµÏÖµ¹Ğ
 	if(m_length < 2)     //Á´±íÖĞĞ¡ÓÚ2¸ö½Úµã£¬¾Í²»ÓÃµ¹ĞòÁË¡£ÒòÎªÖ»ÓĞÒ»¸ö½ÚµãµÄ»°µ¹ĞòÁËÒÔºó»¹ÊÇÔ­Ñù
 		return ;
 	
-	Node *pnode = m_pheadNode;
-	while(pnode->next != nullptr)
-	{
-		pnode = pnode->next;       //»ñÈ¡Î²½ÚµãÖ¸ÕëµÄÎ»ÖÃ
-	}
-	
-	Node* const qnode = pnode;     //qnode½ÚµãÖ¸ÕëÓÀÔ¶±ê¼Çµ¹ĞòÒÔÇ°£¬Î²½ÚµãÎ»ÖÃ
+	Node *pnode = nullptr;
+	Node* const qnode = m_ptailNode;     //qnode½ÚµãÖ¸ÕëÓÀÔ¶±ê¼Çµ¹ĞòÒÔÇ°£¬Î²½ÚµãÎ»ÖÃ
+	m_ptailNode = m_pheadNode->next;     //µ¹ĞòÇ°µÄµÚÒ»¸ö½Úµã£¬ÔÚµ¹Ğòºó¾Í±äÎªÁËÎ²½Úµã
 	while(qnode->prev != m_pheadNode)
 	{
 		pnode = m_pheadNode->next;
@@ -665,13 +735,8 @@ void DoubleList::reverse()    //Ö»½»»»Á´±íÖĞÇ°ºó½ÚµãÖĞµÄÊı¾İÓò£¬µ«ÊÇ²»×öÒÆ¶¯½Úµã
 	if(m_length < 2)
 		return ;
 	
-	Node *pnode = m_pheadNode;
-	while(pnode->next != nullptr)
-	{
-		pnode = pnode->next;     //»ñÈ¡Î²½ÚµãµÄÎ»ÖÃ
-	}
-	
-	Node *qnode = m_pheadNode->next;
+	Node *pnode = m_ptailNode;         //Èç¹ûË«ÏòÁ´±íÖĞ±£ÁôÁËÎ²½Úµã³ÉÔ±Ö¸Õë£¬ÄÇÃ´¾Í¿ÉÒÔºÜ·½±ã»ñÈ¡Î²½ÚµãÎ»ÖÃ£¬
+	Node *qnode = m_pheadNode->next;   //¶ø²»ÓÃÔÙ´ÓÍ·½áµã¿ªÊ¼ÒÀ´Î±éÀú£¬À´»ñÈ¡Î²½ÚµãµÄÎ»ÖÃ¡£Õâ¾ÍÊÇË«ÏòÁ´±íÖĞ±£ÁôÎ²½Úµã³ÉÔ±Ö¸ÕëµÄºÃ´¦¡£
 	for(int i = m_length/2;i>0;--i)
 	{
 		swap(qnode->data,pnode->data);
@@ -764,7 +829,7 @@ void DoubleList::sort(SortType sortType)    //Ñ¡ÔñÅÅĞò
 #endif
 
 #ifndef _CHANGE_WAY_
-void DoubleList::display()const
+void DoubleList::show()const
 {
 	if(m_length < 1)     //Èç¹ûÁ´±íÖĞÒ»¸ö½ÚµãÒ²Ã»ÓĞ£¬ÄÇÃ´¾ÍÃ»ÓĞĞèÒªÏÔÊ¾µÄÄÚÈİÁË£¬Ö±½ÓÍË³ö
 		return ;
@@ -777,7 +842,7 @@ void DoubleList::display()const
 	cout<<endl;
 }
 #else
-void DoubleList::display()const
+void DoubleList::show()const
 {
 	if(m_length < 1)     //Èç¹ûÁ´±íÖĞÒ»¸ö½ÚµãÒ²Ã»ÓĞ£¬ÄÇÃ´¾ÍÃ»ÓĞĞèÒªÏÔÊ¾µÄÄÚÈİÁË£¬Ö±½ÓÍË³ö
 		return ;
@@ -792,18 +857,12 @@ void DoubleList::display()const
 }
 #endif
 
-void DoubleList::rdisplay()const
+void DoubleList::rshow()const
 {
 	if(m_length < 1)
 		return ;
 	
-	Node *pnode = m_pheadNode;
-	while(pnode->next != nullptr)
-	{
-		pnode = pnode->next;
-	}
-	
-	BreakPoint(1);
+	Node *pnode = m_ptailNode;
 	for(;pnode->prev != nullptr;pnode = pnode->prev)
 	{
 		cout<<pnode->data<<" ";
