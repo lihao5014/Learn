@@ -1,7 +1,7 @@
 #ifndef _ADD_H
 #define _ADD_H
 
-//这五种类型函数参数都可以构造函数重载，但调用的时候可能会有歧义
+//这五种类型函数参数都可以构成函数重载，但调用的时候可能会有歧义
 
 /*
 1.const int x=5 等价于 int const x=5
@@ -13,8 +13,6 @@
 C++规定const int& x=5合法以后，int add(int x,int y)与int add(const int& x,const int& y)的功能完全相同，
 并且引用传递的效率比值传递的高，不用多一次变量拷贝。所以C++建议函数传参都使用引用传递。
 */
-
-//
 
 int add(int x,int y);                   //等价于 int add(const int x,const int y)
 
@@ -31,8 +29,8 @@ int add(const int& x,const int& y);     //在VC++编译器中等价于 int add(const int
 class Test
 {
 public:
-	void foo();
-	void foo()const;
+	void foo();            //普通成员函数，相当于void foo(Test *this)。
+	void foo()const;       //成员函数后面加const关键字修饰，相当于void foo(const Test *this)。
 };
 
 #endif //_ADD_H
