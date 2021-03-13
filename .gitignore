@@ -54,6 +54,7 @@ ui_*.h
 *.Debug
 *.Release
 Makefile
+icon_resource.rc
 
 # VS-es
 .vs
