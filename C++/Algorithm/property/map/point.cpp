@@ -38,7 +38,7 @@ void Point::setY(const int y)
 
 int Point::getY()const
 {
-    map<string,int>::const_iterator iter = pos.find(point_y);   //const函数中必须使用const_const_iterator
+    map<string,int>::const_iterator iter = pos.find(point_y);   //const函数中必须使用const_iterator
     assert(iter != pos.end());
     
     return iter->second;
