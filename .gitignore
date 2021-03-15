@@ -57,6 +57,7 @@ Makefile
 icon_resource.rc
 
 # VS-es
+*.asm
 .vs
 x64
 Debug
