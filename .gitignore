@@ -58,6 +58,12 @@ icon_resource.rc
 
 # VS-es
 *.asm
+*.exp
+*.ilk
+*.pdb
+*.log
+*.tlog
+*.idb
 .vs
 x64
 Debug
