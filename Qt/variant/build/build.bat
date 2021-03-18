@@ -1,12 +1,12 @@
 @echo off
 echo=
 echo ---qmake compile start---
-qmake ../
+qmake ../variant.pro
 echo ---c++ compile start---
 echo=
-make -f Makefile
+make -f Makefile.Debug
 echo=
 
 echo ---running---
 echo=
-..\bin\
+..\bin\variant.exe
