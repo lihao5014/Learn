@@ -2,19 +2,15 @@ QT += core gui
 
 greaterThan(QT_MAJOR_VERSION,4): QT += widgets
 
-TARGET =
+TARGET = userinfo
 TEMPLATE = app
 
-CONFIG += c++11
+CONFIG += console c++11
 DESTDIR = $$PWD/bin
 
-HEADERS += include/
+HEADERS += include/userinfodialog.h
 
 SOURCES += source/main.cpp  \
-           source/
-
-FORMS += ui/
-
-RC_ICONS = resource/
+           source/userinfodialog.cpp
 
 INCLUDEPATH += $$PWD/include
