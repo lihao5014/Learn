@@ -46,6 +46,7 @@
 *.qbs.user
 *.qbs.user.*
 *.moc
+*.qm
 moc_*.cpp
 moc_*.h
 qrc_*.cpp
