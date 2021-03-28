@@ -2,9 +2,9 @@
 #include "ui_widget.h"
 #include "dialog.h"
 
-Widget::Widget(QWidget *parent) :
-    QWidget(parent),
-    ui(new Ui::Widget)
+Widget::Widget(QWidget *parent)
+   :QWidget(parent)
+   ,ui(new Ui::Widget)
 {
     ui->setupUi(this);
 

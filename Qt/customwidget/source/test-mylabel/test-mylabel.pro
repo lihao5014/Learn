@@ -11,9 +11,9 @@ include($$PWD/../mylabel/mylabel.pri)
 HEADERS += include/widget.h  \
 		   include/dialog.h
 
-SOURCES += source/main.cpp  \
-		   source/widget.cpp  \
-		   source/dialog.cpp
+SOURCES += src/main.cpp  \
+		   src/widget.cpp  \
+		   src/dialog.cpp
 
 FORMS += ui/widget.ui
 
