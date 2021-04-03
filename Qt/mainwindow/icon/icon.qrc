@@ -1,0 +1,16 @@
+<RCC>
+    <qresource prefix="/">
+        <file>document-new.png</file>
+        <file>document-open.png</file>
+        <file>document-save.png</file>
+        <file>document-save-as.png</file>
+        <file>editcopy.png</file>
+        <file>editcut.png</file>
+        <file>edit-find.png</file>
+        <file>editpaste.png</file>
+        <file>edit-undo.png</file>
+        <file>exit.png</file>
+        <file>gtk-close.png</file>
+        <file>help.png</file>
+    </qresource>
+</RCC>
