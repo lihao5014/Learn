@@ -14,8 +14,14 @@ public:
     explicit Widget(QWidget *parent = nullptr);
     ~Widget();
 
+signals:
+	void signalClose();
+
 public slots:
 	void onPopupClick();
+
+protected:
+    void closeEvent(QCloseEvent *event) override;
 
 private:
     Ui::Widget *ui;
