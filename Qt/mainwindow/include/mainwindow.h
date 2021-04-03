@@ -18,9 +18,6 @@ public:
 
 private:
     Ui::MainWindow *ui;
-
-    QPushButton *okBtn;
-    QLineEdit *edit;
 };
 
 #endif // _MAINWINDOW_H
