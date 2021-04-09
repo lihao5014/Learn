@@ -12,6 +12,6 @@ echo ---compile end---
 echo=
 echo ---delete objece file---
 del /f main.obj
-echo ---start main.exe
+echo ---start main.exe---
 echo=
 main.exe
