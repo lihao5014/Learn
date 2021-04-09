@@ -1,0 +1,156 @@
+1.打开MySQL数据库：
+（1）mysql -u root -p
+（2）mysql -u root -p 123456
+
+2.退出MySQL数据库：
+（1）quit
+（2）exit
+
+3.帮助命令：
+  help
+
+4.显示所有数据库：
+  show databases;
+
+5.创建数据库：
+  create database testdb;
+
+6.删除数据库：
+  drop database testdb;
+
+7.选择数据库：
+  use testdb;
+
+8.显示选择数据库名称：
+  select database();
+
+9.查看数据库中保存的所有表名：
+  show tables;
+
+10.创建表格：
+（1）create table student(id integer,name varchar(8));
+（2）create table student(id int primary key,name varchar(8));
+（3）create table student(id int,name varchar(8),primary key(id));
+
+11.更改表名：
+（1）rename table student to students;
+（2）alter table student rename to students;
+
+12.删除表格：
+  drop table students;
+
+13.查看表格结构：
+（1）desc students;
+（2）describe students;
+
+14.表格增加一列：
+  alter table students add age integer;
+
+15.表格删除一列：
+  alter table students drop age;
+
+16.表格插入一行：
+  insert into students values(1,"amy",25);
+
+17.表格删除一行：
+  delete from students where id = 1;
+
+18.表格更新一行：
+  update students set name = "lisa" where name = "amy";
+
+19.查看表格中的所有内容：
+  select * from students;
+
+20.查看表格一列内容：
+  select name from students;
+
+21.查看表格一行内容：
+  select * from students where name = "amy";
+
+22.限制查看数据行数：
+  select * from students where id < 5 limit 3;
+
+23.启动MySQL服务：
+  net start mysql
+
+24.关闭MySQL服务：
+  net stop mysql
+
+25.修改表格添加主键：
+  alter table students add primary key(id);
+
+26.对查询的结果进行排序：
+（1）select * from students order by age;
+（2）select * from students order by age asc;    //默认升序排列
+（3）select * from students order by age desc;   //降序排列
+
+27.表格导出为文本数据：
+  select * from students into outfile "C:/Users/Administrator/Desktop/students.txt";
+
+28.导入文本数据到表格：
+  load data infile "C:/Users/Administrator/Desktop/students.txt" into table students;
+
+29.复制表格结构：
+  create table students_copy like students;
+
+30.开始事务：（MySQL命令行的中默认事务都是自动提交的）
+（1）begin;       //开启事务以后，如果一个终端中的修改没有commit，那么另外一个终端中不会看到该修改
+（2）begin transaction;   //begin开启事务只对一次commit/rollback有效，commit/rollback以后begin开启的事务就默认被关闭了。
+（3）start transaction;
+
+31.事务确认提交：
+（1）commit;
+（2）commit work;
+
+32.事务回滚：
+（1）rollback;
+（2）rollback work;
+
+33.禁止事务自动提交：
+  set autocommit =0;    //相当于一直执行begin命令开启事务，单次commit/rollback不会导致事务关闭。
+
+34.开启事务自动提交：
+  set autocommit =1;
+
+35.显示所有存储引擎：
+  show engines;
+
+36.查看所有数据库容量大小：
+  select 
+  table_schema as '数据库',
+  sum(table_rows) as '记录数',
+  sum(truncate(data_length/1024/1024, 2)) as '数据容量(MB)',
+  sum(truncate(index_length/1024/1024, 2)) as '索引容量(MB)' 
+  from information_schema.tables 
+  group by table_schema 
+  order by sum(data_length) desc, sum(index_length) desc;
+
+37.查看所有数据库各表容量大小:
+  select 
+  table_schema as '数据库',
+  table_name as '表名',
+  table_rows as '记录数',
+  truncate(data_length/1024/1024, 2) as '数据容量(MB)',
+  truncate(index_length/1024/1024, 2) as '索引容量(MB)' 
+  from information_schema.tables 
+  order by data_length desc, index_length desc;
+
+38.查看指定数据库容量大小:
+  select 
+  table_schema as '数据库',
+  sum(table_rows) as '记录数',
+  sum(truncate(data_length/1024/1024, 2)) as '数据容量(MB)',
+  sum(truncate(index_length/1024/1024, 2)) as '索引容量(MB)' 
+  from information_schema.tables 
+  where table_schema='testdb';
+
+39.查看指定数据库各表容量大小:
+  select 
+  table_schema as '数据库',
+  table_name as '表名',
+  table_rows as '记录数',
+  truncate(data_length/1024/1024, 2) as '数据容量(MB)',
+  truncate(index_length/1024/1024, 2) as '索引容量(MB)' 
+  from information_schema.tables 
+  where table_schema='testdb' 
+  order by data_length desc, index_length desc;
