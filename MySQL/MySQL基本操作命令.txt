@@ -63,6 +63,7 @@
 
 20.查看表格一列内容：
   select name from students;
+  select name ,age from students;       //查看多列内容
 
 21.查看表格一行内容：
   select * from students where name = "amy";
@@ -79,7 +80,7 @@
 25.修改表格添加主键：
   alter table students add primary key(id);
 
-26.对查询的结果进行排序：
+26.对查询结果进行排序：
 （1）select * from students order by age;
 （2）select * from students order by age asc;    //默认升序排列
 （3）select * from students order by age desc;   //降序排列
@@ -101,6 +102,7 @@
 31.事务确认提交：
 （1）commit;
 （2）commit work;
+（3）end transaction;
 
 32.事务回滚：
 （1）rollback;

@@ -1,0 +1,147 @@
+1.SQLite3常用的系统命令：（系统命令是以‘.’点开头,并且没有用';'分号结尾的命令）
+（1）帮助：
+	.help
+	 
+（2）退出：
+    .quit
+	.exit
+	ctrl + c
+	 
+（3）查看表格结构：
+	.schema
+	.schema students
+	 
+（4）查看打开的数据库：
+	.database
+	.databases
+	 
+（5）查看表格：
+	.table
+	.tables
+	 
+（6）显示各种设置的当前值：
+	.show
+	 
+（7）导入文件数据到数据库表格中：
+	import "C:/Users/Administrator/Desktop/students.txt" students;
+
+（8）导出数据库表格到文本数据中：
+	.output students.txt           //将数据库表格导出到txt文本中，需要同时执行三条命令才能完成
+    select * from students;
+    .output stdout
+
+（9）导出完整的数据库到sql文件中：
+    ①sqlite3 testDB.db .dump > testDB.sql    //转换整个testDB.db数据库的内容到SQLite的语句中，并将其转储到ASCII文本文件testDB.sql中
+	②.output testDB.sql
+	  .dump/.dump students
+	  .output stdout
+	
+（10）执行sql文件中命令：
+    sqlite3 testDB.db < testDB.sql    //可以用于导入文本数据到数据库表格中
+
+（11）开启或关闭命令回显：
+	.echo ON|OFF
+	.echo on|off
+
+（12）开启或关闭头部显示：
+	.header ON|OFF
+	.headers on|off
+
+（13）设置输出模式:
+	.mode MODE
+	
+	其中MODE可以是下列之一：
+	①csv：逗号分隔的值
+	②column：左对齐的列
+	③html：HTML的<table>代码
+	④insert：TABLE表的SQL插入（insert）语句
+	⑤line：每行一个值
+	⑥list：由.separator字符串分隔的值
+	⑦tabs：由Tab分隔的值
+	⑧tcl：TCL列表元素
+
+（14）发送输出到屏幕：
+	.output stdout
+
+（15）开启或关闭统计：
+	.stats ON|OFF
+	.stats on|off
+
+（16）常用的格式化输出：
+	.header on
+	.mode column
+	.timer on
+
+（17）在NULL值的地方输出指定字符串:
+	.nullvalue STRING    //例如：.nullvalue "*"
+	
+（18）执行文件中的SQL语句：
+	.read FILENAME	     //例如：.read students.sql
+
+2.SQLite3常用的SQL命令：（SQL命令是不以‘.’点开头，但是需要以‘;’分号结尾的命令）
+（1）创建数据库：
+	sqlite3 test.db     //如果数据库test.db不存在时创建test.db数据库，如果存在时打开test.db数据库
+	.open test.db       //如果数据库test.db不存在时创建test.db数据库，如果存在时打开test.db数据库
+
+（2）删除数据库：
+	del /Q /f test.db   //SQLite没有提供drop database test.db命令，因为SQLite是文件型数据库，所以可以使用删除文件的方式删除数据库
+
+（3）创建表格：
+	create table students(id integer,name char,age integer);       //integer-整型数，char/string-字符串，text-Unicode文本字符串
+	create table students(id int primary key,name string,age integer);
+	create table students(id integer,name text,age int,primary key(id));
+	
+（4）更改表名：
+    alter table student rename to students;
+
+（5）删除表格：
+	drop table students;
+
+（6）表格插入一行数据：
+	insert into students values(1,'amy',25);                 //字符串既可以用单引号‘amy’，也可以用双引号“amy”；
+	insert into students(id,name,age) values(1,"amy",25);    //插入部分数据
+
+（7）表格删除一行数据：
+	delete from students where name ="amy";
+
+（8）表格更新一行数据：
+	update students set name ='amy' where id =2;
+	update students set name ="amy, age =22 where id = 2;    //一次更新多个字段
+
+（9）查询表格完整数据：
+	select * from students;
+
+（10）查询表格部分数据(查询表格多列内容)：
+	select name from students;
+	select name,age from students;
+
+（11）按条件查询表格数据：
+	select * from students where name ='amy';
+	select * from students where name ="amy" and age =25;
+	select * from students where name ="amy" or age =25;
+
+（12）限制查看数据行数：
+	select * from students where id < 5 limit 3;
+
+（13）对查询结果进行排序：
+	select * from students order by age;
+	select * from students order by age asc;    //默认升序排列
+	select * from students order by age desc;   //降序排列
+
+（14）表格增加一列数据：
+    alter table students add age integer;
+
+（15）表格删除一列数据：
+	alter table students drop age;
+	
+（16）开始事务：（默认情况下，SQLite中每条SQL语句自成事务，即SQL语句自动提交）
+	begin;                  //开启事务以后，如果一个终端中的修改没有commit，那么另外一个终端中不会看到该修改
+	begin transaction;      //begin开启事务只对一次commit/rollback有效，commit/rollback以后begin开启的事务就默认被关闭了。
+
+（17）事务提交：
+	commit;
+	end;
+	end transaction;
+
+（18）事务回滚：
+	rollback;
