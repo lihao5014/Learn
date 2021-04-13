@@ -72,3 +72,6 @@ Release
 
 # Source Insight4-es
 *.si4project
+
+# SQLite
+*.db
