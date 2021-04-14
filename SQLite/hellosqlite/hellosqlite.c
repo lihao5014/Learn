@@ -42,6 +42,26 @@
  *       rowData——包含每个字段值的指针数组，即表格中每一行数据（An array of strings representing fields in the row）。
  *       columnName——包含每个字段名称的指针数组，即表格头（An array of strings representing column names）。
  * 返回值：成功返回0，失败返回-1。
+ *
+ *（6）查询数据：（这是一个旧接口，保留该接口是为了向后兼容，不建议使用此接口）
+ * int sqlite3_get_table(sqlite3* db,const char* sql,char*** presultTable,int* row,int* column,char** errmsg);
+ * 功能：用于非回调的方式进行select查询。sqlite3_get_table()接口被实现为sqlite3_exec()的包装器，
+         用于更方便的获取数据库查询结果。
+ * 参数：db——数据库操作句柄（An open database）。
+ *       sql——查询的sql语句（SQL to be evaluated）。
+ *       presultTable——查询结果的返回地址，即查询的结果表指针（Results of the query）。
+ *       row——结果表的行数（Number of result rows written here）。
+ *       column——结果表的列数（Number of result columns written here）。
+ *       errmsg——错误信息（Error msg written here）。
+ * 返回值：成功返回0，失败返回错误码。
+ * 注意：结果表是由sqlite3_get_table()接口创建的内存数据结构，它记录了一个或多个查询的完整查询结果。
+ *       结果表可能包含了一个或多个内存分配，将结果表直接传递到sqlite3_free()进行内存释放是不安全的，
+ *       而应该使用sqlite3_free_table()释放结果表。
+ *
+ *（7）释放结果表：
+ * void sqlite3_free_table(char **resultTable);
+ * 功能：用于释放保存查询内容的指针数组，即释放sqlite3_get_table()接口查询创建的结果表内存。
+ * 参数：resultTable——sqlite3_get_table()接口查询返回的结果表。
  */
 
 #include <stdio.h>
