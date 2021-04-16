@@ -1,3 +1,9 @@
+0.mysql中的四种注释:
+ （1）单行注释：select * from students; -- 查看完整表格（注意"-- "后面是有一个空格的）
+ （2）单行注释：select * from students; #查看完整表格
+ （3）多行注释：select * from students; /*查看完整表格*/
+ （4）内联注释：select * from students; /*!查看完整表格*/（一般不使用内联注释）
+
 1.打开MySQL数据库：
 （1）mysql -u root -p
 （2）mysql -u root -p 123456
@@ -95,14 +101,12 @@
   create table students_copy like students;
 
 30.开始事务：（MySQL命令行的中默认事务都是自动提交的）
-（1）begin;       //开启事务以后，如果一个终端中的修改没有commit，那么另外一个终端中不会看到该修改
-（2）begin transaction;   //begin开启事务只对一次commit/rollback有效，commit/rollback以后begin开启的事务就默认被关闭了。
-（3）start transaction;
+（1）begin;               //开启事务以后，如果一个终端中的修改没有commit，那么另外一个终端中不会看到该修改  
+（2）start transaction;   //begin开启事务只对一次commit/rollback有效，commit/rollback以后begin开启的事务就默认被关闭了。
 
-31.事务确认提交：
+31.事务确认提交：（SQLite数据库中可以使用begin transaction开启事务/end transaction提交事务，但MySQL中没有这两条语句）
 （1）commit;
 （2）commit work;
-（3）end transaction;
 
 32.事务回滚：
 （1）rollback;
@@ -156,3 +160,13 @@
   from information_schema.tables 
   where table_schema='testdb' 
   order by data_length desc, index_length desc;
+
+40.执行sql脚本的两种方法：
+（1）mysql –uroot –p123456 -Dtestdb < C:/Users/Administrator/Desktop/test.sql //如果在sql脚本文件中使用了use数据库，则-D数据库选项可以忽略
+（2）source C:/Users/Administrator/Desktop/test.sql
+
+41.导出数据库到sql文件中：（mysqldump是在cmd下的命令，不能在mysql下运行，如果进入了mysql，得先退出mysql后才可以执行）
+（1）mysqldump -u root -p123456 testdb > C:/Users/Administrator/Desktop/test.sql           //导出完整的数据库结构和内容时不用加-d
+（2）mysqldump -u root -p -d testdb > C:/Users/Administrator/Desktop/test.sql              //只导出数据库表结构时要加-d
+（3）mysqldump -u root -p123456 testdb students > C:/Users/Administrator/Desktop/test.sql  //导出某张表结构和数据时不用加-d
+（4）mysqldump -u root -p -d testdb students > C:/Users/Administrator/Desktop/test.sql     //导出某张表结构时要加-d
