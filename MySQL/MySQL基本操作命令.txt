@@ -13,7 +13,9 @@
 （2）exit
 
 3.帮助命令：
-  help
+  help               -- help命令的语法格式：help 查询内容。（查询内容中可以包含通配符“％”和“_”，效果与LIKE运算符执行的模式匹配操作含义相同）
+  help 'contents'    -- 查看帮助文档的目录列表。（查询内容中不区分大小写）
+  help 'data types'  -- 查看MySQL所支持的数据类型。（查询内容可以使单引号引起来，也可以不使用单引号，为避免歧义，最好使用单引号引起来）
 
 4.显示所有数据库：
   show databases;
@@ -37,6 +39,11 @@
 （1）create table student(id integer,name varchar(8));
 （2）create table student(id int primary key,name varchar(8));
 （3）create table student(id int,name varchar(8),primary key(id));
+（4）create table student(
+		id int unsigned auto_increment,      #auto_increment定义列为自增的属性，一般用于主键，数值会自动加1。
+		name varchar(8) not null,            #如果你不想字段为NULL可以设置字段的属性为NOT NULL，在操作数据库时如果输入该字段的数据为NULL，就会报错。
+		primary key(id)                      #primary key关键字用于定义列为主键。可以使用多列来定义主键，列间以逗号分隔。
+     )engine=innodb default charset =utf8;   #engine设置存储引擎，charset设置编码。
 
 11.更改表名：
 （1）rename table student to students;
@@ -50,13 +57,16 @@
 （2）describe students;
 
 14.表格增加一列：
-  alter table students add age integer;
+  alter table students add age integer;           -- 在末尾添加字段
+  alter table students add age integer frist;     -- 在开头添加字段
+  alter table students add age integer after id;  -- 在中间位置添加字段（注意只能在某个已有字段的后面添加新字段，不能在它的前面添加新字段）
 
 15.表格删除一列：
   alter table students drop age;
 
 16.表格插入一行：
-  insert into students values(1,"amy",25);
+  （1）insert into students values(1,"amy",25);    -- 插入一行完整数据
+  （2）insert into students(id,age) values(1,25);  -- 插入一行部分数据，缺省字段使用NULL补齐。但如果缺省字段使用了auto_increment自动增加属性，那么就不会自动填充NULL
 
 17.表格删除一行：
   delete from students where id = 1;
@@ -65,11 +75,12 @@
   update students set name = "lisa" where name = "amy";
 
 19.查看表格中的所有内容：
-  select * from students;
+  select * from students;  -- 星号'*'用来代替students表格中的所有字段。
 
 20.查看表格一列内容：
   select name from students;
-  select name ,age from students;       //查看多列内容
+  select name ,age from students;        -- 查看多列内容
+  select distinct name from students;    -- 从结果中删除重复行。
 
 21.查看表格一行内容：
   select * from students where name = "amy";
@@ -88,8 +99,8 @@
 
 26.对查询结果进行排序：
 （1）select * from students order by age;
-（2）select * from students order by age asc;    //默认升序排列
-（3）select * from students order by age desc;   //降序排列
+（2）select * from students order by age asc;    -- 默认升序排列
+（3）select * from students order by age desc;   -- 降序排列
 
 27.表格导出为文本数据：
   select * from students into outfile "C:/Users/Administrator/Desktop/students.txt";
@@ -101,8 +112,8 @@
   create table students_copy like students;
 
 30.开始事务：（MySQL命令行的中默认事务都是自动提交的）
-（1）begin;               //开启事务以后，如果一个终端中的修改没有commit，那么另外一个终端中不会看到该修改  
-（2）start transaction;   //begin开启事务只对一次commit/rollback有效，commit/rollback以后begin开启的事务就默认被关闭了。
+（1）begin;               #开启事务以后，如果一个终端中的修改没有commit，那么另外一个终端中不会看到该修改  
+（2）start transaction;   #begin开启事务只对一次commit/rollback有效，commit/rollback以后begin开启的事务就默认被关闭了。
 
 31.事务确认提交：（SQLite数据库中可以使用begin transaction开启事务/end transaction提交事务，但MySQL中没有这两条语句）
 （1）commit;
@@ -113,7 +124,7 @@
 （2）rollback work;
 
 33.禁止事务自动提交：
-  set autocommit =0;    //相当于一直执行begin命令开启事务，单次commit/rollback不会导致事务关闭。
+  set autocommit =0;    #相当于一直执行begin命令开启事务，单次commit/rollback不会导致事务关闭。
 
 34.开启事务自动提交：
   set autocommit =1;
@@ -162,11 +173,88 @@
   order by data_length desc, index_length desc;
 
 40.执行sql脚本的两种方法：
-（1）mysql –uroot –p123456 -Dtestdb < C:/Users/Administrator/Desktop/test.sql //如果在sql脚本文件中使用了use数据库，则-D数据库选项可以忽略
+（1）mysql –uroot –p123456 -Dtestdb < C:/Users/Administrator/Desktop/test.sql  #如果在sql脚本文件中使用了use数据库，则-D数据库选项可以忽略
 （2）source C:/Users/Administrator/Desktop/test.sql
 
 41.导出数据库到sql文件中：（mysqldump是在cmd下的命令，不能在mysql下运行，如果进入了mysql，得先退出mysql后才可以执行）
-（1）mysqldump -u root -p123456 testdb > C:/Users/Administrator/Desktop/test.sql           //导出完整的数据库结构和内容时不用加-d
-（2）mysqldump -u root -p -d testdb > C:/Users/Administrator/Desktop/test.sql              //只导出数据库表结构时要加-d
-（3）mysqldump -u root -p123456 testdb students > C:/Users/Administrator/Desktop/test.sql  //导出某张表结构和数据时不用加-d
-（4）mysqldump -u root -p -d testdb students > C:/Users/Administrator/Desktop/test.sql     //导出某张表结构时要加-d
+（1）mysqldump -u root -p123456 testdb > C:/Users/Administrator/Desktop/test.sql           #导出完整的数据库结构和内容时不用加-d
+（2）mysqldump -u root -p -d testdb > C:/Users/Administrator/Desktop/test.sql              #只导出数据库表结构时要加-d
+（3）mysqldump -u root -p123456 testdb students > C:/Users/Administrator/Desktop/test.sql  #导出某张表结构和数据时不用加-d
+（4）mysqldump -u root -p -d testdb students > C:/Users/Administrator/Desktop/test.sql     #导出某张表结构时要加-d
+
+42.MySQL支持的6种约束：（一个数据表中只能有一个主键约束，其它5种约束可以有多个）
+（1）主键约束（primary key）：是使用最频繁的约束。在设计数据表时，一般情况下都会要求表中设置一个主键。
+     主键是表的一个特殊字段，该字段能唯一标识该表中的每条信息。
+（2）外键约束（foreign key）：用来建立主表与从表的关联关系，为两个表的数据建立连接，约束两个表中数据的一致性和完整性。
+     对于两个具有关联关系的表而言，相关联字段中主键所在的表就是主表/父表，外键所在的表就是从表/子表。
+（3）唯一约束（unique key）：与主键约束有一个相似的地方，就是它们都能够确保列的唯一性。与主键约束不同的是，
+     唯一约束在一个表中可以有多个，并且设置唯一约束的列是允许有空值的，虽然只能有一个空值。
+（4）检查约束（check）：是用来检查数据表中，字段值是否有效的一个手段。可以使用检查约束来限定表中的数据范围。
+（5）非空约束（not null）：用来约束表中的字段不能为空。
+（6）默认值约束（default）：用来约束当数据表中某个字段不输入值时，自动为其添加一个已经设置好的值。默认值约束通常
+     用在已经设置了非空约束的列，这样能够防止数据表在录入数据时出现错误。
+
+43.使用主键的注意事项：
+（1）每个表只能定义一个主键。
+（2）主键值必须唯一标识表中的每一行，且不能为NULL，即表中不可能存在有相同主键值的两行数据。这是唯一性原则。
+（3）一个字段名只能在联合主键字段表中出现一次。
+（4）联合主键不能包含不必要的多余字段。当把联合主键的某一字段删除后，如果剩下的字段构成的主键仍然满足唯一性原则，
+     那么这个联合主键是不正确的。这是最小化原则。
+
+44.在修改表时添加主键约束：
+	alter table students add primary key(id);
+
+45.删除主键约束：（删除主键约束的方法要比创建主键约束容易的多。由于主键约束在一个表中只能有一个，因此不需要指定主键名就可以删除一个表中的主键约束）
+	alter table students drop primary key;
+
+46.主键自增长：（在MySQL中当主键定义为自增长后，这个主键的值就不再需要用户输入数据了，而由数据库系统根据定义自动赋值。每增加一条记录，主键会自动以相同的步长进行增长）
+	create table students(id int auto_increment,name char,primary key(id));
+
+47.指定自增字段初始值：
+   create table students(id int not null auto_increment,name char,primary key(id)) auto_increment=100;   -- 指定主键从100开始自增长
+	
+48.使用主键自增长的注意事项：
+（1）默认情况下，auto_increment的初始值是1，每新增一条记录，字段值自动加1。
+（2）一个表中只能有一个字段使用auto_increment约束，且该字段必须有唯一索引，以避免序号重复（即为主键或主键的一部分）。
+（3）auto_increment约束的字段必须具备not null属性。
+（4）auto_increment约束的字段只能是整数类型（tinyint、smallint、int、bigint等）。
+（5）auto_increment约束字段的最大值受该字段的数据类型约束，如果达到上限，auto_increment就会失效。
+（6）加上auto_increment约束条件后，字段中的每个值都是自动增加的。因此这个字段不可能出现相同的值。
+     通常情况下auto_increment都是作为id字段的约束条件，并且将id字段作为表的主键。
+
+49.使用外键的注意事项：
+（1）主表必须已经存在于数据库中，或者是当前正在创建的表。如果是后一种情况，则主表与从表是同一个表，
+     这样的表称为自参照表，这种结构称为自参照完整性。
+（2）从表的外键关联的必须是主表的主键，且主键和外键的数据类型必须一致。所以必须为主表定义主键。
+（3）主键不能包含空值，但允许在外键中出现空值。也就是说只要外键的每个非空值出现在指定的主键中，
+     这个外键的内容就是正确的。
+（4）在主表的表名后面指定列名或列名的组合。这个列或列的组合必须是主表的主键或候选键。
+（5）外键中列的数目必须和主表的主键中列的数目相同。
+（6）外键中列的数据类型必须和主表主键中对应列的数据类型相同。
+（7）主表删除某条记录时，从表中与之对应的记录也必须有相应的改变。一个表可以有一个或多个外键，外键可以为空值，
+     若不为空值，则每一个外键的值必须等于主表中主键的某个值。
+
+50.在创建表时设置外键约束：
+（1）主表：create table department(id int primary key,name varchar(20) not null,location varchar(20));
+（2）从表：create table employee(
+				id int primary key,
+				name varchar(20),
+				deptId int,
+				salary double,
+				foreign key (deptId) references department(id)
+		   );
+
+51.在修改表时添加外键约束：
+	alter table employee add foreign key(deptId) references department(id);
+	
+52.删除外键约束：（当一个表中不需要外键约束时，就需要从表中将其删除。外键一旦删除，就会解除主表和从表间的关联关系）
+	alter table employee drop foreign key(deptId);   -- 由于外键约束在一个表中可以有多个，因此需要指定外键名来删除一个表中的外键约束
+
+53.在创建表时设置唯一约束：（唯一约束可以在创建表时直接设置，通常设置在除了主键以外的其它列上）
+	create table students(id integer primary key,name varchar(20) unique);
+
+54.在修改表时添加唯一约束：
+	alter table students add constraint unique_name unique(name);
+
+55.删除唯一约束:
+	alter table students drop index unique_name;
