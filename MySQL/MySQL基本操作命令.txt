@@ -58,7 +58,7 @@
 
 14.表格增加一列：
   alter table students add age integer;           -- 在末尾添加字段
-  alter table students add age integer frist;     -- 在开头添加字段
+  alter table students add age integer first;     -- 在开头添加字段
   alter table students add age integer after id;  -- 在中间位置添加字段（注意只能在某个已有字段的后面添加新字段，不能在它的前面添加新字段）
 
 15.表格删除一列：
@@ -83,10 +83,15 @@
   select distinct name from students;    -- 从结果中删除重复行。
 
 21.查看表格一行内容：
-  select * from students where name = "amy";
+  select * from students where name = "amy";            -- 单一条件的查询语句
+  select * from students where age > 25 and age < 28;   -- 多个查询条件时用逻辑运算符and(&&)、or(||)或xor隔开。
+  select * from students where name like 'j%';          -- 模糊查找名字以‘j’开头的学生信息，并且不区分大小写。
+  select * from students where name like binary 'J%';   -- 模糊查找名字以‘J’开头的学生信息，并且区分大小写。
 
 22.限制查看数据行数：
-  select * from students where id < 5 limit 3;
+  select * from students where id < 5 limit 3;    -- limit关键字不指定初始位置时，记录从第一条记录开始显示。显示记录的条数由limit关键字指定。
+  select * from students limit 4,3;               -- limit关键字指定查询结果从哪条记录开始显示，显示多少条记录
+  select * from students limit 3 offset 4;        -- limit 记录数 offset 初始位置。
 
 23.启动MySQL服务：
   net start mysql
@@ -101,6 +106,7 @@
 （1）select * from students order by age;
 （2）select * from students order by age asc;    -- 默认升序排列
 （3）select * from students order by age desc;   -- 降序排列
+（4）select * from students order by name,age;   -- 先按name、再按age，进行多字段排序
 
 27.表格导出为文本数据：
   select * from students into outfile "C:/Users/Administrator/Desktop/students.txt";
@@ -189,7 +195,7 @@
      对于两个具有关联关系的表而言，相关联字段中主键所在的表就是主表/父表，外键所在的表就是从表/子表。
 （3）唯一约束（unique key）：与主键约束有一个相似的地方，就是它们都能够确保列的唯一性。与主键约束不同的是，
      唯一约束在一个表中可以有多个，并且设置唯一约束的列是允许有空值的，虽然只能有一个空值。
-（4）检查约束（check）：是用来检查数据表中，字段值是否有效的一个手段。可以使用检查约束来限定表中的数据范围。
+（4）检查约束（check）：是用来检查数据表中，字段值是否有效的一个手段。可以用检查约束来限定表中的字段范围，以减少无效数据的输入。
 （5）非空约束（not null）：用来约束表中的字段不能为空。
 （6）默认值约束（default）：用来约束当数据表中某个字段不输入值时，自动为其添加一个已经设置好的值。默认值约束通常
      用在已经设置了非空约束的列，这样能够防止数据表在录入数据时出现错误。
@@ -244,7 +250,7 @@
 				foreign key (deptId) references department(id)
 		   );
 
-51.在修改表时添加外键约束：
+51.在修改表时添加外键约束：（外键是表中的一列，它的值必须在另一个表的主键中，外键是保证引用完整性的极其重要部分）
 	alter table employee add foreign key(deptId) references department(id);
 	
 52.删除外键约束：（当一个表中不需要外键约束时，就需要从表中将其删除。外键一旦删除，就会解除主表和从表间的关联关系）
@@ -258,3 +264,84 @@
 
 55.删除唯一约束:
 	alter table students drop index unique_name;
+	drop index unique_name on students;
+	
+56.在创建表时设置检查约束:（在更新表数据的时候，系统会检查更新后的数据行是否满足check约束中的限定条件）
+	create table students(id integer primary key,name varchar(20),age int,check(age > 0 and age < 100));
+
+57.在修改表时添加检查约束:
+	alter table students add constraint check_age check(age > 0 and age < 100);
+
+58.删除检查约束：
+	alter table students drop check check_age;
+
+59.在创建表时设置默认值约束：
+	create table students(id int primary key auto_increment,name varchar(20) default 'amy');
+
+60.在修改表时添加默认值约束:
+	alter table students change column age age integer default 25;
+
+61.删除默认值约束:
+	alter table students change column age age integer default NULL;
+
+62.在创建表时设置非空约束:
+	create table students(id int primary key,name varchar(20) not null);
+
+63.在修改表时添加非空约束:
+	alter table students change column name name varchar(20) not null;
+
+64.删除非空约束:
+	alter table students change column name name varchar(20) null;
+
+65.查看建表语句：（查看数据表中的约束）
+	show create table students;
+
+66.查看表格中的所有约束：
+	show keys from students;
+	
+67.为表格设置别名：
+	select stu.id,stu.name from testdb.students as stu;
+
+68.为字段指定别名:
+	select id,name,2021-age as brithday from testdb.students;
+
+69.like模糊查询:
+（1）like关键字支持百分号“%”和下划线“_”通配符。通配符是一种特殊语句，主要用来模糊查询。
+     当不知道真正字符或者懒得输入完整名称时，可以使用通配符来代替一个或多个真正的字符。
+	 使用百分号“%”或下划线“_”通配符进行模糊查找时，匹配的字符串必须加单引号或双引号。
+（2）带有“%”通配符的查询：“%”是MySQL中最常用的通配符，它能代表任何长度的字符串，字符串的长度可以为0。
+     百分号“%”通配符可以到匹配任意字符，但是不能匹配NULL。
+（3）带有“_”通配符的查询：_”只能代表单个字符，字符的长度不能为0。
+（4）区分大小写的模糊查询：默认情况下like匹配字符的时候是不区分大小写的。如果需要区分大小写，可以加入binary关键字。
+（5）如果查询内容中包含通配符，可以使用“\”转义符。
+
+70.“%”和“_“通配符的常用方法：
+	'%java'      //以java字符串结尾的信息
+	'java%'      //以java字符串开头的信息
+	'%java%'     //含有java字符串的信息
+	'_java'      //长度为5，以java字符串结尾的信息
+	'java_'      //长度为5，以java字符串开头的信息
+	'_java_'     //长度为6，含有java字符串的信息
+
+71.范围查询：
+	select * from students where age between 25 and 28;
+	select * from students where age not between 25 and 28;
+
+72.空值查询:
+	select * from students where age is null;       -- is null是一个整体，不能将is换成“=”。
+	select * from students where age is not null;   -- is not null是一个整体，不能将is not换成“!=”或“<>”。
+
+73.分组查询：
+	select * from students group by sex;                                  #单独使用group by关键字时，查询结果会只显示每个分组的第一条记录
+	select sex,group_concat(name) as allName from students group by sex;  #使用group_concat()函数将每个分组的name字段的值都显示出来
+	select sex,count(id) from students group by sex;                      #group by关键字经常和count(),sum(),avg(),min(),max()等聚合函数一起使用。
+	select sex,avg(age) as average_age from students group by sex;        #统计每个性别的平均年龄
+	select sex,group_concat(name) from students group by sex with rollup; #with rollup关键字用来在所有记录的最后加上一条记录，这条记录是上面所有记录的总和，即统计记录数量
+	
+74.where和having关键字的区别：
+（1）一般情况下，where用于过滤数据行，而having用于过滤分组。
+（2）where查询条件中不可以使用聚合函数，而having查询条件中可以使用聚合函数。
+（3）where在数据分组前进行过滤，而having在数据分组后进行过滤 。
+（4）where针对数据库文件进行过滤，而having针对查询结果进行过滤。即where根据
+     数据表中的字段直接进行过滤，而having是根据前面已经查询出的字段进行过滤。
+（5）where查询条件中不可以使用字段别名，而having查询条件中可以使用字段别名。
