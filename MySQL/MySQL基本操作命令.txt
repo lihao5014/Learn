@@ -189,15 +189,15 @@
 （4）mysqldump -u root -p -d testdb students > C:/Users/Administrator/Desktop/test.sql     #导出某张表结构时要加-d
 
 42.MySQL支持的6种约束：（一个数据表中只能有一个主键约束，其它5种约束可以有多个）
-（1）主键约束（primary key）：是使用最频繁的约束。在设计数据表时，一般情况下都会要求表中设置一个主键。
+（1）主键约束(primary key)：是使用最频繁的约束。在设计数据表时，一般情况下都会要求表中设置一个主键。
      主键是表的一个特殊字段，该字段能唯一标识该表中的每条信息。
-（2）外键约束（foreign key）：用来建立主表与从表的关联关系，为两个表的数据建立连接，约束两个表中数据的一致性和完整性。
+（2）外键约束(foreign key)：用来建立主表与从表的关联关系，为两个表的数据建立连接，约束两个表中数据的一致性和完整性。
      对于两个具有关联关系的表而言，相关联字段中主键所在的表就是主表/父表，外键所在的表就是从表/子表。
-（3）唯一约束（unique key）：与主键约束有一个相似的地方，就是它们都能够确保列的唯一性。与主键约束不同的是，
+（3）唯一约束(unique key)：与主键约束有一个相似的地方，就是它们都能够确保列的唯一性。与主键约束不同的是，
      唯一约束在一个表中可以有多个，并且设置唯一约束的列是允许有空值的，虽然只能有一个空值。
-（4）检查约束（check）：是用来检查数据表中，字段值是否有效的一个手段。可以用检查约束来限定表中的字段范围，以减少无效数据的输入。
-（5）非空约束（not null）：用来约束表中的字段不能为空。
-（6）默认值约束（default）：用来约束当数据表中某个字段不输入值时，自动为其添加一个已经设置好的值。默认值约束通常
+（4）检查约束(check)：是用来检查数据表中，字段值是否有效的一个手段。可以用检查约束来限定表中的字段范围，以减少无效数据的输入。
+（5）非空约束(not null)：用来约束表中的字段不能为空。
+（6）默认值约束(default)：用来约束当数据表中某个字段不输入值时，自动为其添加一个已经设置好的值。默认值约束通常
      用在已经设置了非空约束的列，这样能够防止数据表在录入数据时出现错误。
 
 43.使用主键的注意事项：
@@ -247,7 +247,7 @@
 				name varchar(20),
 				deptId int,
 				salary double,
-				foreign key (deptId) references department(id)
+				foreign key(deptId) references department(id)
 		   );
 
 51.在修改表时添加外键约束：（外键是表中的一列，它的值必须在另一个表的主键中，外键是保证引用完整性的极其重要部分）
@@ -345,3 +345,53 @@
 （4）where针对数据库文件进行过滤，而having针对查询结果进行过滤。即where根据
      数据表中的字段直接进行过滤，而having是根据前面已经查询出的字段进行过滤。
 （5）where查询条件中不可以使用字段别名，而having查询条件中可以使用字段别名。
+
+75.过滤分组：
+	select name,sex,age from students having age > 25 and age < 28;  -- 如果select关键字后，没有查询出having查询条件中使用的age字段，MySQL会运行报错。
+	select name,sex from students where age > 25 and age < 28;              -- 正常运行
+	select name,sex from students having age > 25 and age < 28;             -- 运行报错
+	select group_concat(name),sex,age from students group by age where avg(age) > 25;    -- 如果在where查询条件中使用聚合函数，MySQL会运行报错。
+	select group_concat(name),sex,age from students group by age having avg(age) > 25;   -- 正常运行
+
+76.连接查询：（在MySQL中多表查询主要有交叉连接、内连接和外连接）
+（1）交叉连接(cross join)：一般用来返回连接表的笛卡尔积。多个表交叉连接时，在from后连续使用cross join或","即可。
+	 当连接的表之间没有关系时，我们会省略掉where子句，此时返回结果就是两个表的笛卡尔积，返回结果数量就是两个表
+	 的数据行相乘。如果在交叉连接时使用where子句，MySQL会先生成两个表的笛卡尔积，然后再选择满足where条件的记录。
+	 因此表的数量较多时，交叉连接会非常非常慢，而且得到的运行结果也没太大的意义。一般情况下不建议使用交叉连接。
+（2）内连接(inner join)：主要通过设置连接条件的方式，来移除查询结果中某些数据行的交叉连接。简单来说就是利用
+     条件表达式来消除交叉连接的某些数据行。内连接使用inner join关键字连接两张表，并使用on子句来设置连接条件。
+	 如果没有连接条件，inner join和cross join在语法上是等同的，两者可以互换。inner join也可以使用where子句
+	 指定连接条件，但是inner join ... on语法是官方的标准写法，而且where子句在某些时候会影响查询的性能。
+（3）外连接：内连接的查询结果都是符合连接条件的记录，而外连接会先将连接的表分为基表和参考表，再以基表为依据
+     返回满足和不满足条件的记录。外连接可以分为左外连接和右外连接。外连接查询时，可以查询出“基表”中的所有记录
+	 和“参考表”中匹配连接条件的记录。如果“基表”的某行在“参考表”中没有匹配行，那么在返回结果中，“参考表”的字段
+	 值均为空值NULL。使用外连接查询时，一定要分清需要查询的结果，是需要显示左表的全部记录还是右表的全部记录，
+	 然后选择相应的左连接和右连接。
+（4）左连接(left outer join)：左外连接又称为左连接，使用left outer join关键字连接两个表，并使用on子句来设置连接条件。
+     在左连接中left outer join关键字前面的表格为基表，后面的表格为参考表。
+（5）右连接(right outer join)：右外连接又称为右连接，右连接是左连接的反向连接。使用right outer join关键字连接两个表，
+     并使用on子句来设置连接条件。在左连接中right outer join关键字前面的表格为参考表，后面的表格为基表。
+（6）当对多个表进行查询时，要在select语句后面指定字段是来源于哪一张表。因此在多表查询时select语句后面的写法是“表名.列名”。
+     另外如果表名非常长的话，也可以给表设置别名，这样就可以直接在select语句后面写上表的“别名.列名”。
+（7）交叉连接——相当于取两个表的笛卡尔积；内连接——相当于取两个表格的交集；外连接——相当于取两个差集。
+
+77.交叉连接查询：（当表中的数据较多时，得到的运行结果会非常长，所以通过交叉连接的方式进行多表查询的这种方法并不常用，应该尽量避免这种查询）
+	select * from students cross join courses;
+	select * from students,courses;                                        -- cross join关键字可以省略
+	select * from students,courses where students.c_id = courses.c_id;
+	select x.s_id,x.s_name,y.* from students as x cross join courses as y where x.c_id = y.c_id;
+	
+78.内连接查询：（内连接中可以省略inner关键字，只用关键字join。多个表内连接时，在from后连续使用inner join或join即可）
+	select * from students inner join courses on students.c_id = courses.c_id;
+	select x.s_id,x.s_name,y.* from students as x join courses as y on x.c_id = y.c_id;     -- 内连接inner关键字可以省略
+	select students.s_id,students.s_name,courses.* from students join courses where students.c_id = courses.c_id;
+
+79.左连接查询：（左连接中可以省略outer关键字，只使用关键字left join）
+	select * from students left outer join courses on students.c_id = courses.c_id;
+	select x.s_id,x.s_name,y.* from students as x left join courses as y on x.c_id = y.c_id;
+
+80.右连接查询：（右连接中可以省略outer关键字，只使用关键字right join）
+	select * from students right outer join courses on students.c_id = courses.c_id;
+	select x.s_id,x.s_name,y.* from students as x right join courses as y on x.c_id = y.c_id;
+	
+	
