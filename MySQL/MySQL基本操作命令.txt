@@ -72,7 +72,8 @@
   delete from students where id = 1;
 
 18.表格更新一行：
-  update students set name = "lisa" where name = "amy";
+  update students set name = "lisa" where name = "amy";     -- 条件插入
+  update students set c_id =2 where s_id in(1,3,5);         -- 集合插入
 
 19.查看表格中的所有内容：
   select * from students;  -- 星号'*'用来代替students表格中的所有字段。
@@ -87,7 +88,9 @@
   select * from students where age > 25 and age < 28;   -- 多个查询条件时用逻辑运算符and(&&)、or(||)或xor隔开。
   select * from students where name like 'j%';          -- 模糊查找名字以‘j’开头的学生信息，并且不区分大小写。
   select * from students where name like binary 'J%';   -- 模糊查找名字以‘J’开头的学生信息，并且区分大小写。
-
+  select * from students where id in(1,3,5,7);          -- 传入集合参数快速查询
+  select * from students where id not in(1,3,5,7);
+	
 22.限制查看数据行数：
   select * from students where id < 5 limit 3;    -- limit关键字不指定初始位置时，记录从第一条记录开始显示。显示记录的条数由limit关键字指定。
   select * from students limit 4,3;               -- limit关键字指定查询结果从哪条记录开始显示，显示多少条记录
@@ -301,6 +304,7 @@
 	
 67.为表格设置别名：
 	select stu.id,stu.name from testdb.students as stu;
+	select stu.s_id,stu.s_name from testdb.students stu;   -- 字段或表格取别名时，as关键字可以省略
 
 68.为字段指定别名:
 	select id,name,2021-age as brithday from testdb.students;
@@ -393,5 +397,38 @@
 80.右连接查询：（右连接中可以省略outer关键字，只使用关键字right join）
 	select * from students right outer join courses on students.c_id = courses.c_id;
 	select x.s_id,x.s_name,y.* from students as x right join courses as y on x.c_id = y.c_id;
+
+81.子查询：
+（1）子查询是MySQL中比较常用的查询方法，通过子查询可以实现多表查询。子查询指将一个查询语句嵌套在另一个查询语句中。
+     子查询可以在select、update和delete语句中使用，而且可以进行多层嵌套。在实际开发时，子查询经常出现在where子句中。
+（2）子查询的功能也可以通过表连接完成，但是子查询会使SQL语句更容易阅读和编写。一般来说表连接（内连接和外连接等）都
+     可以用子查询替换，但反过来却不一定，有的子查询不能用表连接来替换。子查询比较灵活、方便、形式多样，适合作为查询
+	 的筛选条件，而表连接更适合于查看连接表的数据。
+（3）外层的select查询称为父查询，圆括号中嵌入的查询称为子查询，子查询必须放在圆括号内。MySQL在处理select语句时，
+     执行流程为：先执行子查询，再执行父查询。
+（4）in/not in子查询：当表达式与子查询返回的结果集中的某个值相等时，返回true，否则返回false；
+     若使用关键字not，则返回值正好相反。
+（5）exists/not exists子查询：用于判断子查询的结果集是否为空，若子查询的结果集不为空，返回true，否则返回false；
+     若使用关键字not，则返回的值正好相反。exists关键字可以和其它查询条件一起使用，条件表达式与exists关键字之间
+	 用and和or连接。
+（6）子查询语句可以嵌套在SQL语句中任何表达式出现的位置。在select语句中，子查询可以被嵌套在select语句的列、表和查询条件中，
+     即select子句、from子句、where子句、group by子句和having子句。
+（7）只出现在子查询中而没有出现在父查询中的表不能包含在输出列中。多层嵌套子查询的最终数据集只包含父查询（即最外层的查询）
+     的select子句中出现的字段，而子查询的输出结果通常会作为其外层子查询数据源或用于数据判断匹配。
+
+82.in子查询：
+	select * from students where s_age in (select max(s_age) from students);          -- 查询学生表中年龄最大学生的信息
+	select * from students where students.c_id in (select courses.c_id from courses where c_name ='c++');
+	select * from students where students.c_id = (select courses.c_id from courses where c_name ='c++');     -- in关键字可以使用"="代替
+	select * from students as x where x.c_id not in (select y.c_id from courses as y where y.c_name='c++');
+	select * from students as x where x.c_id <> (select y.c_id from courses as y where y.c_name='c++');      -- not in关键字可以使用"<>"代替
 	
-	
+83.exists子查询：
+	select * from students where exists(select c_name from courses where c_name ="c++");    -- 如果courses表格中存在c++课程，那么就完全打印students表格
+	select * from students where s_age>25 and exists(select c_name from courses where c_name ="c++");
+
+84.子查询嵌套在select子句中：（子查询结果为单行单列，但不必指定列别名）
+	select courses.*,(select count(c_id) from students where students.c_id = courses.c_id) as students_count from courses;  -- 每门课程学习的学生数
+
+85.子查询嵌套在from子句中：（必须为表指定别名。一般返回多行多列数据记录，可以当作一张临时表）
+	select courses.*, temp.avgage from courses,(select c_id,avg(s_age) avgage from students group by c_id) temp where temp.c_id = courses.c_id;    -- 每门课程学生的平均年龄
