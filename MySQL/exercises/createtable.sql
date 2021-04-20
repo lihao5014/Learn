@@ -17,10 +17,10 @@ use classdb;
 -- 创建学生表
 create table Student (
 	s_id varchar(20),
-	s_name varchar(20) not null default '',
+	s_name varchar(20) not null default '',       -- 设置非空约束和默认值约束
 	s_birth varchar(20) not null default '',
 	s_sex varchar(20) not null default '',
-	primary key(s_id)
+	primary key(s_id)                             -- 设置主键约束
 );
 
 -- 创建课程表
@@ -43,7 +43,7 @@ create table Score (
 	s_id varchar(20),
 	c_id varchar(20),
 	s_score int(3),
-	primary key(s_id,c_id)
+	primary key(s_id,c_id)   -- 由学生id和课程id通过构成成绩表的联合主键
 );
 
 -- 学生表测试数据
