@@ -1,6 +1,9 @@
 #include "sort.h"
 #include <stdio.h>
 
+#define _CHANGE_WAY_
+// #undef _CHANGE_WAY_
+
 static void swap(int *x,int *y);
 
 BOOL ascend(const int x,const int y)
@@ -48,7 +51,7 @@ void display(const int arr[],const int size)
 	puts("");
 }
 
-#if 0
+#if _CHANGE_WAY_
 void swap(int *x,int *y)
 {
 	*x = *x ^ *y;

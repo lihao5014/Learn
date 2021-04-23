@@ -67,6 +67,7 @@
 16.表格插入一行：
   （1）insert into students values(1,"amy",25);    -- 插入一行完整数据
   （2）insert into students(id,age) values(1,25);  -- 插入一行部分数据，缺省字段使用NULL补齐。但如果缺省字段使用了auto_increment自动增加属性，那么就不会自动填充NULL
+  （3）insert info students values(1,"amy",25),(2,"bob",26),(3,"lisa",24);     -- 一次性插入多个值
 
 17.表格删除一行：
   delete from students where id = 1;
@@ -74,6 +75,7 @@
 18.表格更新一行：
   update students set name = "lisa" where name = "amy";     -- 条件插入
   update students set c_id =2 where s_id in(1,3,5);         -- 集合插入
+  update students set name ='amy',age =25 where id =1;    -- 一次更新多个字段
 
 19.查看表格中的所有内容：
   select * from students;  -- 星号'*'用来代替students表格中的所有字段。
@@ -119,6 +121,7 @@
 
 29.复制表格结构：
   create table students_copy like students;
+  create table students_copy select * from students;     -- 复制表格结构及其中的数据
 
 30.开始事务：（MySQL命令行的中默认事务都是自动提交的）
 （1）begin;               #开启事务以后，如果一个终端中的修改没有commit，那么另外一个终端中不会看到该修改  
@@ -182,7 +185,7 @@
   order by data_length desc, index_length desc;
 
 40.执行sql脚本的两种方法：
-（1）mysql –uroot –p123456 -Dtestdb < C:/Users/Administrator/Desktop/test.sql  #如果在sql脚本文件中使用了use数据库，则-D数据库选项可以忽略
+（1）mysql -uroot –p123456 -Dtestdb < C:/Users/Administrator/Desktop/test.sql  #如果在sql脚本文件中使用了use数据库，则-D数据库选项可以忽略
 （2）source C:/Users/Administrator/Desktop/test.sql
 
 41.导出数据库到sql文件中：（mysqldump是在cmd下的命令，不能在mysql下运行，如果进入了mysql，得先退出mysql后才可以执行）
@@ -432,3 +435,6 @@
 
 85.子查询嵌套在from子句中：（必须为表指定别名。一般返回多行多列数据记录，可以当作一张临时表）
 	select courses.*, temp.avgage from courses,(select c_id,avg(s_age) avgage from students group by c_id) temp where temp.c_id = courses.c_id;    -- 每门课程学生的平均年龄
+
+86.修改表格默认字符集：
+	alter table students charset utf8;
