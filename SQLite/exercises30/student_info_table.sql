@@ -1,0 +1,13 @@
+PRAGMA foreign_keys=OFF;
+BEGIN TRANSACTION;
+CREATE TABLE student_info_table(id integer primary key autoincrement,name varchar(16),class varchar(16),grade varchar(16));
+INSERT INTO student_info_table VALUES(1,'王小凤','一班','一年级');
+INSERT INTO student_info_table VALUES(2,'刘诗迪','一班','二年级');
+INSERT INTO student_info_table VALUES(3,'李思雨','一班','一年级');
+INSERT INTO student_info_table VALUES(4,'张文华','二班','二年级');
+INSERT INTO student_info_table VALUES(5,'张青云','二班','一年级');
+INSERT INTO student_info_table VALUES(6,'徐文杰','二班','二年级');
+INSERT INTO student_info_table VALUES(7,'李智瑞','一班','一年级');
+INSERT INTO student_info_table VALUES(8,'徐雨秋','二班','二年级');
+INSERT INTO student_info_table VALUES(9,'孙皓然','一班','一年级');
+COMMIT;

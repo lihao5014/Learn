@@ -33,7 +33,11 @@
 （9）导出完整的数据库到sql文件中：
     ①sqlite3 testDB.db .dump > testDB.sql    //转换整个testDB.db数据库的内容到SQLite的语句中，并将其转储到ASCII文本文件testDB.sql中
 	②.output testDB.sql
-	  .dump/.dump students
+	  .dump                 //导出整个数据库到testDB.sql文件中
+	  .output stdout
+	
+	③.output testDB.sql
+	  .dump students        //导出数据库中的students表格数据，到testDB.sql文件中
 	  .output stdout
 	
 （10）执行sql文件中命令：
@@ -89,6 +93,7 @@
 （3）创建表格：
 	create table students(id integer,name char,age integer);       //integer-整型数，char/string-字符串，text-Unicode文本字符串
 	create table students(id int primary key,name string,age integer);
+	create table students(id integer primary key autoincrment,name string,age integer);     //MySQL中主键自增使用auto_increment关键字，而在SQLite中使用autoincrement关键字，中间没有下划线'_'
 	create table students(id integer,name text,age int,primary key(id));
 	
 （4）更改表名：
@@ -103,6 +108,7 @@
 
 （7）表格删除一行数据：
 	delete from students where name ="amy";
+	delete from students;                    //清空表格数据，但是不会删除表格
 
 （8）表格更新一行数据：
 	update students set name ='amy' where id =2;

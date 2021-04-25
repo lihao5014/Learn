@@ -1,0 +1,13 @@
+PRAGMA foreign_keys=OFF;
+BEGIN TRANSACTION;
+CREATE TABLE sale_table(year_num int,month_num int,sales int,check(year_num >0),check(month_num >=1 and month_num <=12));
+INSERT INTO sale_table VALUES(2019,1,2854);
+INSERT INTO sale_table VALUES(2019,2,4772);
+INSERT INTO sale_table VALUES(2019,3,3542);
+INSERT INTO sale_table VALUES(2019,4,1336);
+INSERT INTO sale_table VALUES(2019,5,3544);
+INSERT INTO sale_table VALUES(2018,1,2293);
+INSERT INTO sale_table VALUES(2018,2,2559);
+INSERT INTO sale_table VALUES(2018,3,2597);
+INSERT INTO sale_table VALUES(2018,4,2363);
+COMMIT;
