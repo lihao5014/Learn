@@ -19,3 +19,24 @@
 
 -- 将score_info_table.txt文件中的数据导入到score_info_table表格中。
 .import score_info_table.txt score_info_table
+
+-- 将student_info_table.txt文件中的数据导入到student_info_table表格中。
+.import student_info_table.txt student_info_table
+
+-- 将column_table.txt文件中的数据导入到column_table表格中。
+.import column_table.txt column_table
+
+-- 将order_table.txt文件中的数据导入到order_table表格中。
+.import order_table.txt order_table
+
+-- 将winner_table.txt文件中的数据导入到winner_table表格中。
+.import winner_table.txt winner_table
+
+-- 将user_login.txt文件中的数据导入到user_login表格中。
+.import user_login.txt user_login
+
+-- 将course_table.txt文件中的数据导入到course_table表格中。
+.import course_table.txt course_table
+
+-- 将consum_order_table.txt文件中的数据导入到consum_order_table表格中。
+.import consum_order_table.txt consum_order_table

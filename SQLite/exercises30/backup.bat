@@ -1,6 +1,6 @@
 @echo off
 echo=
-echo "[usage]: backupdb.bat {export|import}"
+echo "[usage]: backup.bat {export|import}"
 echo=
 
 set cmd=%1

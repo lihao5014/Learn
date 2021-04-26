@@ -16,6 +16,81 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
+-- Table structure for table `column_table`
+--
+
+DROP TABLE IF EXISTS `column_table`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+ SET character_set_client = utf8mb4 ;
+CREATE TABLE `column_table` (
+  `column1` int(11) DEFAULT NULL,
+  `column2` int(11) DEFAULT NULL,
+  `column3` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `column_table`
+--
+
+LOCK TABLES `column_table` WRITE;
+/*!40000 ALTER TABLE `column_table` DISABLE KEYS */;
+INSERT INTO `column_table` VALUES (5,10,7),(1,10,6),(9,3,5),(5,2,9),(10,4,3),(5,2,9),(5,8,6),(8,8,6);
+/*!40000 ALTER TABLE `column_table` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `consum_order_table`
+--
+
+DROP TABLE IF EXISTS `consum_order_table`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+ SET character_set_client = utf8mb4 ;
+CREATE TABLE `consum_order_table` (
+  `order_id` int(11) NOT NULL,
+  `user_id` int(11) DEFAULT NULL,
+  `amount` int(11) DEFAULT NULL,
+  PRIMARY KEY (`order_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `consum_order_table`
+--
+
+LOCK TABLES `consum_order_table` WRITE;
+/*!40000 ALTER TABLE `consum_order_table` DISABLE KEYS */;
+INSERT INTO `consum_order_table` VALUES (201901,1,10),(201902,2,20),(201903,3,15),(201904,3,15),(201905,4,20),(201906,4,20),(201907,5,25),(201908,5,25),(201909,6,30),(201910,6,30),(201911,7,35),(201912,7,35);
+/*!40000 ALTER TABLE `consum_order_table` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `course_table`
+--
+
+DROP TABLE IF EXISTS `course_table`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+ SET character_set_client = utf8mb4 ;
+CREATE TABLE `course_table` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(16) DEFAULT NULL,
+  `grade` varchar(16) DEFAULT NULL,
+  `courses` varchar(16) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `course_table`
+--
+
+LOCK TABLES `course_table` WRITE;
+/*!40000 ALTER TABLE `course_table` DISABLE KEYS */;
+INSERT INTO `course_table` VALUES (1,'王小凤','一年级','心理学'),(2,'刘诗迪','二年级','心理学'),(3,'李思雨','三年级','社会学'),(4,'张文华','一年级','心理学'),(5,'张青云','二年级','心理学'),(6,'徐文杰','三年级','计算机'),(7,'李智瑞','一年级','心理学'),(8,'徐雨秋','二年级','计算机'),(9,'孙皓然','三年级','社会学'),(10,'李春山','一年级','社会学');
+/*!40000 ALTER TABLE `course_table` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `month_table`
 --
 
@@ -38,6 +113,30 @@ LOCK TABLES `month_table` WRITE;
 /*!40000 ALTER TABLE `month_table` DISABLE KEYS */;
 INSERT INTO `month_table` VALUES ('E002','王小凤',1),('E001','张文华',2),('E003','孙皓然',3),('E001','张文华',4),('E002','王小凤',5),('E001','张文华',6),('E004','李智瑞',7),('E002','王小凤',8),('E003','孙皓然',9);
 /*!40000 ALTER TABLE `month_table` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `order_table`
+--
+
+DROP TABLE IF EXISTS `order_table`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+ SET character_set_client = utf8mb4 ;
+CREATE TABLE `order_table` (
+  `order_id` int(11) NOT NULL,
+  `order_date` date DEFAULT NULL,
+  PRIMARY KEY (`order_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `order_table`
+--
+
+LOCK TABLES `order_table` WRITE;
+/*!40000 ALTER TABLE `order_table` DISABLE KEYS */;
+INSERT INTO `order_table` VALUES (1,'2019-01-08'),(2,'2019-01-09'),(3,'2019-01-10'),(4,'2019-01-11'),(5,'2020-01-08'),(6,'2020-01-09'),(7,'2020-01-10'),(8,'2020-01-11'),(9,'2020-01-12');
+/*!40000 ALTER TABLE `order_table` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -171,6 +270,53 @@ LOCK TABLES `student_table` WRITE;
 INSERT INTO `student_table` VALUES (1,'王小凤','一班','女'),(2,'刘诗迪','一班','女'),(3,'李思雨','一班','女'),(4,'张文华','二班','男'),(5,'张青云','二班','女'),(6,'徐文杰','二班','男'),(7,'李智瑞','三班','男'),(8,'徐雨秋','三班','男'),(9,'孙皓然','三班','男'),(10,'李春山','三班','男');
 /*!40000 ALTER TABLE `student_table` ENABLE KEYS */;
 UNLOCK TABLES;
+
+--
+-- Table structure for table `user_login`
+--
+
+DROP TABLE IF EXISTS `user_login`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+ SET character_set_client = utf8mb4 ;
+CREATE TABLE `user_login` (
+  `user_id` int(11) DEFAULT NULL,
+  `login_time` datetime DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `user_login`
+--
+
+LOCK TABLES `user_login` WRITE;
+/*!40000 ALTER TABLE `user_login` DISABLE KEYS */;
+INSERT INTO `user_login` VALUES (1,'2019-01-01 06:00:00'),(1,'2019-01-02 10:00:00'),(1,'2019-01-04 19:00:00'),(2,'2019-01-02 10:00:00'),(2,'2019-01-03 09:00:00'),(2,'2019-01-09 14:00:00'),(3,'2019-01-03 08:00:00'),(3,'2019-01-04 10:00:00');
+/*!40000 ALTER TABLE `user_login` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `winner_table`
+--
+
+DROP TABLE IF EXISTS `winner_table`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+ SET character_set_client = utf8mb4 ;
+CREATE TABLE `winner_table` (
+  `id` int(11) NOT NULL,
+  `name` varchar(16) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `winner_table`
+--
+
+LOCK TABLES `winner_table` WRITE;
+/*!40000 ALTER TABLE `winner_table` DISABLE KEYS */;
+INSERT INTO `winner_table` VALUES (1,'王小凤'),(2,'刘诗迪'),(3,'李思雨'),(7,'李智瑞'),(8,'徐雨秋'),(9,'孙皓然');
+/*!40000 ALTER TABLE `winner_table` ENABLE KEYS */;
+UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
@@ -181,4 +327,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2021-04-25 17:29:04
+-- Dump completed on 2021-04-26 23:54:21
