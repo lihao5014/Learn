@@ -149,7 +149,12 @@ void update_string()
 	
 	str = "say yes";
 	str.replace(4,3,"no");
+	str.replace("say","speak");
 	qDebug()<<"update string: replace ,str ="<<str;
+	
+	QString str1 = "refuse";
+	str.swap(str1);
+	qDebug()<<"update string: swap ,str ="<<str<<" ,str1 ="<<str1;
 	
 	str = "The Qt PROject";
 	qDebug()<<"update string: toLower/toUpper, "<<str.toLower()<<" ,"<<str.toUpper();
@@ -220,6 +225,11 @@ void delete_string()
 	        <<" ,str.mid(6) ="<<str.mid(6)      //从第6个位置开始，一直截取到最后
             <<" ,str.left(4) ="<<str.left(5)
 			<<" ,str.right(8) ="<<str.right(5);
+	
+	QStringRef strRef1 = str.leftRef(7);
+	QStringRef strRef2 = str.rightRef(2);
+	QStringRef strRef3 = str.midRef(9,3);
+	qDebug()<<"delete string: leftRef/rightRef/midRef ,strRef1 ="<<strRef1<<" ,strRef2 ="<<strRef2<<" ,strRef3 ="<<strRef3;
 	
 	str.remove(2,4);
 	qDebug()<<"delete string: remove ,str ="<<str;

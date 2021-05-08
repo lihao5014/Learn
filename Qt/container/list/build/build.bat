@@ -1,7 +1,7 @@
 @echo off
 echo=
 echo ---qmake compile start---
-qmake ../
+qmake ../list.pro
 echo=
 
 rem 批处理脚本中定义的compiler变量，默认是全局的
@@ -16,4 +16,4 @@ echo=
 
 echo ---running---
 echo=
-..\bin\
+..\bin\list.exe
