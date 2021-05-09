@@ -1,0 +1,26 @@
+1.ubuntu用户名与密码：
+（1）用户名：root    密码：123456
+（2）用户名：linux    密码：123456
+
+2.linux软件安装与卸载：
+	sudo apt-get update                      //更新软件安装源列表：
+	sudo apt install 软件名
+	sudo apt-get install 软件名
+	dpkg --list                              //显示的是你电脑上安装的所有软件。
+	sudo apt-get --purge remove 软件名       //彻底删除软件，包括配置文件一起删除
+	sudo apt-get remove 软件名               //删除软件时保留配置文件
+
+3.打开ssh服务以允许SecureCRT连接：
+    sudo apt install openssh-server
+	sudo service sshd start
+	sudo service sshd restart
+	sudo service sshd stop
+    ps -e|grep sshd                          //查看是否打开sshd服务
+
+4.vim使用环境快速配置：
+	（1）http://www.cnblogs.com/ma6174/archive/2011/12/10/2283393.html                     //参考博客
+	（2）sudo wget -qO- https://raw.github.com/ma6174/vim/master/setup.sh | sh -x          //下载命令，不过现在好像过时了
+	
+5.使用git统计代码行数命令：
+	（1）git log --author="username" start_commit_id..end_commit_id --pretty=tformat: --numstat | gawk '{ add += $1 ; subs += $2 ; loc += $1 - $2 } END { printf "added lines: %s removed lines : %s total lines: %s\n",add,subs,loc }'
+    （2）将'start_commit_id'改为第一次提交的id，'end_commit_id'改为最后一次提交的id，'username'改为git用户名。就可以统计出两次提交间代码的变化行数。
