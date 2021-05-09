@@ -1,5 +1,5 @@
 /*（1）操作系统相关宏定义：Windows32系统（_WIN32），Windows64系统（_WIN64），Linux系统（__linux或__linux__）
- *（2）编译器相关宏定义：GCC编译器（__GNUC__），VC++或MSVC编译器（_MSC_VER_）
+ *（2）编译器相关宏定义：GCC编译器（__GNUC__），VC++或MSVC编译器（_MSC_VER）
  */
 
 #include <iostream>
