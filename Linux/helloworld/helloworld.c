@@ -11,7 +11,7 @@
  */
 
 /*常用系统I/0函数需要的头文件：
- *（1）#include <fcntl.h>      //creat()、open()、SEEK_SET、SEEK_CUR、SEEK_END、O_RDONLY、O_WRONLY、O_CREAT，所在目录"/usr/include/"
+ *（1）#include <fcntl.h>      //creat()、open()、SEEK_SET、SEEK_CUR、SEEK_END、O_RDONLY、O_WRONLY、O_CREAT、S_IRWXU、S_IRUSR、S_IRGRP、S_IROTH，所在目录"/usr/include/"
  *（2）#include <unistd.h>     //read()、write()、close()、STDIN_FILENO、STDOUT_FILENO、STDERR_FILENO，所在目录"/usr/include/"
  *（3）#include <sys/types.h>  //ssize_t、off_t、pid_t，所在目录"/usr/include/x86_64-linux-gnu/sys/"
  *（4）#include <sys/stat.h>   //struct stat、stat()、fstat()、lstat()，所在目录"/usr/include/x86_64-linux-gnu/sys/"
