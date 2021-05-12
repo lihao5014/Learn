@@ -1,0 +1,3 @@
+read file test
+hello world
+time is 2021/5/12

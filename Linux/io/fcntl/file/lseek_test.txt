@@ -1,0 +1,5 @@
+seek file AAA BBB
+lo world
+time is 2020:05:12
+append line text
+append line text
