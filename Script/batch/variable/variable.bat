@@ -29,7 +29,7 @@ set localVar=local variable
 echo localVar = %localVar%
 endlocal
 
-rem 当我们准备执行一条命令，命令解析器会先将命令读取，如果命令中又变量，那么会先将变量的值读取出来，然后再运行这条命令。
+rem 当我们准备执行一条命令，命令解析器会先将命令读取，如果命令中有变量，那么会先将变量的值读取出来，然后再运行这条命令。
 set x=1
 set /a x+=1 > nul & echo x = %x%           %x的值输出为1，而不是计算后的值2%
 
