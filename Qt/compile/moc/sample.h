@@ -1,7 +1,10 @@
 #ifndef _SAMPLE_H
 #define _SAMPLE_H
 
-#include <QtCore/QObject>
+/*因为只添加了Qt库的include/lib目录到INCLUDE/LIB环境变量中，所以使用Qt库的头文件时
+ *必须带上模块路径。这就等效于qmake文件中，使用QT += 模块名。
+ */
+#include <QtCore/QObject>   //等效于QT += core
 
 typedef int data_t;
 

@@ -20,14 +20,9 @@ set LIB=D:\Qt5.12\5.12.0\msvc2017_64\lib;%LIB%
 
 rem vc++编译器编译时，才会到INCLUDE和LIB环境变量中自动查找头文件或库文件。
 if "%cmd%" == "cl" (
-	echo ---compile *.cpp to *.obj---
-	cl /c sample.cpp
-	cl /c moc_sample.cpp /Fo"moc_sample.obj"
-	echo=
-	
 	echo --compile main.cpp to main.exe---
 	echo=
-	cl /Fe"main.exe" main.cpp sample.obj moc_sample.obj /link Qt5Cored.lib
+	cl /Fe"main.exe" main.cpp /link Qt5Cored.lib Qt5Widgetsd.lib Qt5Guid.lib
 	del /f main.obj
 	echo=
 )
@@ -49,14 +44,9 @@ if "%cmd%" == "g++" (
 		echo=
 	)
 
-	echo ---compile *.cpp to *.obj---
-	g++ -c sample.cpp -o sample.o -I !INCLUDE!
-	g++ -c moc_sample.cpp -o moc_sample.o -I !INCLUDE!
-	echo=
-
 	echo --compile main.cpp to main.exe---
 	echo=
-	g++ main.cpp sample.o moc_sample.o -L !LIB! -lQt5Cored -o main.exe -I !INCLUDE!
+	g++ main.cpp -L !LIB! -lQt5Cored -lQt5Widgetsd -lQt5Guid -o main.exe -I !INCLUDE!
 	echo=
 )
 
@@ -68,15 +58,10 @@ if "%cmd%" == "" (
 		set LIB=D:\Qt5.12\5.12.0\mingw73_64\lib
 		echo=
 	)
-	
-	echo ---compile *.cpp to *.obj---
-	g++ -c sample.cpp -o sample.o -I !INCLUDE!
-	g++ -c moc_sample.cpp -o moc_sample.o -I !INCLUDE!
-	echo=
 
 	echo --compile main.cpp to main.exe---
 	echo=
-	g++ main.cpp sample.o moc_sample.o !LIB!\libQt5Cored.a -o main.exe -I !INCLUDE!
+	g++ main.cpp -L !LIB! -lQt5Cored -lQt5Widgetsd -lQt5Guid -o main.exe -I !INCLUDE!
 	echo=
 )
 
