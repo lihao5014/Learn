@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>800</width>
+    <height>600</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>MainWindow</string>
+  </property>
+  <widget class="QWidget" name="centralwidget"/>
+  <widget class="QMenuBar" name="menubar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>800</width>
+     <height>26</height>
+    </rect>
+   </property>
+   <widget class="QMenu" name="menufile">
+    <property name="title">
+     <string>file</string>
+    </property>
+    <addaction name="actionopen"/>
+    <addaction name="actionsave"/>
+   </widget>
+   <widget class="QMenu" name="menuedit">
+    <property name="title">
+     <string>edit</string>
+    </property>
+    <addaction name="actioncopy"/>
+    <addaction name="actionpaste"/>
+   </widget>
+   <widget class="QMenu" name="menuabout">
+    <property name="title">
+     <string>about</string>
+    </property>
+    <addaction name="actionaboutqt"/>
+   </widget>
+   <addaction name="menufile"/>
+   <addaction name="menuedit"/>
+   <addaction name="menuabout"/>
+  </widget>
+  <widget class="QStatusBar" name="statusbar"/>
+  <widget class="QToolBar" name="toolBar">
+   <property name="windowTitle">
+    <string>toolBar</string>
+   </property>
+   <attribute name="toolBarArea">
+    <enum>TopToolBarArea</enum>
+   </attribute>
+   <attribute name="toolBarBreak">
+    <bool>false</bool>
+   </attribute>
+   <addaction name="actionnew"/>
+   <addaction name="actionopen"/>
+   <addaction name="actionsave"/>
+   <addaction name="separator"/>
+   <addaction name="actioncut"/>
+   <addaction name="actioncopy"/>
+   <addaction name="actionpaste"/>
+   <addaction name="separator"/>
+   <addaction name="actionaboutqt"/>
+  </widget>
+  <action name="actionopen">
+   <property name="icon">
+    <iconset resource="resource.qrc">
+     <normaloff>:/image/open.png</normaloff>:/image/open.png</iconset>
+   </property>
+   <property name="text">
+    <string>open</string>
+   </property>
+  </action>
+  <action name="actionsave">
+   <property name="icon">
+    <iconset resource="resource.qrc">
+     <normaloff>:/image/save.png</normaloff>:/image/save.png</iconset>
+   </property>
+   <property name="text">
+    <string>save</string>
+   </property>
+  </action>
+  <action name="actioncopy">
+   <property name="icon">
+    <iconset resource="resource.qrc">
+     <normaloff>:/image/copy.png</normaloff>:/image/copy.png</iconset>
+   </property>
+   <property name="text">
+    <string>copy</string>
+   </property>
+  </action>
+  <action name="actionpaste">
+   <property name="icon">
+    <iconset resource="resource.qrc">
+     <normaloff>:/image/paste.png</normaloff>:/image/paste.png</iconset>
+   </property>
+   <property name="text">
+    <string>paste</string>
+   </property>
+  </action>
+  <action name="actionaboutqt">
+   <property name="icon">
+    <iconset>
+     <normaloff>image/qt_32x32.png</normaloff>image/qt_32x32.png</iconset>
+   </property>
+   <property name="text">
+    <string>aboutQt</string>
+   </property>
+  </action>
+  <action name="actionnew">
+   <property name="icon">
+    <iconset resource="resource.qrc">
+     <normaloff>:/image/new.png</normaloff>:/image/new.png</iconset>
+   </property>
+   <property name="text">
+    <string>new</string>
+   </property>
+   <property name="toolTip">
+    <string>new</string>
+   </property>
+  </action>
+  <action name="actioncut">
+   <property name="icon">
+    <iconset resource="resource.qrc">
+     <normaloff>:/image/cut.png</normaloff>:/image/cut.png</iconset>
+   </property>
+   <property name="text">
+    <string>cut</string>
+   </property>
+   <property name="toolTip">
+    <string>cut</string>
+   </property>
+  </action>
+ </widget>
+ <resources>
+  <include location="resource.qrc"/>
+ </resources>
+ <connections/>
+</ui>

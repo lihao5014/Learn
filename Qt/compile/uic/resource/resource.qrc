@@ -1,0 +1,11 @@
+<RCC>
+  <qresource prefix="/">
+    <file>image/qt_32x32.png</file>
+    <file>image/copy.png</file>
+    <file>image/cut.png</file>
+    <file>image/new.png</file>
+    <file>image/open.png</file>
+    <file>image/paste.png</file>
+    <file>image/save.png</file>
+  </qresource>
+</RCC>
