@@ -1,5 +1,5 @@
 @echo off
 echo=
-echo ---compile *.ui to *.cpp source---
+echo ---compile *.ui to ui_*.h header---
 uic mainwindow.ui -o ui_mainwindow.h
 echo ---ui compile end---

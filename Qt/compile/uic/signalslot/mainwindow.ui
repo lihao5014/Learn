@@ -70,8 +70,8 @@
   </widget>
   <action name="actionopen">
    <property name="icon">
-    <iconset resource="resource.qrc">
-     <normaloff>:/image/open.png</normaloff>:/image/open.png</iconset>
+    <iconset>
+     <normaloff>image/open.png</normaloff>image/open.png</iconset>
    </property>
    <property name="text">
     <string>open</string>
@@ -79,8 +79,8 @@
   </action>
   <action name="actionsave">
    <property name="icon">
-    <iconset resource="resource.qrc">
-     <normaloff>:/image/save.png</normaloff>:/image/save.png</iconset>
+    <iconset>
+     <normaloff>image/save.png</normaloff>image/save.png</iconset>
    </property>
    <property name="text">
     <string>save</string>
@@ -88,8 +88,8 @@
   </action>
   <action name="actioncopy">
    <property name="icon">
-    <iconset resource="resource.qrc">
-     <normaloff>:/image/copy.png</normaloff>:/image/copy.png</iconset>
+    <iconset>
+     <normaloff>image/copy.png</normaloff>image/copy.png</iconset>
    </property>
    <property name="text">
     <string>copy</string>
@@ -97,8 +97,8 @@
   </action>
   <action name="actionpaste">
    <property name="icon">
-    <iconset resource="resource.qrc">
-     <normaloff>:/image/paste.png</normaloff>:/image/paste.png</iconset>
+    <iconset>
+     <normaloff>image/paste.png</normaloff>image/paste.png</iconset>
    </property>
    <property name="text">
     <string>paste</string>
@@ -106,8 +106,8 @@
   </action>
   <action name="actionaboutqt">
    <property name="icon">
-    <iconset resource="resource.qrc">
-     <normaloff>:/image/qt_32x32.png</normaloff>:/image/qt_32x32.png</iconset>
+    <iconset>
+     <normaloff>image/qt_32x32.png</normaloff>image/qt_32x32.png</iconset>
    </property>
    <property name="text">
     <string>aboutQt</string>
@@ -115,8 +115,8 @@
   </action>
   <action name="actionnew">
    <property name="icon">
-    <iconset resource="resource.qrc">
-     <normaloff>:/image/new.png</normaloff>:/image/new.png</iconset>
+    <iconset>
+     <normaloff>image/new.png</normaloff>image/new.png</iconset>
    </property>
    <property name="text">
     <string>new</string>
@@ -127,8 +127,8 @@
   </action>
   <action name="actioncut">
    <property name="icon">
-    <iconset resource="resource.qrc">
-     <normaloff>:/image/cut.png</normaloff>:/image/cut.png</iconset>
+    <iconset>
+     <normaloff>image/cut.png</normaloff>image/cut.png</iconset>
    </property>
    <property name="text">
     <string>cut</string>
@@ -138,8 +138,6 @@
    </property>
   </action>
  </widget>
- <resources>
-  <include location="resource.qrc"/>
- </resources>
+ <resources/>
  <connections/>
 </ui>
