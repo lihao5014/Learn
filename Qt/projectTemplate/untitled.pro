@@ -15,6 +15,10 @@ SOURCES += source/main.cpp  \
 
 FORMS += ui/
 
-RC_ICONS = resource/
-
 INCLUDEPATH += $$PWD/include
+
+#DEPENDPATH += $$PWD/
+
+#RC_ICONS = $$PWD/resource/
+
+RESOURCES += $$PWD/resource/
