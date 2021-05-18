@@ -8,6 +8,8 @@ TEMPLATE = app
 CONFIG += c++11
 DESTDIR = $$PWD/bin
 
+#DEFINES +=
+
 HEADERS += include/
 
 SOURCES += source/main.cpp  \
@@ -21,4 +23,4 @@ INCLUDEPATH += $$PWD/include
 
 #RC_ICONS = $$PWD/resource/
 
-RESOURCES += $$PWD/resource/
+#RESOURCES += $$PWD/resource/
