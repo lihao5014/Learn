@@ -94,9 +94,9 @@ void creat_test()
 		free(tailStr);
 		tailStr = NULL;
 	}
+#endif
 	
 	close(fb);
-#endif
 }
 
 void open_test()

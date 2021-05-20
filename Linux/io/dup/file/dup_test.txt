@@ -1,0 +1,4 @@
+hello world
+time is 2021/05/19
+output to dup_test.txt
+dup_test3: new_fb is 1
