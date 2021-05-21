@@ -1,0 +1,2 @@
+hello world
+time is 2021.05.21study fdopen usage
