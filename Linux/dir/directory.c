@@ -7,7 +7,7 @@
  */
 
 /*1.目录属性结构体struct dirent定义：（使用man 3 readdir可以查看）
- * struct dirent{
+ * struct dirent {
  *     ino_t          d_ino;       // Inode number（文件对应的inode编号, 定位文件存储在磁盘的那个数据块上）。
  *     off_t          d_off;       // Offset to the next dirent（文件在当前目录中的偏移量）。
  *     unsigned short d_reclen;    // Length of this record（文件名字的实际长度）。

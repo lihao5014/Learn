@@ -2,8 +2,8 @@
 
 CC := gcc
 
-TARGET := main.out
-SOURCE := main.c
+TARGET := directory.out
+SOURCE := directory.c
 
 all:${TARGET}
 
