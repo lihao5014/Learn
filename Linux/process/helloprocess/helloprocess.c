@@ -1,4 +1,4 @@
-#include <unistd.h>       //write(),sleep(),getpid(),getppid()
+#include <unistd.h>       //write(),sleep(),getpid(),getppid(),fork(),vfork()
 #include <sys/types.h>    //pid_t
 #include <sys/wait.h>
 #include <stdio.h>
