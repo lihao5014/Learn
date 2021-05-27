@@ -7,8 +7,9 @@ main_dynamic.exe:libmath.dll ../src/main.c
 libmath.a:add.o sub.o mult.o divi.o
 	ar rcs -o ../lib/libmath.a add.o sub.o mult.o divi.o
 
+#-fPIC用于生成位置无关的代码（Position-Independent Code）。
 libmath.dll:
-	gcc -shared -o ../lib/libmath.dll ../src/add.c ../src/sub.c ../src/mult.c ../src/divi.c -I ../include
+	gcc -fPIC -shared -o ../lib/libmath.dll ../src/add.c ../src/sub.c ../src/mult.c ../src/divi.c -I ../include
 	copy ..\lib\libmath.dll ..\bin
 
 add.o:../src/add.c

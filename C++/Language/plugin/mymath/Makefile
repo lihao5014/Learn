@@ -1,7 +1,8 @@
 all: libmymath.dll test.exe
 
+#-fPIC用于生成位置无关的代码（Position-Independent Code）。
 libmymath.dll:
-	gcc -shared -o libmymath.dll mymath.c
+	gcc -fPIC -shared -o libmymath.dll mymath.c
 
 test.exe:
 	gcc -o test.exe main.c -ldl

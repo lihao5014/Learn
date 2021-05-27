@@ -11,8 +11,9 @@ libperson.a:person.c
 	ar rcs -o static_library/libperson.a person.o
 
 #生成动态库文件需要单独的gcc命令-shared。
+#-fPIC用于生成位置无关的代码（Position-Independent Code）。
 libperson.dll:person.c
-	gcc -shared person.c -o ./dynamic_library/libperson.dll
+	gcc -fPIC -shared person.c -o ./dynamic_library/libperson.dll
 	copy dynamic_library/libperson.dll .
 
 #这里的clean不是一个文件，它只不过是一个动作的名字，也可称其为标签，不依赖其他文件。
