@@ -164,9 +164,59 @@
  *（1）sa_handler：是一个函数指针，指定信号处理函数。除了可以使用自定义的处理函数外，还可以为SIG_DFL默认处理方式
  *                 或SIG_IGN忽略信号。它的处理函数只有一个参数，即信号值。
  *（2）sa_sigaction: 是一个函数指针，指向的函数就是捕捉到的信号的处理动作。
- *（2）sa_mask：是一个信号集，它可以指定在信号处理程序执行过程中哪些信号应当被屏蔽。在调用信号捕获函数前，
- *              该信号集要加入到信号的信号屏蔽集中。
- *（3）sa_flags：中包含了很多标志位，是对信号进行处理的各个选择项。
+ *（2）sa_mask：在信号处理函数执行期间，临时屏蔽某些信号，将要屏蔽的信号设置到集合中即可。当前处理函数执行完毕，
+ *              临时屏蔽自动解除。假设在这个集合中不屏蔽任何信号，默认也会屏蔽一个，捕捉的信号是谁，就临时屏蔽谁。
+ *（3）sa_flags：使用哪个函数指针指向的函数处理捕捉到的信号。
+ *  ①0：使用sa_handler（一般情况下使用这个)。
+ *  ②SA_SIGINFO：使用sa_sigaction（使用信号传递数据，即等于进程间通信)。
+ *（4）sa_restorer: 被废弃的成员。
+ */
+
+/*16.信号集：
+ *（1）为了方便对多个信号进行处理，在Linux系统中引入了信号集。信号集是用来表示多个信号的数据类型sigset_t。
+ *（2）sigset_t是整形数组被封装之后得到的数据类型，原型int[32]，里边一共有1024给标志位, 每一个信号对应一个标志位。
+ *（3）使用信号集函数组处理信号时设计了一系列的函数。这些函数按照先后的调用次序可分为以下3大模块：创建信号集、
+ *     注册信号处理函数及检测信号。
+ *（4）创建信号集主要用于处理用户感兴趣的一些信号。
+ *（5）注册信号处理函数主要用于决定进程如何处理信号。注意信号集里的信号并不是真正可以处理的信号，只有当信号的状态
+ *     处于非阻塞状态时才会真正起作用。因此首先使用sigprocmask()函数检测并更改阻塞信号集（阻塞信号集是用来指定当前
+ *     被阻塞的一组信号，它们不会被进程接收），然后使用sigaction()函数来定义进程接收到特定信号后的行为。
+ *（6）检测信号是信号处理的后续步骤，因为被阻塞的信号不会传递给进程，所以这些信号就处于“未处理”状态
+ *    （进程不清楚它们的存在）。sigaction()函数允许进程检测“未处理”信号，并进一步决定对它们做何处理。
+ */
+
+/*17.创建信号集相关的函数：
+ *（1）int sigemptyset(sigset_t *set)。                    //将信号集初始化为空
+ *（2）int sigfillset(sigset_t *set)。                     //将信号集初始化为包含所有已定义的信号集
+ *（3）int sigaddset(sigset_t *set, int signum)。          //将指定信号加入到信号集中
+ *（4）int sigdelset(sigset_t *set, int signum)。          //将指定信号从信号集中删除
+ *（5）int sigismember(const sigset_t *set, int signum)。  //查询指定信号是否在信号集中，在返回1，不在返回0
+ */
+
+/*18.信号阻塞集：（信号屏蔽集/信号掩码）
+ *（1）信号阻塞集也称信号屏蔽集、信号掩码。每个进程都有一个阻塞集，创建子进程时子进程将继承父
+ *     进程的阻塞集。信号阻塞集用来描述哪些信号递送到该进程的时候被阻塞，即在信号发生时记住它，
+ *     直到进程准备好时再将信号通知进程。
+ *（2）所谓信号阻塞并不是禁止传送信号，而是暂缓信号的传送。若将被阻塞的信号从信号阻塞集中删除，
+ *     且对应的信号在被阻塞时发生了，进程将会收到相应的信号。
+ *（3）可以通过sigprocmask()修改当前的信号掩码来改变信号的阻塞情况。
+ */
+
+/*19.sigprocmask()函数的用法：
+ *（1）函数原型：int sigprocmask(int how, const sigset_t *set, sigset_t *oldset)。
+ *（2）功能：检查或修改信号阻塞集，根据how指定的方法对进程的阻塞集合进行修改，新的信号阻塞集由set指定，
+ *           而原先的信号阻塞集合由oldset保存。
+ *（3）how参数：指定信号阻塞集合的修改方法，有3种情况。
+ *  ①SIG_BLOCK：向信号阻塞集合中添加set信号集，新的信号掩码是set和旧信号掩码的并集。
+ *  ②SIG_UNBLOCK：从信号阻塞集合中删除set信号集，从当前信号掩码中去除set中的信号。
+ *  ③SIG_SETMASK：将信号阻塞集合设为set信号集，相当于原来信号阻塞集的内容清空，
+ *                 然后按照set中的信号重新设置信号阻塞集。
+ *（4）set参数：要操作的信号集地址。若set为NULL，则不改变信号阻塞集合，函数只把当前信号阻塞集合保存到oldset中。
+ *（5）oldset参数：保存原先信号阻塞集地址。
+ *（6）返回值：成功返回0，失败返回-1，失败时错误代码只可能是EINVAL，表示参数how不合法。
+ *（7）注意不能阻塞SIGKILL和SIGSTOP等信号。但是当set参数包含这些信号时sigprocmask()不返回错误，只是忽略它们。
+ *    另外阻塞SIGFPE这样的信号可能导致不可挽回的结果，因为这些信号是由程序错误产生的，忽略它们只能导致程序无法
+ *    执行而被终止。
  */
 
 #include <unistd.h>       //fork(),pause(),sleep(),alarm(),getpid()
@@ -192,6 +242,7 @@ static void kill_test2();
 static void alarm_test1();
 static void alarm_test2();
 static void mysleep_test();
+static void sigaction_test();
 
 int main(int argc,char* argv[])
 {
@@ -200,8 +251,9 @@ int main(int argc,char* argv[])
 	// kill_test1();
 	// kill_test2();
 	// alarm_test1();
-	alarm_test2();
+	// alarm_test2();
 	// mysleep_test();
+	sigaction_test();
 	
 	return 0;
 }
@@ -469,4 +521,78 @@ void mysleep_test()
 	mysleep(5);
 	
 	fprintf(stdout,"mysleep_test: end ,pid =%d\n",getpid());
+}
+
+/*在信号处于阻塞状态时，所发出的信号对进程不起作用，并且该信号进入待处理状态。
+ *当信号脱离了阻塞状态时，以前发出的信号才能正常运行。
+ */
+void sigaction_test()
+{
+	printf("sigaction_test: before ,pid =%d\n",getpid());
+	
+	sigset_t blockset;    //创建阻塞信号集
+	sigemptyset(&blockset);   //初始化阻塞信号集为空
+	
+	sigaddset(&blockset,SIGINT);    //将相应的信号添加到信号集中
+	sigaddset(&blockset,SIGQUIT);
+	sigaddset(&blockset,SIGALRM);
+	
+	struct sigaction action;
+	sigemptyset(&action.sa_mask);   //清空信号集的内容
+	
+	action.sa_handler = handle;
+	action.sa_flags = SA_NODEFER;
+	sigaction(SIGINT,&action,NULL);   //注册SIGINT信号处理函数
+	
+	action.sa_handler = SIG_DFL;      //采用系统默认的方式处理SIGQUIT信号，即终止进程
+	sigaction(SIGQUIT,&action,NULL);
+	
+	if(sigismember(&blockset,SIGALRM) == 1)  //查询SIGALRM信号是否在blockset阻塞信号集中
+	{
+		action.sa_handler = handle;
+	    action.sa_flags = SA_NOMASK;        //SA_NOMASK与SA_NODEFER效果相同
+		sigaction(SIGALRM,&action,NULL);
+	}
+
+	alarm(3);   //设置定时器延时3s发出SIGALRM信号。
+	
+	/*因为SIGINT、SIGQUIT和SIGALRM信号被添加到了阻塞信号集中，所以即使定时器延时满3s，
+	 *发出了SIGALRM信号，进程也不会接收到。
+	 */
+	sigprocmask(SIG_BLOCK,&blockset,NULL);   //设置阻塞信号集，此时blockset中的信号不会被传递给进程，暂时进入待处理状态。
+
+	printf("sigaction_test: signal set was blocked ,press any key: ");
+	getchar();    //阻塞进程，为了等待用户输入测试信号。
+	
+	sigset_t pendset;       //创建未决信号集
+	sigpending(&pendset);   //读取未决信号集
+	
+	if(sigismember(&pendset,SIGALRM) == 1)   //检查SIGALRM信号是否在pendset未决信号集中
+	{
+		puts("sigaction_test: SIGALRM is in pendset");
+	}
+	else
+	{
+		fputs("sigaction_test: SIGALRM isn't in pendset\n",stdout);
+	}
+	
+	if(sigismember(&pendset,SIGINT) == 1)   //检查SIGINT信号是否在pendset未决信号集中
+	{
+		puts("sigaction_test: SIGINT is in pendset");
+	}
+	else
+	{
+		fputs("sigaction_test: SIGINT is isn't pendset\n",stdout);
+	}
+	
+	//如果信号的阻塞被解除了，那么解除信号阻塞前发出的信号就会被马上发送执行。
+	sigprocmask(SIG_UNBLOCK,&blockset,NULL);    //从阻塞信号集中，删除pendset中的信号。
+	
+	for(int i=0;i<6;++i)
+	{
+		fputs("sigaction_test: do some work\n",stdout);
+		sleep(1);
+	}
+	
+	fprintf(stdout,"sigaction_test: after ,pid =%d\n",getpid());
 }
