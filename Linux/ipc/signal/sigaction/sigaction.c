@@ -14,6 +14,7 @@
  *（5）Linux中的每个信号产生之后都会有对应的默认处理行为，如果想要忽略或修改某个信号的默认行为就需要在程序中
  *     捕捉该信号。程序中进行信号捕捉可以看做是一个注册的动作，提前告诉应用程序信号产生之后做什么样的处理，
  *     当进程中对应的信号产生了，这个处理动作也就被调用了。
+ *（6）如果linux执行一个信号处理函数的时候如果又收到一个不同种信号，会去执行新的信号处理函数，执行完之后再回来执行。
  */
  
 /*2.信号的产生方式：
@@ -110,10 +111,10 @@
  *（6）返回值：成功返回0，失败返回-1，并把错误号写到errno变量中。
  *
  *（7）itimerval结构体的定义：
- * struct itimerval {
- *     struct timeval it_interval;   //时间间隔
- *     struct timeval it_value;      //第一次触发定时器的时长
- * };
+ *  struct itimerval {
+ *      struct timeval it_interval;   //时间间隔
+ *      struct timeval it_value;      //第一次触发定时器的时长
+ *  };
  *
  *（8）timeval结构体的定义：（timeval结构体表示的是一个时间段: tv_sec + tv_usec）
  * struct timeval {
@@ -159,7 +160,7 @@
  *（4）sigpending()函数的用法：
  *  ①函数原型：int sigpending(sigset_t *set)。
  *  ②功能：读取未决信号集。
- *  ③set参数：是传出参数, 传出的内核未决信号集的拷贝。读一下这个集合就指定哪个信号是未决状态。
+ *  ③set参数：是一个传出参数，传出的内核未决信号集的拷贝。读一下这个集合就知道哪个信号是未决状态。
  */
 
 /*12.信号集相关操作函数：（sigprocmask()有一个sigset_t类型的参数set，对set进行初始化就需要调用创建信号集函数）
@@ -254,6 +255,12 @@
  *  	void  *sival_ptr;     //用于传递任意类型的大规模数据。
  *  };
  */
+
+/*16.SIGCHLD信号：（子进程改变状态时，父进程就会收到SIGCHLD信号）
+ *当子进程退出、暂停、从暂停恢复运行的时候，在子进程中会产生一个SIGCHLD信号，并将其发送给父进程。
+ *但是父进程收到这个信号之后默认就忽略了。可以在父进程中对该信号加以利用，以实现回收子进程的资源，
+ *因此需要在父进程中捕捉子进程发送过来的SIGCHLD信号。
+ */
  
 #include <unistd.h>       //fork(),_exit(),read(),write(),alarm()
 #include <signal.h>       //kill(),raise(),signal(),sigaction(),sigqueue()
@@ -279,6 +286,7 @@ static void handle(int signo);
 static void timeout(int signo);
 static void deal_with(int signo);
 static void dispose(int signum,siginfo_t *info,void *context);
+static void recycle(int signo);
 
 #ifndef _CHANGE_WAY_
 static void (*mysignal(int signo,void (*pfun)(int)))(int);
@@ -293,6 +301,7 @@ static void setitimer_test();
 static void sigaction_test();
 static void sigprocmask_test();
 static void sigqueue_test();
+static void resource_collect();
 
 int main(int argc,char* argv[])
 {
@@ -300,7 +309,8 @@ int main(int argc,char* argv[])
 	// setitimer_test();
 	// sigaction_test();
 	// sigprocmask_test();
-	sigqueue_test();
+	// sigqueue_test();
+	resource_collect();
 	
 	return 0;
 }
@@ -360,6 +370,34 @@ void dispose(int signum,siginfo_t *info,void *context)
 	// printf("info->si_ptr =%s\n", (char*)info->si_ptr);              //打印通过信号传递过来的指针数据。
     printf("info->si_value.sival_ptr =%s\n", (char*)info->si_value.sival_ptr);
 #endif
+}
+
+/*使用非阻塞方式回收子进程的资源。因为SIGCHLD为17号信号，1-31号信号都不支持排队。如果这些信号同时产生多个，
+ *最终处理的时候只处理一次。假设多个子进程同时退出，父进程同时收到了多个SIGCHLD信号，父进程只会处理一次该信号，
+ *recycle()函数只被调用一次。waitpid被调用一次相当于只回收了一个子进程，但同时死了多个子进程，就出现了僵尸进程。
+ */
+void recycle(int signo)
+{
+	printf("recycle: pid =%d ,signo =%d\n",getpid(),signo);
+	
+	for(;;)
+	{
+		pid_t retpid = waitpid(-1,NULL,WNOHANG);  //使用waitpid()非阻塞轮询的方式，回收子进程的退出资源
+		if(retpid > 0)
+		{
+			printf("recycle: child process died ,retpid =%d\n",retpid);
+		}
+		else if(retpid == 0)  //没有死亡的子进程, 直接退出当前循环
+		{
+			puts("recycle: child process running");
+			break;
+		}
+		else if(retpid == -1)
+		{
+			fputs("recycle: don't have child process to collecte\n",stdout);
+			break;
+		}
+	}
 }
 
 #ifndef _CHANGE_WAY_
@@ -598,5 +636,68 @@ void sigqueue_test()
 		
 		const char info[] = "sigqueue_test: parent process exit\n";
 		write(STDOUT_FILENO,info,strlen(info));
+	}
+}
+
+void resource_collect()
+{
+	sigset_t blockset;
+	sigemptyset(&blockset);
+	sigaddset(&blockset,SIGCHLD);    //设置SIGCHLD信号阻塞
+	sigprocmask(SIG_BLOCK,&blockset,NULL);
+	
+	pid_t pid = -1;
+	for(int i=0;i<10;++i)   //循环创建5个子进程
+	{
+		pid = fork();
+		if(pid == 0)  //只让父进程创建子进程，如果是子进程不让其继续创建子进程。
+		{
+			break;
+		}
+	}
+	
+	if(pid == 0)
+	{
+		printf("resource_collect: child process ,pid =%d ,ppid =%d\n",getpid(),getppid());
+		_exit(-1);
+	}
+	else if(pid > 0)
+	{
+		fprintf(stdout,"resource_collect: parent process ,pid =%d ,cpid =%d ,ppid =%d\n",getpid(),pid,getppid());
+		
+		struct sigaction action;
+		sigemptyset(&action.sa_mask);
+		action.sa_handler = recycle;
+		action.sa_flags = SA_NODEFER;    //使用旧式的函数指针sa_handler来作为信号处理函数
+
+		/*注册信号捕捉，委托内核处理将来产生的信号当信号产生之后。当前进程优先处理信号，之前的处理动作会暂停，
+         *信号处理完毕之后, 回到原来的暂停的位置继续运行。
+		 */
+		sigaction(SIGCHLD,&action,NULL);
+		sleep(1);   //等待子进程都运行完退出，以查看未接信号集中的数据
+		
+		sigset_t pendset;
+		sigpending(&pendset);     //获取未决信号集
+		if(sigismember(&pendset,SIGCHLD))   //判断SIGCHLD信号是否在未决信号集中
+		{
+			printf("resource_collect: %d SIGCHLD in pendset\n",SIGCHLD);
+		}
+		else
+		{
+			fprintf(stdout,"resource_collect: %d SIGCHLD out of pendset\n",SIGCHLD);
+		}
+		
+		//解除SIGCHLD信号的阻塞。信号被阻塞之后，就捕捉不到了，解除阻塞之后才能捕捉到这个信号。
+		sigprocmask(SIG_UNBLOCK,&blockset,NULL);
+		
+		//默认父进程执行for循环中的语句。但是信号产生了，默认执行逻辑就会被强迫暂停，转而让父进程去运行信号的处理函数
+		for(int i=0;i<5;++i)
+		{
+			puts("resource_collect: parent process is running");
+			sleep(1);    //休眠1s，减小CPU使用率
+		}
+		
+		const char* info = "resource_collect: parent process run finished\n";
+		fwrite(info,strlen(info),1,stdout);
 	}
 }
