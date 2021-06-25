@@ -95,7 +95,7 @@
  *    关闭用popen()创建的流管道必须使用函数pclose()，该函数关闭标准I/O流，并等待命令执行结束。
  */
 
-/*10.popen()函数的工作步骤：
+/*10.popen()函数的工作过程：
  *（1）创建一个管道。
  *（2）fork()创建一个子进程。
  *（3）在父子进程中关闭不需要的文件描述符。
@@ -105,15 +105,17 @@
  */
 
 #include <unistd.h>       //fork(),dup(),dup2(),execlp()
+#include <fcntl.h>        //fcntl()
 #include <sys/types.h>    //pid_t,ssize_t
 #include <sys/wait.h>     //wait(),waitpid(),WIFEXITED(),WEXITSTATUS()
 #include <stdio.h>        //popen(),pclose()
-#include <stdlib.h>       //exit(),malloc(),free()
-#include <string.h>       //strerror()
+#include <stdlib.h>       //exit(),malloc(),free(),system()
+#include <string.h>       //strerror(),bzero()
+#include <assert.h>
 #include <errno.h>        //errno全局变量
 
 #define _CHANGE_WAY_
-// #undef _CHANGE_WAY_
+#undef _CHANGE_WAY_
 
 #define BUFF_SIZE 256
 
@@ -125,6 +127,9 @@ static void pipe_communicate();
 static void pipe_transmit();
 static void popen_test();
 
+static void mysystem(const char* cmd);
+static void fcntl_pipe();
+
 int main(void)
 {
     // pipe_test();
@@ -132,7 +137,9 @@ int main(void)
     
     // pipe_communicate();
     // pipe_transmit();
-    popen_test();
+    // popen_test();
+	// mysystem("ls -al");
+	fcntl_pipe();
 	
 	return 0;
 }
@@ -449,7 +456,84 @@ void popen_test()
 	while(fgets(buf,sizeof(buf),fp) != NULL)
 	{
 		fputs(buf,stdout);
+		bzero(buf,sizeof(buf));
 	}
 	
 	pclose(fp);
+}
+
+void mysystem(const char* cmd)
+{
+	assert(cmd != NULL);
+	
+	FILE *fp = popen(cmd,"r");
+	if(fp == NULL)
+	{
+		perror("mysystem error: ");
+		_exit(-1);
+	}
+	
+	int size = 0;
+	char buf[BUFF_SIZE] = {0};
+	while((size = fread(buf,1,sizeof(buf),fp)) > 0)   //fread()一次读取一个字节才能读取文件的长度
+	{
+		fwrite(buf,size,1,stdout);
+		memset(buf,0,BUFF_SIZE);
+	}
+}
+
+/*通过fcntl()函数设置文件的阻塞特性：
+ *（1）设置为阻塞：fcntl(fd,F_SETFL,0)。
+ *（2）设置为非阻塞：fcntl(fd,F_SETFL,O_NONBLOCK)。
+ */
+void fcntl_pipe()
+{
+	int fb[2] = {-1,-1};
+	if(pipe(fb) == -1)
+	{
+		puts("fcntl_pipe error: create pipe failed");
+		abort();
+	}
+	
+	pid_t pid = fork();
+	if(pid == -1)
+	{
+		perror("fcntl_pipe error: ");
+		return ;
+	}
+	else if(pid == 0)
+	{
+		close(fb[0]);
+		sleep(2);
+		
+		const char info[] = "fcntl() modify pipe";
+		write(fb[1],info,strlen(info));
+		
+		close(fb[1]);
+		exit(1);
+	}
+	else if(pid > 0)
+	{
+		close(fb[1]);
+#ifndef _CHANGE_WAY_
+		puts("fcntl_pipe: non-blocking pipe");
+		fcntl(fb[0],F_SETFL,O_NONBLOCK);   //设置管道的读端文件描述符为非阻塞
+#else
+		fputs("fcntl_pipe: blocking pipe\n",stdout);
+		fcntl(fb[0],F_SETFL,0);            //设置管道的读端文件描述符为阻塞
+#endif
+
+		char buf[BUFF_SIZE] = {0};
+		for(int i=0;i<5;++i)
+		{
+			read(fb[0],buf,BUFF_SIZE);
+			printf("receive [%s] from pipe ,i =%d\n",buf,i);
+			
+			sleep(1);
+			bzero(buf,sizeof(buf));
+		}
+		
+		close(fb[0]);
+		waitpid(pid,NULL,0);   //阻塞等待回收子进程资源
+	}
 }
