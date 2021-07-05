@@ -115,13 +115,12 @@
 #include <errno.h>        //errno全局变量
 
 #define _CHANGE_WAY_
-#undef _CHANGE_WAY_
+// #undef _CHANGE_WAY_
 
 #define BUFF_SIZE 256
 
 static void pipe_test();
 static void pipe_count();
-static void pipe_message();   //struct
 
 static void pipe_communicate();
 static void pipe_transmit();
