@@ -84,7 +84,7 @@
  *（1）函数原型：int mkfifo(const char *pathname, mode_t mode)。
  *（2）功能：创建有名管道。
  *（3）pathname参数：要创建的有名管道的名字。
- *（4）mode参数：文件的操作权限，和open ()的第三个参数一个作用，最终权限为(mode & ~umask)。
+ *（4）mode参数：文件的操作权限，和open()的第三个参数一个作用，最终权限为(mode & ~umask)。
  *（5）返回值：创建成功返回0，失败返回-1。
  */
 
