@@ -15,8 +15,10 @@ ${TARGET}:$(OBJECT)
 ${OBJECT}:$(SOURCE)
 	$(CC) -c $< -o $@
 
-debug:
+debug:FORCE
 	$(CC) -g $(SOURCE) -o ${TARGET}   #如果要调试程序，则在进行gcc编译的时候要加上-g参数
+
+FORCE:     #FORCE为强制目标
 
 run:
 	./$(TARGET) welcome

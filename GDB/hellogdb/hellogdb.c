@@ -44,7 +44,7 @@
  *  ⑥break sum               //在进入sum()函数时停住。C++中可以使用class::function或function(type,type)格式来指定函数名。
  *  ⑦break hellodbg.c:sum    //在源文件hellodbg.c的sum()函数入口处停住。
  *  ⑧break                   //break命令没有参数时，表示在下一条命令处停住。
- *  ⑨break 25 if i = 6       //在循环体中，可以设置"break if i = 6"表示当i为6时停住程序。
+ *  ⑨break 25 if i == 6       //在循环体中，可以设置"break if i == 6"表示当i为6时停住程序。
  *
  *（5）查看断点：
  *  ①info：设置完断点以后，用户可以键入"info b"来查看断点设置情况。
