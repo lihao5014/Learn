@@ -1,10 +1,30 @@
 #include <iostream>
 
+#define _CHANGE_WAY_
+// #undef _CHANGE_WAY_
+
 using namespace std;
 
+class Empty{};      //空类的大小是1个字节
+
+/*类中只要有虚函数，那么32位系统中就会增加4个字节大小的虚表指针，64位系统中会增加8个字节的虚表指针。
+ *32位系统中指针大小位4个字节，64位系统中指针大小位8个字节。
+ */
 class Base
 {
 public:
+#ifndef _CHANGE_WAY_
+	~Base()
+	{
+		cout<<"Base destructor"<<endl;
+	}
+#else
+	virtual ~Base()
+	{
+		cout<<"virtual Base destructor"<<endl;
+	}
+#endif
+	
 	virtual void fun(int a)
 	{
 		cout<<"class Base: fun "<<a<<endl;
@@ -19,6 +39,12 @@ public:
 class SubClass:public Base
 {
 public:
+	~SubClass()
+	{
+		cout<<"SubClass destructor"<<endl;
+	}
+	
+	
 	void fun(int a)
 	{
 		cout<<"class SubClass: fun "<<a<<endl;
@@ -39,6 +65,15 @@ public:
 
 int main()
 {
+	cout<<"sizeof(Empty) ="<<sizeof(Empty)<<endl;
+	cout<<"sizeof(Base) ="<<sizeof(Base)<<endl;
+	
+	{
+		//Base父类指针q，指向子类SubClass
+		Base *q = new SubClass;    //如果Base父类中没有虚析构函数，那么delete父类指针时，只调用父类的析构函数。
+		delete q;                  //如果Base父类中有虚析构函数，那么delete父类指针时，就会动态调用到子类和父类的析构函数。
+	}
+	
 	Base a,*p = &a;
 	SubClass b;
 	
