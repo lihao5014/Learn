@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <limits.h>
 
 static int isLetter(int c);
 static int isNumber(int c);
@@ -10,6 +11,9 @@ static int isUpper(int c);
 static int isLower(int c);
 static int toUpper(int c);
 static int toLower(int c);
+
+static int charToDigit(int c);
+static char digitToChar(int num);
 
 static void number_test();
 static void char_test();
@@ -68,6 +72,28 @@ int toLower(int c)
 	return c + ('a' - 'A');
 }
 
+int charToDigit(int c)
+{
+	if(!isNumber(c))
+	{
+		printf("charToDigit error: %c isn't a number\n",c);
+		return INT_MIN;
+	}
+	
+	return c - '0';
+}
+
+char digitToChar(int num)
+{
+	if(num < 0 || num > 9)
+	{
+		printf("digitToChar error: %d can't convert to character\n",num);
+		return '\0';
+	}
+	
+	return num + '0';
+}
+
 void number_test()
 {
 	int var = '5';
@@ -87,6 +113,12 @@ void number_test()
 	{
 		fprintf(stdout,"var =%c ,isn't a letter or number\n",var);
 	}
+	
+	int num = charToDigit('5');
+	printf("num =%d ,character convert to digit\n",num);
+	
+	int ch = digitToChar(7);
+	printf("ch =%c ,digit convert to character\n",ch);
 }
 
 void char_test()

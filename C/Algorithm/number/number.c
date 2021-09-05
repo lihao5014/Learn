@@ -16,6 +16,14 @@
 #define _CHANGE_WAY
 // #undef _CHANGE_WAY
 
+typedef enum Bool_t
+{
+	FALSE = 0,
+	TRUE = ~0
+}Bool;
+
+static void displayNumber();
+
 static void showArray(const int arr[],const int size);
 
 static int getLength(int num);
@@ -30,8 +38,13 @@ static int charToNumber(char ch);
 static char* intToString(int num);
 static int stringToInt(const char* str);
 
+static Bool binaryToDecimal(const char* pbin,int *pnum);
+static Bool decimalToBinary(int num,char* pbin);
+
 int main(void)
 {
+	displayNumber();
+	
 	printf("123 ,len =%d\n",getLength(123));
 	printf("-123 ,len =%d\n",getLength(-123));
 	printf("0 ,len =%d\n",getLength(0));
@@ -73,8 +86,30 @@ int main(void)
 	
 	ret = stringToInt("-12abc3");
 	printf("ret =%d\n",ret);
+
+	int digit = 0;
+	binaryToDecimal("10110",&digit);
+	printf("digit =%d\n",digit);
 	
+	char binary[32] = {0};
+	decimalToBinary(37,binary);
+	printf("binary =%s\n",binary);
+
 	return 0;
+}
+
+void displayNumber()
+{
+	int a = 0b1101;     //二进制由0和1两个数字组成，使用时必须以0b或0B开头，不区分大小写。
+	int b = 07562;      //八进制由0~7八个数字组成，使用时必须以0开头。注意是数字0，不是字母o。
+	int c = 0xA93C;     //十六进制由数字0~9、字母A~F或a~f组成，使用时必须以0x或0X开头，不区分大小写。
+
+	char buf[16] = {0};
+	itoa(a,buf,2);           //itoa()不是标准C库函数，只有vc++编译器在string.h中实现了该函数，而gcc中没有提供该函数。
+	printf("decimal: a =%d , binary: a =%s\n",a,buf);       //printf()函数不能直接打印二进制，需要将二进制数先转换为字符串再显示
+	
+	printf("decimal: b =%d , octonal: b =%o\n",b,b);        //%o以八进制形似输出
+	printf("decimal: c =%d , hexadecimal: c =%x\n",c,c);    //%x以十六进制形似输出
 }
 
 void showArray(const int arr[],const int size)
@@ -345,3 +380,56 @@ int stringToInt(const char* str)
 	return num;
 }
 #endif
+
+Bool binaryToDecimal(const char* pbin,int *pnum)
+{
+	if(pbin == NULL || pnum == NULL)
+	{
+		puts("binaryToDecimal error: pbin or pnum is null");
+		return FALSE;
+	}
+	
+	int n = 1;
+	for(int i=strlen(pbin) - 1;i>=0;--i)
+	{
+		*pnum += (pbin[i] - '0') * n;
+		n *= 2;
+	}
+	
+	return TRUE;
+}
+
+Bool decimalToBinary(int num,char* pbin)
+{
+	if(pbin == NULL)
+	{
+		fputs("decimalToBinary error: pbin is null\n",stdout);
+		return FALSE;
+	}
+	
+	int index = 0;
+	for(;;)
+	{
+		pbin[index] = num%2 + '0';
+		num /= 2;
+		index++;
+		
+		if(num == 1)
+		{
+			pbin[index] = '1';
+			break;
+		}
+	}
+	pbin[++index] = '\0';
+	
+	char temp = '\0';
+	int length = strlen(pbin);
+	for(int i=0;i<length/2;++i)
+	{
+		temp = pbin[i];
+		pbin[i] = pbin[length - 1 - i];
+		pbin[length - 1 - i] = temp;
+	}
+	
+	return TRUE;
+}
