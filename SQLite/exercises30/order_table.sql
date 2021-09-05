@@ -1,0 +1,13 @@
+PRAGMA foreign_keys=OFF;
+BEGIN TRANSACTION;
+CREATE TABLE order_table(order_id integer primary key,order_date date);
+INSERT INTO order_table VALUES(1,'2019-1-8');
+INSERT INTO order_table VALUES(2,'2019-1-9');
+INSERT INTO order_table VALUES(3,'2019-1-10');
+INSERT INTO order_table VALUES(4,'2019-1-11');
+INSERT INTO order_table VALUES(5,'2020-1-8');
+INSERT INTO order_table VALUES(6,'2020-1-9');
+INSERT INTO order_table VALUES(7,'2020-1-10');
+INSERT INTO order_table VALUES(8,'2020-1-11');
+INSERT INTO order_table VALUES(9,'2020-1-12');
+COMMIT;

@@ -1,0 +1,12 @@
+PRAGMA foreign_keys=OFF;
+BEGIN TRANSACTION;
+CREATE TABLE column_table(column1 integer,column2 int,column3 int);
+INSERT INTO column_table VALUES(5,10,7);
+INSERT INTO column_table VALUES(1,10,6);
+INSERT INTO column_table VALUES(9,3,5);
+INSERT INTO column_table VALUES(5,2,9);
+INSERT INTO column_table VALUES(10,4,3);
+INSERT INTO column_table VALUES(5,2,9);
+INSERT INTO column_table VALUES(5,8,6);
+INSERT INTO column_table VALUES(8,8,6);
+COMMIT;

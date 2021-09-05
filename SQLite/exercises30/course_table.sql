@@ -1,0 +1,14 @@
+PRAGMA foreign_keys=OFF;
+BEGIN TRANSACTION;
+CREATE TABLE course_table(id integer primary key auto_increment,name varchar(16),grade varchar(16),courses varchar(16));
+INSERT INTO course_table VALUES(1,'王小凤','一年级','心理学');
+INSERT INTO course_table VALUES(2,'刘诗迪','二年级','心理学');
+INSERT INTO course_table VALUES(3,'李思雨','三年级','社会学');
+INSERT INTO course_table VALUES(4,'张文华','一年级','心理学');
+INSERT INTO course_table VALUES(5,'张青云','二年级','心理学');
+INSERT INTO course_table VALUES(6,'徐文杰','三年级','计算机');
+INSERT INTO course_table VALUES(7,'李智瑞','一年级','心理学');
+INSERT INTO course_table VALUES(8,'徐雨秋','二年级','计算机');
+INSERT INTO course_table VALUES(9,'孙皓然','三年级','社会学');
+INSERT INTO course_table VALUES(10,'李春山','一年级','社会学');
+COMMIT;

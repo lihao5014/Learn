@@ -1,0 +1,10 @@
+PRAGMA foreign_keys=OFF;
+BEGIN TRANSACTION;
+CREATE TABLE winner_table(id integer,name varchar(16),primary key(id));
+INSERT INTO winner_table VALUES(1,'王小凤');
+INSERT INTO winner_table VALUES(2,'刘诗迪');
+INSERT INTO winner_table VALUES(3,'李思雨');
+INSERT INTO winner_table VALUES(7,'李智瑞');
+INSERT INTO winner_table VALUES(8,'徐雨秋');
+INSERT INTO winner_table VALUES(9,'孙皓然');
+COMMIT;

@@ -1,0 +1,16 @@
+PRAGMA foreign_keys=OFF;
+BEGIN TRANSACTION;
+CREATE TABLE consum_order_table(order_id integer primary key,user_id int,amount int);
+INSERT INTO consum_order_table VALUES(201901,1,10);
+INSERT INTO consum_order_table VALUES(201902,2,20);
+INSERT INTO consum_order_table VALUES(201903,3,15);
+INSERT INTO consum_order_table VALUES(201904,3,15);
+INSERT INTO consum_order_table VALUES(201905,4,20);
+INSERT INTO consum_order_table VALUES(201906,4,20);
+INSERT INTO consum_order_table VALUES(201907,5,25);
+INSERT INTO consum_order_table VALUES(201908,5,25);
+INSERT INTO consum_order_table VALUES(201909,6,30);
+INSERT INTO consum_order_table VALUES(201910,6,30);
+INSERT INTO consum_order_table VALUES(201911,7,35);
+INSERT INTO consum_order_table VALUES(201912,7,35);
+COMMIT;
