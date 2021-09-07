@@ -1,35 +1,40 @@
-#ifndef _STRING_H_
+﻿#ifndef _STRING_H_
 #define _STRING_H_
 
 #include <iostream>
 
-using namespace std;
-
 class String
 {
 public:
-	String(const char* str=0);
+	String(const char* str = NULL);
+	String(String&& str);
 	String(const String& str);
 	~String();
 	
-	char& at(const int index);
+	bool empty()const;
+	int length()const;
+	void clear();
+	char at(int index)const;
 	
-	char& operator [](const int index);
-	String operator +(const String& str);
-	String operator =(const String& str);
+	char& operator [](int index);
+	const char& operator [](int index)const;
 	
-	friend ostream& operator <<(ostream& os,const String& str);
+	String& operator +=(const String& str);
+	String& operator =(const String& str);
 	
+	bool operator ==(const String& str)const;
+	bool operator !=(const String& str)const;
+	bool operator >(const String& str)const;
+	bool operator <(const String& str)const;
+	
+	friend std::istream& operator >>(std::istream& is,String& str);
+	friend std::ostream& operator <<(std::ostream& os,const String& str);
 private:	
-	char* str;
+	char* buf;
+	int len;         //字符串长度，即不包含'\0'的长度。
 };
 
-
-
-inline istream&
-operator >>(istream& is,const String& str)
-{
-	
-}
+extern std::istream& operator >>(std::istream& is,String& str);
+extern std::ostream& operator <<(std::ostream& os,const String& str);
 
 #endif //_STRING_H_
