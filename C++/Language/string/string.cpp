@@ -38,7 +38,7 @@ String::String(const char* str)
 {
 	length = strlen(str);
 	buffer = new char[length+1];
-	assert(buffer != NULL);
+	// assert(buffer != NULL);    //new运算符分配内存失败，会抛出异常，所以不需要对new运算符的返回值做判空处理。
 	strcpy(buffer,str);
 }
 
@@ -76,7 +76,7 @@ void String::append(const char ch)
 
 	length++;
 	char* newStr = new char[length+1];
-	assert(newStr != NULL);
+	// assert(newStr != NULL);   //new运算符的返回值不需要做判空处理，malloc的返回值需要做判空处理。
 	
 	if(buffer != NULL)
 		strcpy(newStr,buffer);
@@ -92,7 +92,7 @@ void String::prepend(const char ch)
 {
 	length++;
 	char* newStr = new char[length+1];
-	assert(newStr != NULL);
+	// assert(newStr != NULL);      //new运算符分配内存失败，会抛出异常，所以不需要对new运算符的返回值做判空处理。
 	
 	if(buffer != NULL)
 		strcpy(newStr+1,buffer);
