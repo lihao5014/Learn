@@ -1,0 +1,12 @@
+hellocppcheck.c:16:9: error: Returning pointer to local variable 'str' that will be invalid when returning. [returnDanglingLifetime]
+ return str;      //函数不能返回临时变量的地址
+        ^
+hellocppcheck.c:16:9: note: Array decayed to pointer here.
+ return str;      //函数不能返回临时变量的地址
+        ^
+hellocppcheck.c:9:7: note: Variable created here.
+ char str[] = "hello world";       //str是一个数组，而不是指针。
+      ^
+hellocppcheck.c:16:9: note: Returning pointer to local variable 'str' that will be invalid when returning.
+ return str;      //函数不能返回临时变量的地址
+        ^

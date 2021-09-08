@@ -12,7 +12,7 @@ String::String(const char* str)
 {
 	if(str != NULL)
 	{
-		buf = new char[strlen(str) + 1];
+		buf = new char[strlen(str) + 1];    //一般new申请的内存，释放时用delete；new []申请的内存，释放时要用delete []才行。
 		strcpy(buf,str);
 		
 		len = strlen(str);
@@ -42,7 +42,7 @@ String::~String()
 {
 	if(buf != NULL)
 	{
-		delete buf;
+		delete buf;   //对于基本数据类型的动态数组，使用delete或delete []释放内存空间都可以。
 		buf = NULL;
 	}
 	

@@ -29,7 +29,7 @@ public:
 	
 	friend std::istream& operator >>(std::istream& is,String& str);
 	friend std::ostream& operator <<(std::ostream& os,const String& str);
-private:	
+private:
 	char* buf;
 	int len;         //字符串长度，即不包含'\0'的长度。
 };

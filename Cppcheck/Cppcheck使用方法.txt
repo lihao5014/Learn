@@ -1,0 +1,56 @@
+1.Cppcheck简介：（Cppcheck检查编写的代码是否安全和健壮，是否有隐藏的问题）
+  Cppcheck是一种C/C++代码缺陷静态检查工具。不同于C/C++编译器及很多其它分析工具，它不检查代码中的语法错误。
+  Cppcheck只检查编译器检查不出来的bug类型，其目的是检查代码中真正的错误，即零误报。
+
+2.Cppcheck的检查信息：
+（1）error错误：代码中的错误项，包括内存泄漏等。
+（2）warning警告：为了避免产生bug而提供的编程改进意见。
+（3）style风格警告：编码风格，提示你哪些函数没有使用、哪些为多余代码等。
+（4）portability可移植性警告：提示跨平台时容易出现的问题。
+（5）performance性能警告：该部分代码可以优化。
+（6）information提示消息：其他信息，可以忽略。
+
+3.Cppcheck的使用方法：
+（1）直接使用：在工具栏的"Analyze"中，可以选择要分析的文件目录，或者直接选择需要分析的文件。
+（2）结合VS使用：
+   ①在Visual Studio菜单栏"工具"→"外部工具"，点击"添加"，配置Cppcheck工具。
+   ②检查代码时，点击"工具"→"Cppcheck"即可。
+
+4.Cppcheck快捷键：
+（1）分析文件：Ctrl + F
+（2）分析目录：Ctrl + D
+（3）重新分析修改的文件：Ctrl + R
+
+5.命令行中使用Cppcheck：
+（1）cppcheck file.c                 //检查单个file.c文件。
+（2）cppcheck src                    //分析src文件夹中的所有文件。
+（3）cppcheck -isrc/test.c src       //检查src文件夹中的所有文件，但是忽略指定的src/test.c文件。
+
+6.开启提示消息类型：（Cppcheck命令行中默认情况只显示错误消息，可以通过--enable命令启用更多检查）
+（1）启用警告消息：cppcheck --enable=warning file.c
+（2）启用性能消息：cppcheck --enable=performance file.c
+（3）启用提示消息：cppcheck --enable=information file.c
+（4）启用警告和性能消息：cppcheck --enable=warning,performance file.c
+（5）启用未使用函数检查：cppcheck --enable=unusedFunction file.c
+（6）启用所有消息：cppcheck --enable=all
+
+7.保存Cppcheck结果到文件中：（希望将结果保存在一个文件中，可以使用shell的管道重定向错误输出到一个文件）
+  cppcheck file.c 2> error.txt
+
+8.Cppcheck多线程检查:
+  cppcheck -j 4 src     //选项-j用于指定需要使用的线程数。
+
+9.Cppcheck执行的检查项：
+（1）自动变量检查。
+（2）数组的边界检查。
+（3）class类检查。
+（4）过期的函数，废弃函数调用检查。
+（5）异常内存使用，释放检查。
+（6）内存泄漏检查，主要是通过内存引用指针。
+（7）操作系统资源释放检查，中断，文件描述符等。
+（8）异常STL函数使用检查。
+（9）代码格式错误，以及性能因素检查。
+
+10.Cppcheck学习资料：
+（1）Windows下Cppcheck的使用教程：https://blog.csdn.net/hellokandy/article/details/83302859
+（2）CppCheck介绍与使用：https://www.cnblogs.com/lvdongjie/p/9549254.html

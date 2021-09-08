@@ -18,9 +18,9 @@
     ps -e|grep sshd                          //查看是否打开sshd服务
 
 4.vim使用环境快速配置：
-	（1）http://www.cnblogs.com/ma6174/archive/2011/12/10/2283393.html                     //参考博客
-	（2）sudo wget -qO- https://raw.github.com/ma6174/vim/master/setup.sh | sh -x          //下载命令，不过现在好像过时了
+（1）http://www.cnblogs.com/ma6174/archive/2011/12/10/2283393.html                     //参考博客
+（2）sudo wget -qO- https://raw.github.com/ma6174/vim/master/setup.sh | sh -x          //下载命令，不过现在好像过时了
 	
 5.使用git统计代码行数命令：
-	（1）git log --author="username" start_commit_id..end_commit_id --pretty=tformat: --numstat | gawk '{ add += $1 ; subs += $2 ; loc += $1 - $2 } END { printf "added lines: %s removed lines : %s total lines: %s\n",add,subs,loc }'
-    （2）将'start_commit_id'改为第一次提交的id，'end_commit_id'改为最后一次提交的id，'username'改为git用户名。就可以统计出两次提交间代码的变化行数。
+（1）git log --author="username" start_commit_id..end_commit_id --pretty=tformat: --numstat | gawk '{ add += $1 ; subs += $2 ; loc += $1 - $2 } END { printf "added lines: %s removed lines : %s total lines: %s\n",add,subs,loc }'
+（2）将'start_commit_id'改为第一次提交的id，'end_commit_id'改为最后一次提交的id，'username'改为git用户名。就可以统计出两次提交间代码的变化行数。
