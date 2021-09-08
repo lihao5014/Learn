@@ -1,0 +1,13 @@
+==38943== Invalid write of size 4
+==38943==    at 0x10918B: foo (hellovalgrind.c:7)
+==38943==    by 0x1091AC: main (hellovalgrind.c:13)
+==38943==  Address 0x4a504a8 is 0 bytes after a block of size 40 alloc'd
+==38943==    at 0x483B7F3: malloc (in /usr/lib/x86_64-linux-gnu/valgrind/vgpreload_memcheck-amd64-linux.so)
+==38943==    by 0x10917E: foo (hellovalgrind.c:6)
+==38943==    by 0x1091AC: main (hellovalgrind.c:13)
+==38943== 
+==38943== 40 bytes in 1 blocks are definitely lost in loss record 1 of 1
+==38943==    at 0x483B7F3: malloc (in /usr/lib/x86_64-linux-gnu/valgrind/vgpreload_memcheck-amd64-linux.so)
+==38943==    by 0x10917E: foo (hellovalgrind.c:6)
+==38943==    by 0x1091AC: main (hellovalgrind.c:13)
+==38943== 

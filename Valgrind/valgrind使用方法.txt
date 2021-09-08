@@ -1,0 +1,35 @@
+1.Valgrind简介：
+  Valgrind的工具套件提供了大量的调试和分析工具，帮助程序跑的更快，更正确。这些工具中最流行的被称为Memcheck。
+  它可以检测C和C++程序中常见的许多和内存相关的，并可能导致崩溃和不可预知行为的错误。
+
+2.Valgrind包含的工具集：
+  memcheck、addrcheck、cachegrind、Massif、helgrind和Callgrind等。在运行Valgrind时，
+  必须指明想用的工具，如果省略工具名，默认运行memcheck。
+
+3.Valgrind的安装：
+（1）sudo apt-get update
+（2）sudo apt-get install valgrind
+
+4.memcheck工具的作用：（memcheck探测程序中的内存管理问题。它检查所有对内存的读/写操作，并截取所有的malloc/new/free/delete调用）
+（1）使用未初始化的内存（Use of uninitialised memory）。
+（2）使用已经释放了的内存（Reading/writing memory after it has been freed）。
+（3）使用超过 malloc分配的内存空间（Reading/writing off the end of malloc blocks）。
+（4）对堆栈的非法访问（Reading/writing inappropriate areas on the stack）。
+（5）申请的空间是否有释放（Memory leaks – where pointers to malloc’d blocks are lost forever）。
+（6）malloc/free/new/delete申请和释放内存的匹配（Mismatched use of malloc/new/new[] vs free/delete/delete[]）。
+（7）src和dst的重叠（Overlapping src and dst pointers inmemcpy() and related functions）。
+
+5.Valgrind调试前程序准备：
+（1）在编译程序时打开调试模式，即gcc编译器的-g选项。程序包含调试信息后再用valgrind检查，memcheck的错误消息将包括确切的行号。
+（2）编译器-O2或者更高的优化选项，可能会使得memcheck提交错误的未初始化报告，因此为了使得valgrind的报告更精确，在编译的时候最好不要使用优化选项。
+
+6.Valgrind的使用方法：（Valgrind调试程序将比正常的运行慢得多，并使用更多的内存。memcheck会报告关于内存错误，和检测到的泄漏的消息）
+（1）valgrind --leak-check=yes ./a.out                       //--leak-check选项打开详细的内存泄漏检测器。
+（2）valgrind --tool=memcheck --leak-check=yes ./a.out       //memcheck是默认的工具，可以省略不写。
+（3）valgrind -q ./a.out                                     //-q或–quiet安静地运行，只打印错误信息。
+（4）valgrind -q --log-file=error.txt ./a.out                //指定Valgrind把它所有的信息输出到指定的文件中。
+
+
+Valgrind学习资料：
+（1）Valgrind的快速入门指南：https://blog.csdn.net/robertsong2004/article/details/38864515?utm_medium=distribute.pc_relevant.none-task-blog-2~default~baidujs_title~default-0.control&spm=1001.2101.3001.4242
+（2）Valgrind安装与使用：https://www.cnblogs.com/lvdongjie/p/4168999.html#:~:text=Valgrind%20%E5%AE%89%E8%A3%85%E4%B8%8E%E4%BD%BF%E7%94%A8.%201.%20%E5%88%B0%20www.valgrind.org%20%E4%B8%8B%E8%BD%BD%E6%9C%80%E6%96%B0%E7%89%88valgrind-3.2.3.tar.bz2.%202.,%E8%A7%A3%E5%8E%8B%E5%AE%89%E8%A3%85%E5%8C%85%EF%BC%9Atar%20%E2%80%93jxvf%20valgrind-3.2.3.tar.bz2.%203.%20%E8%A7%A3%E5%8E%8B%E5%90%8E%E7%94%9F%E6%88%90%E7%9B%AE%E5%BD%95valgrind-3.2.3.%205.%20%E8%BF%90%E8%A1%8C.%2Fautogen.sh%E8%AE%BE%E7%BD%AE%E7%8E%AF%E5%A2%83%EF%BC%88%E9%9C%80%E8%A6%81%E6%A0%87%E5%87%86%E7%9A%84autoconf%E5%B7%A5%E5%85%B7%EF%BC%89%EF%BC%88%E5%8F%AF%E9%80%89%EF%BC%89.
