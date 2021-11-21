@@ -73,7 +73,11 @@ void fun(const int num)
 	cout<<"b ="<<b<<endl;   //引用b是只读的，但是并不能保证它的值是不可改变的，也就是说它不是常量。
 }
 
-int foo(const int num)    //num是一个只读变量，而不是常量。num的值只有在运行时才会获取。
+/*（1）const修饰的变量并不一定都是常量。在函数传参时，const修饰的变量就是不是常量，而是只读变量。
+ *     const关键字的作用有两种：声明变量只读，定义常量。
+ *（2）constexpr修饰的变量就一定是常量。constexpr关键字的作用有两种：定义常量，声明常量表达式函数。
+ */
+int foo(const int num)
 {
 	return num + 1;
 }
@@ -98,19 +102,19 @@ int main(void)
 	
 	const int n = foo(15);  //n不是常量表达式。n的值只有在运行时才会获取。
 	const int m = 25;       //是一个常量表达式。且完全等价于constexpr int m = 25。
-	const int k = m + 1;    //是一个常量表达式。
+	const int k = m + 1;    //常量表达式。此时完全等价于constexpr int k = m + 1。
 #ifndef _CHANGE_WAY_
 	static_assert(k != 26,"k =26");
 #else
-	int arr1[k] = {0};   //因为没有办法在编译期打印常量的值，所以用定义数组的方式来判读一个const变量是不是常量。
+	int arr1[k] = {0};   //因为没有办法在编译期打印常量的值，所以用定义数组的方式来判断一个const变量是不是常量。
 #endif
 
 	constexpr int i = 11;       //是一个常量表达式。且完全等价于const int i = 11。
-	constexpr int j = i + 5;    //是一个常量表达式。
+	constexpr int j = i + 5;    //常量表达式。此时完全等价于const int k = j = i + 5。
 #ifndef _CHANGE_WAY_
 	static_assert(j != 16,"j =16");
 #else
-	int arr2[j] = {0};   //因为没有办法在编译期打印常量的值，所以用定义数组的方式来判读一个constexpr变量是不是常量。
+	int arr2[j] = {0};   //因为没有办法在编译期打印常量的值，所以用定义数组的方式来判断一个constexpr变量是不是常量。
 #endif
 
 	int a = 21;

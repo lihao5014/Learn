@@ -2,7 +2,7 @@
 
 set cmd=%1
 if "%cmd%" == "clean" (
-	del /f a.exe constexpr.obj
+	del /f *.exe *.obj
 	exit /b
 )
 
