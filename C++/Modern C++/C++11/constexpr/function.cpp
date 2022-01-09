@@ -1,4 +1,4 @@
-/*常量表达式是指值不会改变并且在编译过程就能得到计算结构的表达式。一个对象或表达式是不是常量表达式，
+/*常量表达式是指值不会改变并且在编译过程就能得到计算结果的表达式。一个对象或表达式是不是常量表达式，
  *由它的数据类型和初始值共同决定。
  */
 
@@ -10,27 +10,38 @@
  *这种函数应该足够简单以使其在编译时就可以计算出结果，这样就可以使用constexpr函数去初始化constexpr变量了。
  */
 
-/*算术类型、引用和指针都属于字面值类型。尽管指针和引用都能定义成constexpr，但它们的初始值却受到严格限制。
- *一个constexpr指针的初始值必须是nullptr或0，或者是存储于某个固定地址中的对象。
+/*1.constexpr修饰变量：
+ *（1）C++11标准中定义变量时可以用constexpr修饰，从而使该变量获得在编译阶段即可计算出结果的能力。
+ *     使用constexpr修改普通变量时，变量必须经过初始化且初始值必须是一个常量表达式。
+ *（2）当常量表达式中包含浮点数时，考虑到程序编译和运行所在的系统环境可能不同，常量表达式在编译阶段和
+ *     运行阶段计算出的结果精度很可能会受到影响，因此C++11标准规定，浮点常量表达式在编译阶段计算的精度
+ *     要高于等于运行阶段计算出的精度。
+ *（3）constexpr修饰变量时用const关键字替换也可以正常执行。
  */
- 
-//在constexpr声明中如果定义了一个指针，限定符constexpr仅对指针有效，与指针所指的对象无关。
 
-/*1.constexpr修饰普通函数/成员函数使之成为常量表达式函数的条件：
+/*2.constexpr修饰普通函数/成员函数使之成为常量表达式函数的条件：
  *（1）函数必须要有返回值，并且return返回的表达式必须是常量表达式。
  *（2）函数在使用之前，必须有对应的定义语句。
  *（3）整个函数的函数体中，不能出现非常量表达式之外的语句，using、typedef、return以及static_assert()断言除外。
  */
 
-/*2.constexpr修饰模板函数：
+/*3.constexpr修饰指针：
+ *（1）算术类型、引用和指针都属于字面值类型。尽管指针和引用都能定义成constexpr，但它们的初始值却受到严格限制。
+ *     一个constexpr指针的初始值必须是nullptr或0，或者是存储于某个固定地址中的对象。
+ *（2）在constexpr声明中如果定义了一个指针，限定符constexpr仅对指针有效，与指针所指的对象无关。
+ */
+ 
+/*4.constexpr修饰模板函数：
  *constexpr可以修饰函数模板，但由于模板中类型的不确定性，因此函数模板实例化后的函数是否符合常量表达式函数的要求，
  *也是不确定的。如果constexpr修饰的模板函数实例化结果不满足常量表达式函数的要求，则constexpr会被自动忽略，
  *即该函数就等同于一个普通函数。
  */
 
-/*3.constexpr修饰构造函数：
- *如果想用直接得到一个常量对象，也可以使用constexpr修饰一个构造函数，这样就可以得到一个常量构造函数了。
- *常量构造函数有一个要求：构造函数的函数体必须为空，并且必须采用初始化列表的方式为各个成员赋值。
+/*5.constexpr修饰构造函数：
+ *（1）如果想用直接得到一个常量对象，也可以使用constexpr修饰一个构造函数，这样就可以得到一个常量构造函数。
+ *     常量构造函数有一个要求：构造函数的函数体必须为空，并且必须采用初始化列表的方式为各个成员赋值。
+ *（2）constexpr构造函数除了声明为=default或者=delete以外，constexpr构造函数的函数体一般为空，
+ *     使用初始化列表或者其他的constexpr构造函数初始化所有数据成员
  */
 
 /*C++11提供了constexpr，让用户显式的声明函数或对象构造函数在编译期会成为常量表达式，
@@ -122,7 +133,7 @@ public:
 	}
 };
 
-struct Person
+struct Person       //数据成员都是字面值类型的聚合类/结构体是字面值常量类。
 {
 	const char* name;
 	int age;
@@ -134,6 +145,21 @@ constexpr T baz(T t)
 {
 	return t;
 }
+
+//使用constexpr关键字修饰构造函数以后，就可以在使用constexpr表达式或者constexpr函数的地方使用字面值常量类了。
+class Student
+{
+public:
+	constexpr Student(const char* name,int age)
+		:m_name(name)
+		,m_age(age)
+	{
+		
+	}
+
+	const char* m_name;
+	int m_age;
+};
 
 int main(int argc,char** argv)
 {
@@ -175,6 +201,21 @@ int main(int argc,char** argv)
 	constexpr Person person2{"lisa",23};
 	constexpr Person person3 = baz(person2);  //由于模板函数bar()的参数是常量，符合常量表达式函数的要求，此时constexpr是有效的。
 	cout<<"name ="<<person3.name<<" ,age ="<<person3.age<<endl;
+
+#ifdef _ERROR_
+	const char* name = "bob";
+	int age = 24;
+	constexpr Student student(name,age);     //生成constexpr对象时，其传递的参数不能是变量，只能是常量。
+#else
+	constexpr Student student("bob",24);
+#endif
+	cout<<"name ="<<student.m_name<<" ,age ="<<student.m_age<<endl;
+	
+	const char* name = "kevin";
+	int age = 25;
+	Student student1(name,age);
+	student1.m_age = 26;
+	cout<<"name ="<<student1.m_name<<" ,age ="<<student1.m_age<<endl;
 	
 	return 0;
 }

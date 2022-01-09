@@ -10,15 +10,15 @@
  *     但它修饰的仍然有可能是个动态变量，而constexpr修饰的才是真正的常量，它会在编译期间就会被计算出来，
  *     整个运行过程中都不可以被改变。constexpr可以用于修饰函数，该函数的返回值会尽可能在编译期间被计算出来，
  *     并被当作一个常量。但是如果编译期间此函数不能被计算出来，那它就会当作一个普通函数被处理。
- *（4）constexpr声明的函数可以在编译时执行，生成一个值，用在需要常量表达式的地方。比如定义数组时指定大小、
- *     作为初始化模板的整形参数等。在C++11中的constexpr函数只能包含一个表达式，但C++14标准放松了这些限制，
+ *（4）constexpr声明的函数可以在编译时执行，生成一个值，用在需要常量表达式的地方，如定义数组时指定大小、
+ *     作为初始化模板的整形参数等。C++11中的constexpr函数只能包含一个表达式，但C++14标准放松了这些限制，
  *     支持条件语句（if/switch）、循环语句（for/while/do/范围for）和函数递归。
  */
 
 /*2.非常量表达式与常量表达式的计算时机：
  *  C++程序从编写完毕到执行分为4个阶段：预处理、 编译、汇编和链接，得到可执行程序之后就可以运行了。
- *  常量表达式和非常量表达式的计算时机不同，非常量表达式只能在程序运行阶段计算出结果，但常量表达式的计算
- *  往往发生在程序的编译阶段，这可以极大提高程序的执行效率，因为表达式只需要在编译阶段计算一次，
+ *  常量表达式和非常量表达式的计算时机不同，非常量表达式只能在程序运行阶段计算出结果，但常量表达式的
+ *  计算往往发生在程序的编译阶段，这可以极大提高程序的执行效率，因为表达式只需要在编译阶段计算一次，
  *  节省了每次程序运行时都需要计算一次的时间。
  */
 
@@ -27,9 +27,19 @@
  *表达“常量”语义的场景都使用constexpr。在定义常量时const和constexpr是等价的，都可以在程序的编译阶段计算出结果。
  */
 
-/*3. 常量表达式函数：
+/*3.常量表达式函数：
  *为了提高C++程序的执行效率，可以将程序中值不需要发生变化的变量定义为常量，也可以使用constexpr修饰函数的返回值，
- *这种函数被称作常量表达式函数，这些函数主要包括以下几种：普通函数、类成员函数、类的构造函数、模板函数。
+ *这种函数被称作常量表达式函数。常量表达式函数主要包括以下几种：普通函数、类成员函数、类的构造函数、模板函数。
+ */
+
+/*4.constexpr函数要求：
+ *常量表达式函数的返回类型及所有形参都得是字面值类型，且在C++11标准中常量表达式函数体必须有且只有一条return语句。
+ *一般来说基本数据类型、引用和指针都属于字面值类型，但自定义类、STL容器、string不属于字面值，不能定义为constexpr。
+ */
+
+/*与普通函数不一样，内联函数和constexpr函数可以在程序中多次定义。毕竟编译器要想展开函数仅有函数声明是不够的，
+ *还需要函数的定义。不过对于某个给定的内联函数或者constexpr函数来说，它的多个定义必须完全一致。基于这个原因，
+ *内联函数和constexpr函数通常定义在头文件中。
  */
 
 #include <iostream>
@@ -45,7 +55,7 @@ using namespace std;
 #define SIZE 10
 
 #define PrintMacroHelper(x) #x
-#define PrintMacro(x) #x" = "PrintMacroHelper(x)
+#define PrintMacro(x) #x " = " PrintMacroHelper(x)
 
 /*const关键字修饰参数num，表示此变量是只读的，但不是常量。使用只读变量num定义一个数组，
  *编译器是会报错的，提示num不可用作为常量来使用。
@@ -87,6 +97,17 @@ constexpr int bar(int num)
 	return num * 2;
 }
 
+//constexpr函数体中可以包含静态断言、类型别名、using声明等其他语句，只要这些语句在运行时不执行任何操作就行。
+constexpr int qux()
+{
+	static_assert(6 > 5,"6 < 5");
+	typedef double (*pf)(double x,double y);
+	using uint = unsigned int;
+	
+	constexpr uint ret = 10u;
+	return ret;
+}
+
 /*对于C++内置类型的数据，可以直接用constexpr修饰，但如果是自定义的数据类型，直接用constexpr修饰是不行的。
  *即定义struct或class时，添加constexpr关键字修饰是无效的。
  */
@@ -112,21 +133,29 @@ int main(void)
 	constexpr int i = 11;       //是一个常量表达式。且完全等价于const int i = 11。
 	constexpr int j = i + 5;    //常量表达式。此时完全等价于const int k = j = i + 5。
 #ifndef _CHANGE_WAY_
-	static_assert(j != 16,"j =16");
+	static_assert(j != 16,"j =16");     //constexpr变量就一定是常量。
 #else
-	int arr2[j] = {0};   //因为没有办法在编译期打印常量的值，所以用定义数组的方式来判断一个constexpr变量是不是常量。
+	int arr2[j] = {0};   //因为没有办法在编译期打印常量的值，所以用定义数组的方式来判断一个变量是不是常量。
 #endif
 
 	int a = 21;
 	bar(a);      //普通函数
 	
-	bar(m);
-	constexpr int b = bar(31);    //编译期间就会被计算出来
+	/*执行该初始化任务时，编译器把对constexpr函数的调用替换成其结果值。
+	 *为了能在编译过程中随时展开，constexpr函数被隐式地指定为内联函数。
+	 */
+	constexpr int b = bar(m);    //编译期间就会被计算出来
 #ifndef _CHANGE_WAY_
-	static_assert(b != 31 * 2,"b =31 * 2");
+	static_assert(b != m * 2,"b =25 * 2");
 #else
 	int arr3[b] = {0};
+	cout<<"arr3 len ="<<sizeof(arr3)/sizeof(arr3[0])<<endl;
 #endif
+
+	enum {
+		DUMMY = qux()
+	};
+	cout<<"DUMMY ="<<DUMMY<<endl;
 	
 	constexpr Test test{11,22};
     // t.num += 100;              //对象test是一个常量，因此它的成员也是常量，常量是不能被修改的。
