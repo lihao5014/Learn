@@ -1,5 +1,47 @@
+/*1.constexpr修饰函数必须满足的4个条件：（constexpr并非可以修改任意函数的返回值，使其成为常量表达式函数）
+ *（1）整个函数的函数体中，除了可以包含using指令、typedef语句以及static_assert断言外，只能包含一条return返回语句。
+ *     常量表达式函数的return语句中不能包含赋值的操作。constexpr修饰函数时函数本身是支持递归的。
+ *（2）函数必须有返回值，即函数的返回值类型不能是void。这是因为返回值为空的函数根本无法获得一个常量。
+ *（3）函数在使用之前，必须有对应的定义语句。函数的使用分为“声明”和“定义”两部分，普通的函数调用只需要提前写好该函数的
+ *     声明部分即可，函数的定义部分可以放在调用位置之后甚至其它文件中。但常量表达式函数在使用前，必须要有该函数的定义。
+ *（4）函数return返回的表达式必须是常量表达式。常量表达式函数的返回值必须是常量表达式的原因很简单，
+ *     如果想在程序编译阶段获得某个函数返回的常量，则该函数的return语句中就不能包含程序运行阶段才能确定值的变量。
+ */
+
+/*constexpr可用于修饰函数，而类中的成员方法完全可以看做是“位于类这个命名空间中的函数”，
+ *所以constexpr也可以修饰类中的成员函数，只不过此函数必须满足constexpr修饰普通函数的4个条件。
+ */
+
+/*2.constexpr修饰构造函数：
+ *（1）对于C++内置类型的数据，可以直接用constexpr修饰，但如果是struct/class这样的自定义数据类型，
+ *     直接用constexpr修饰是不行的。
+ *（2）如果想自定义一个可产生常量的类型时，正确的做法是在该类型的内部添加一个常量构造函数。
+ *（3）constexpr修饰类的构造函数时，要求该构造函数的函数体必须为空，且采用初始化列表的方式为
+ *     各个成员赋值时，必须使用常量表达式。
+ *（4）C++11标准中，不支持用constexpr修饰带有virtual的成员方法。
+ */
+
+/*3.constexpr修饰模板函数：
+ *C++11语法中，constexpr可以修饰模板函数，但由于模板中类型的不确定性，因此模板函数实例化后的函数
+ *是否符合常量表达式函数的要求也是不确定的。C++11标准规定，如果constexpr修饰的模板函数实例化结果
+ *不满足常量表达式函数的要求，则constexpr会被自动忽略，即该函数就等同于一个普通函数。
+ */
+
+/*4.constexpr和const的区别：
+ *（1）constexpr是C++11标准新添加的关键字，在此之前的C++98/03标准中只有const关键字。
+ *     而const关键字在使用过程中经常会表现出“常量”和“只读”两种不同的语义。
+ *（2）C++11标准中，为了解决const关键字的双重语义问题，保留了const表示“只读”的语义，而将“常量”的语义划分给了
+ *     新添加的constexpr关键字。因此C++11标准中，建议将const和constexpr的功能区分开，即凡是表达“只读”语义的场景
+ *     都使用const，表达“常量”语义的场景都使用constexpr。
+ *（3）在大部分实际场景中，const和constexpr是可以混用的，它们是完全等价的，都可以在程序的编译阶段计算出结果。
+ *     但在某些场景中，必须明确使用constexpr。
+ *（4）C++11标准中，const用于为修饰的变量添加“只读”属性；而constexpr关键字则用于指明其后是一个常量或常量表达式，
+ *     编译器在编译程序时可以顺带将其结果计算出来，而无需等到程序运行阶段，这样的优化极大地提高了程序的执行效率。
+ */
+
 #include <iostream>
 #include <string>
+#include <array>
 #include <list>
 
 #define _ERROR_
@@ -18,6 +60,18 @@
 #define TOSTRING(x) ToString(x)
 
 using namespace std;
+
+#ifdef _ERROR_
+const int square(int num)       //普通函数的返回值，不能再代码编译期就计算出来。
+{
+	return num * num;
+}
+#else
+constexpr int square(int num)    //常量表达式函数的返回值，可以在代码编译阶段就计算出来。
+{
+	return num * num;
+}	
+#endif
 
 #ifdef _ERROR_
 struct Person
@@ -97,6 +151,9 @@ int main(int argc,char** argv)
 	constexpr const char* str = "constexpr const char* , right";
 #endif
 	cout<<"str ="<<str<<endl;
+
+	std::array<int,square(3)> myarray;    //必须使用返回值为constexpr的函数，而不能使用返回值为const的函数。
+	cout<<"myarray.size() ="<<myarray.size()<<endl;
 
 #ifdef _ERROR_
 	constexpr list<int> seq = {1,2,3,4,5};
