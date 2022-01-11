@@ -77,6 +77,34 @@
 
 using namespace std;
 
+/*当自定义一个可产生常量的类型时，正确的做法是在该类型的内部添加一个常量构造函数。
+ *constexpr修饰构造函数时，要求该构造函数的函数体必须为空，且采用初始化列表的方式
+ *为各个成员赋值时，必须使用常量表达式。
+ */
+#ifdef _ERROR_
+constexpr struct Person
+{
+	const char* m_name;
+	int age;
+};
+#else
+struct Person
+{
+	constexpr Person(const char* name,int age)
+		:m_name(name)
+		,m_age(age)
+	{
+			
+	}
+	
+	const char* m_name;
+	int m_age;
+};
+#endif
+
+/*constexpr可用于修饰函数，而类中的成员方法完全可以看做是“位于类这个命名空间中的函数”，
+ *所以constexpr也可以修饰类中的成员函数，只不过此函数必须满足常量表达式函数的4个条件。
+ */
 class Date
 {
 public:
@@ -132,6 +160,9 @@ int main()
 	default:
 		cout<<"switch default"<<endl;
 	}
+	
+	constexpr Person person("lisa",25);
+	cout<<person.m_name<<" , "<<person.m_age<<endl;
 
 	constexpr Date date1(2021,3,29);
 	constexpr int size = date1.getDay();
