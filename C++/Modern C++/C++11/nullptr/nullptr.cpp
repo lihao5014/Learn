@@ -6,9 +6,11 @@
  *（2）C++头文件中NULL都是定义为#define NULL 0，因此本质上NULL的类型是int，使用NULL来表示空指针是非常不合适的行为，
  *     于是C++11重新定义了一个不是int类型且适用于空指针的关键词。
  *（3）nullptr是c++11用来表示空指针新引入的常量值，在c++中如果表示空指针语义时建议使用nullptr而不要使用NULL，
- *     因为NULL本质上是个int型的0，其实不是个指针。使用nullptr可以很完美的解决的函数重载问题。
+ *     因为NULL本质上是个int型的0，而不是个指针。使用nullptr可以很完美的解决的函数重载问题。
  *（4）关键词nullptr代表指针字面量。它是std::nullptr_t类型的纯右值。存在从nullptr到任何指针类型及任何成员指针类型的隐式转换。
  *     同样的转换对于任何空指针常量也存在，空指针常量包括std::nullptr_t的值，以及宏NULL、nullptr、指针字面量。
+ *（5）C++不允许直接将void*隐式转换到其他类型。没有了void*隐式转换的C++只好将NULL定义为0。而这依然会产生新的问题，
+ *     将NULL定义成0将导致C++中重载特性发生混乱。
  */
 
 /*2.C++98/03标准中将一个指针初始化为空指针的2种方式:
@@ -33,6 +35,8 @@
  *（3）C++编译器会将nullptr隐式转换成int*、char*和double*等指针类型。使用nullptr可以很完美的解决的函数重载问题。
  *（4）nullptr无法隐式转换为整形，但是可以隐式匹配指针类型。在C++11标准下，相比NULL和0，使用nullptr初始化空指针
  *     可以令我们编写的程序更加健壮。
+ *（5）C++11引入nullptr关键字，专门用来区分空指针和0。而nullptr的类型为nullptr_t，能够隐式的转换为任何指针或成员指针的类型，
+ *     也能和他们进行相等或者不等的比较。
  */
 
 #include <iostream>
@@ -52,15 +56,17 @@ void fun(int n)     //C++中NULL空指针，会当作0对待。
 
 int main(int argc,char* argv[])
 {
+	cout<<"C++ version: "<<__cplusplus<<endl;
+	
 	//c语言中将NULL定义为空指针，而在c++中直接定义为0。因为C++是强类型的，void*是不能隐式转换成其他指针类型的。
 	if(NULL == 0)
 	{
 		cout<<"NULL == 0"<<endl;
 	}
 	
-	//nullptr是为了解决原来C++中NULL的二义性问题而引进的一种新的类型，因为NULL实际上代表的是0，
+	//nullptr是为了解决原来C++中NULL的二义性问题而引进的一种新的类型，因为NULL实际上代表的是0。
 	char* p = nullptr;   //C++编译器会将nullptr隐式转换成char*类型指针。
-	char* q = NULL;
+	char* q = NULL;      //如果C++编译器尝试把NULL定义为(void*)0， 那么这里就会违背void*类型不能隐式转换到其他类型的原则。
 	if(p == q)
 	{
 		cout<<"p == q"<<endl;  //p == q，说明p和q都是空指针。

@@ -15,5 +15,7 @@ int main(void)
 	cout<<"max(3.14159,2.17828) ="<<max(3.14159,2.17828)<<endl;
 	cout<<"min(0.618,1.144) ="<<min(0.618,1.144)<<endl;
 	
+	cout<<"C++ version: "<<__cplusplus<<endl;
+	
 	return 0;
 }
