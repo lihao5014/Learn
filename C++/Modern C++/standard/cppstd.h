@@ -18,7 +18,8 @@
 
 /*4.编译器切换支持的C++标准选项：
  *（1）gcc编译器：-std=c++98，-std=c++11，-std=c++14，-std=c++17。
- *（2）msvc编译器：/std:c++14，/std:c++17，/std:c++latest。注意VC++编译器的/std选项是从vs2015 Update3开始支持的。
+ *（2）msvc编译器：/std:c++14，/std:c++17，/std:c++latest。注意VC++编译器的/std选项是从vs2015 Update3开始支持的，
+ *     且不能切换到C++98、C++03或C++11标准，即msvc编译器没有/std:c++98，/std:c++03和/std:c++11选项。
  */
 
 /*5. msvc编译器对C++标准版本的支持：
@@ -49,14 +50,18 @@
 #endif
  
 #if CPP_STANDARD >= 199711L
+	#define HAS_CPP_98 1
 	#define HAS_CPP_03 1
 #endif
+
 #if CPP_STANDARD >= 201103L
 	#define HAS_CPP_11 1
 #endif
+
 #if CPP_STANDARD >= 201402L
 	#define HAS_CPP_14 1
 #endif
+
 #if CPP_STANDARD >= 201703L
 	#define HAS_CPP_17 1
 #endif
