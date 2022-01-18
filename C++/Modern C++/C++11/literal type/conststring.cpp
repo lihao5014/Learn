@@ -178,7 +178,7 @@ int main(int argc,char** argv)
 	printN<countUpper(cstr)>();
 	
 	try{
-		cout<<"cstr[16] ="<<cstr[16]<<endl;
+		cout<<"cstr[20] ="<<cstr[20]<<endl;
 	}catch(std::out_of_range& err){
 		cout<<err.what()<<endl;
 	}catch(...){
