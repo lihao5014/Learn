@@ -102,7 +102,7 @@ const int Test::length = 10;
 class Demo
 {
 public:
-	constexpr Demo(int data):m_data{}
+	constexpr Demo(int data):m_data(data){}
 	
 	void setData(int data){m_data = data;}
 	constexpr int getData()const{return m_data;}
@@ -115,7 +115,7 @@ private:
 int main(void)
 {
 	//编译器会直接利用其中某一个cout语句来替换掉整个if代码块。因为运行代码的机器是32还是64位的又不会变。
-	if (sizeof(void*) == 4) {
+	if(sizeof(void*) == 4){
 		std::cout << "This is a 32-bit system!" << std::endl;
 	} else {
 		std::cout << "This is a 64-bit system!" << std::endl;
@@ -125,7 +125,7 @@ int main(void)
 	int arr[sizeof(void*)] = {0};    //sizeof运算符返回值是编译期常量。
 	cout<<"sizeof[arr] ="<<sizeof(arr)<<endl;
 #else
-	array<int,sizeof(double))> arr;   //定义std::array数组时，必须使用编译期常量指定数组大小。
+	array<int,sizeof(double)> arr;   //定义std::array数组时，必须使用编译期常量指定数组大小。
 	cout<<"arr.size() ="<<arr.size()<<endl;
 #endif
 	
@@ -145,7 +145,7 @@ int main(void)
 	constexpr int ret = summation(num);
 #else
 	constexpr int ret = summation(8);
-endif
+#endif
 	cout<<"ret ="<<ret<<endl;
 	
 	func<5>();
@@ -161,20 +161,20 @@ endif
 #ifdef _ERROR_
 	int value = 25;
 	constexpr Demo demo(value);    //定义constexpr常量时，调用constexpr构造函数时，传入的函数参数也必须为常量表达式。
-#endif
+#else
 	constexpr Demo demo(25);
 #endif
 
 	enum{
 		a = sizeof(int),
 		b = summation(5),
-		c = demo.getData();
+		c = demo.getData()
 	};
 
 	Demo demo1(30);   //定义Demo类型变量时，constexpr构造函数失去常量表达式的语义，变为一个普通的构造函数。
 	demo1.print();
 	demo1.setData(35);
 	demo1.print();
-	
+
 	return 0;
 }
