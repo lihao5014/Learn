@@ -29,7 +29,7 @@
 #define _ERROR_
 #undef _ERROR_
 
-#define _CHANGE_WAY_ 1
+#define _CHANGE_WAY_ 0
 
 #define SIZE 10
 
@@ -134,9 +134,9 @@ int main(void)
 #else
 	const int size = 10;
 	constexpr int length = 20;
-	int seq(length) = {0};
+	int seq[length] = {0};
 #endif
-	cout<<"sizeof[seq] ="<<sizeof(seq)<<endl;
+	cout<<"seq len ="<<sizeof(seq)/sizeof(seq[0])<<endl;
 
 	process(GREEN);
 
