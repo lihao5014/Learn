@@ -32,7 +32,7 @@ struct Summation<1>
 #endif
 
 #ifndef _CHANGE_WAY_
-constexpr int summation_11(int n)
+constexpr int summation_11(int n)    //C++11中constexpr常量表达式函数里面，只能包含一条return语句。
 {
 	return n == 1 ? 1 : n + summation_11(n - 1);
 }
