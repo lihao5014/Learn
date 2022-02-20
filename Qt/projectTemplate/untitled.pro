@@ -19,10 +19,10 @@ FORMS += ui/
 
 INCLUDEPATH += $$PWD/include
 
-CONFIG(debug,debug|release):{
-	LIBS += -L$$PWD/lib/   -ld       #当编译debug版本的应用程序时，使用debug版本的第三方库
+CONFIG(debug,debug|release){
+	LIBS += -L$$PWD/lib/     -ld       #当编译debug版本的应用程序时，调用debug版本的第三方库
 } else {
-	LIBS += -L$$PWD/lib/   -l        #当编译release版本的应用程序时，使用release版本的第三方库
+	LIBS += -L$$PWD/lib/     -l        #当编译release版本的应用程序时，调用release版本的第三方库
 }
 
 DEPENDPATH += $$PWD/
