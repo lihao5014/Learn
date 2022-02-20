@@ -5,10 +5,10 @@ greaterThan(QT_MAJOR_VERSION,4): QT += widgets
 TARGET =
 TEMPLATE = app
 
-#CONFIG += console c++11   #使用编译器默认的c++14标准
+CONFIG += console c++11   #使编译器支持c++11标准
 DESTDIR = $$PWD/bin
 
-#DEFINES +=
+DEFINES +=
 
 HEADERS += include/
 
@@ -19,8 +19,14 @@ FORMS += ui/
 
 INCLUDEPATH += $$PWD/include
 
-#DEPENDPATH += $$PWD/
+CONFIG(debug,debug|release):{
+	LIBS += -L$$PWD/lib/   -ld       #当编译debug版本的应用程序时，使用debug版本的第三方库
+} else {
+	LIBS += -L$$PWD/lib/   -l        #当编译release版本的应用程序时，使用release版本的第三方库
+}
 
-#RC_ICONS = $$PWD/resource/
+DEPENDPATH += $$PWD/
 
-#RESOURCES += $$PWD/resource/
+RC_ICONS = $$PWD/resource/
+
+RESOURCES += $$PWD/resource/
