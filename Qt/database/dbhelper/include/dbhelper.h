@@ -35,7 +35,6 @@ public:
 private:
 	DBHelper();
 	
-	DBConfig m_config;
 	QSqlDatabase m_database;
 };
 

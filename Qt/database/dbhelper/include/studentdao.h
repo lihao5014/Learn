@@ -11,11 +11,14 @@ class StudentDao:public Singleton<StudentDao>
 public:
 	bool insertStudent(const Student& student);
 	bool deleteStudentById(int id);
-	bool updataStudentById(int id,const Student& student);
+	bool updateStudentById(int id,const Student& student);
 	bool selectAllStudent(QList<Student>& studentList);
 
+	bool clearStudent();
 private:
-	StudentDao() = default;
+	StudentDao();
+	
+	QString m_tableName;
 };
 
 #endif  //_STUDENT_DAO_H

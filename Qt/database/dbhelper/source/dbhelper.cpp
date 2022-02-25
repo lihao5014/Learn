@@ -7,7 +7,7 @@
 
 DBHelper::DBHelper()
 {
-	QTextCodec::setCodecForLocale(QTextCodec::codecForName("UTF8"));
+	// QTextCodec::setCodecForLocale(QTextCodec::codecForName("UTF8"));
 }
 
 bool DBHelper::openDB(const DBConfig& config)

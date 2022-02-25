@@ -6,17 +6,22 @@ TARGET = dbhelper
 TEMPLATE = app
 
 CONFIG += console
+#DEFINES += _TRANSLATE_
+
 DESTDIR = $$PWD/bin
 
 HEADERS += include/singleton.h   \
            include/dbhelper.h    \
 		   include/dbconfig.h    \
 		   include/student.h     \
-		   include/studentdao.h
+		   include/studentdao.h  \
+		   include/course.h      \
+		   include/coursedao.h
 
 SOURCES += source/main.cpp        \
            source/dbhelper.cpp    \
-		   source/studentdao.cpp
+		   source/studentdao.cpp  \
+		   source/coursedao.cpp
 
 INCLUDEPATH += $$PWD/include
 
