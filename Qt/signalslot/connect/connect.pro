@@ -1,6 +1,6 @@
 QT += core
 
-TARGET = signalslot
+TARGET = connect
 TEMPLATE = app
 
 #对于release版本的gui应用程序一般不加CONFIG += console配置。而debug版本如果需要查看

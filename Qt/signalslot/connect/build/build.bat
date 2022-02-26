@@ -1,7 +1,7 @@
 @echo off
 echo=
 echo ---qmake compile start---
-qmake ../signalslot.pro
+qmake ../connect.pro
 echo ---c++ compile start---
 echo=
 make -f Makefile.Debug
@@ -9,4 +9,4 @@ echo=
 
 echo ---running---
 echo=
-..\bin\signalslot.exe
+..\bin\connect.exe
