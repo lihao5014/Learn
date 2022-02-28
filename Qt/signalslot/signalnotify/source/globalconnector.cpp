@@ -55,15 +55,17 @@ bool GlobalConnector::detach(const QString& msgType,QObject* reciever)
 		return false;
 	}
 	
+	bool ret = false;
 	QList<Message_t> msgList = m_msgMap.values(msgType);
 	for(const Message_t& msg : msgList)
 	{
 		if(msg.m_msgType == msgType && msg.m_reciever == reciever)
 		{
 			m_msgMap.remove(msgType,msg);
+			ret = true;
 		}
 	}
-	return true;
+	return ret;
 }
 
 bool GlobalConnector::notify(const QString& msgType,void* param)
@@ -73,10 +75,12 @@ bool GlobalConnector::notify(const QString& msgType,void* param)
 		return false;
 	}
 	
+	bool ret = false;
 	QList<Message_t> msgList = m_msgMap.values(msgType);
 	for(const Message_t& msg : msgList)
 	{
 		emit msg.m_sender->notify(param);
+		ret = true;
 	}
-	return true;
+	return ret;
 }
