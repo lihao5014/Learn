@@ -9,12 +9,12 @@ class CourseDao:public Singleton<CourseDao>
 {
 	friend class Singleton<CourseDao>;
 public:
-	bool insertCourse(const Course& course);
-	bool deleteCourseById(int id);
-	bool updateCourseById(int id,const Course& course);
-	bool selectAllCourse(QList<Course>& courseList);
+	bool insertCourse(const Course& course,QString* error = nullptr);
+	bool deleteCourseById(int id,QString* error = nullptr);
+	bool updateCourseById(int id,const Course& course,QString* error = nullptr);
+	bool selectAllCourse(QList<Course>& courseList,QString* error = nullptr);
 	
-	bool clearCourse();
+	bool clearCourse(QString* error = nullptr);
 private:
 	CourseDao();
 	

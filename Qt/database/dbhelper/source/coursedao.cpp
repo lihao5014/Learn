@@ -7,7 +7,7 @@ CourseDao::CourseDao()
 	
 }
 
-bool CourseDao::insertCourse(const Course& course)
+bool CourseDao::insertCourse(const Course& course,QString* error)
 {
 	DBRecord_t record;
 	record["id"] = course.id;
@@ -15,16 +15,16 @@ bool CourseDao::insertCourse(const Course& course)
 	record.insert("number",course.number);
 	record.insert("teacher",course.teacher);
 	
-	return DBHelper::getInstance()->insertToDB(m_tableName,record);
+	return DBHelper::getInstance()->insertToDB(m_tableName,record,error);
 }
 
-bool CourseDao::deleteCourseById(int id)
+bool CourseDao::deleteCourseById(int id,QString* error)
 {
 	QString sqlWhere = QString("where id =%1").arg(id);
-	return DBHelper::getInstance()->deleteFromDB(m_tableName,sqlWhere);
+	return DBHelper::getInstance()->deleteFromDB(m_tableName,sqlWhere,error);
 }
 
-bool CourseDao::updateCourseById(int id,const Course& course)
+bool CourseDao::updateCourseById(int id,const Course& course,QString* error)
 {
 	DBRecord_t record;
 	record["id"] = course.id;
@@ -33,13 +33,13 @@ bool CourseDao::updateCourseById(int id,const Course& course)
 	record.insert("teacher",course.teacher);
 	
 	QString sqlWhere = QString("where id =%1").arg(id);
-	return DBHelper::getInstance()->updateToDB(m_tableName,record,sqlWhere);
+	return DBHelper::getInstance()->updateToDB(m_tableName,record,sqlWhere,error);
 }
 
-bool CourseDao::selectAllCourse(QList<Course>& courseList)
+bool CourseDao::selectAllCourse(QList<Course>& courseList,QString* error)
 {
 	DBResult_t result;
-	bool ret = DBHelper::getInstance()->selectFromDB(m_tableName,result);
+	bool ret = DBHelper::getInstance()->selectFromDB(m_tableName,result,"",error);
 	
 	for(const DBRecord_t& record : result)
 	{
@@ -54,7 +54,7 @@ bool CourseDao::selectAllCourse(QList<Course>& courseList)
 	return ret;
 }
 
-bool CourseDao::clearCourse()
+bool CourseDao::clearCourse(QString* error)
 {
-	return DBHelper::getInstance()->clearTable(m_tableName);
+	return DBHelper::getInstance()->clearTable(m_tableName,error);
 }

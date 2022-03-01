@@ -10,7 +10,7 @@ DBHelper::DBHelper()
 	// QTextCodec::setCodecForLocale(QTextCodec::codecForName("UTF8"));
 }
 
-bool DBHelper::openDB(const DBConfig& config)
+bool DBHelper::openDB(const DBConfig& config,QString* error)
 {
 	m_database = QSqlDatabase::addDatabase("QMYSQL");
 	m_database.setHostName(config.m_ip);
@@ -23,28 +23,43 @@ bool DBHelper::openDB(const DBConfig& config)
 	{
 		QString strError = m_database.lastError().text();
 		qDebug()<<strError;
+		
+		if(error != nullptr)
+		{
+			*error = strError;
+		}
 		return false;
 	}
 	return true;
 }
 
-bool DBHelper::reconnectDB()
+bool DBHelper::reconnectDB(QString* error)
 {
 	if(m_database.isOpen())
 	{
 		return true;
 	}
 	
-	return m_database.isOpen();
+	if(!m_database.open())
+	{
+		QString strError = m_database.lastError().text();
+		qDebug()<<strError;
+		
+		if(error != nullptr)
+		{
+			*error = strError;
+		}
+		return false;
+	}
+	return true;
 }
 
-bool DBHelper::insertToDB(const QString& tableName,const DBRecord_t& record)
+bool DBHelper::insertToDB(const QString& tableName,const DBRecord_t& record,QString* error)
 {
-	if(tableName.isEmpty() || record.isEmpty())
+	if(tableName.isEmpty() || record.isEmpty() || !reconnectDB(error))
 	{
 		return false;
 	}
-	reconnectDB();
 	
 	QString strFields,strValues;
 	for(auto citer = record.constBegin();citer != record.constEnd();++citer)
@@ -68,12 +83,17 @@ bool DBHelper::insertToDB(const QString& tableName,const DBRecord_t& record)
 	{
 		QString strError = query.lastError().text();
 		qDebug()<<strError;
+		
+		if(error != nullptr)
+		{
+			*error = strError;
+		}
 		return false;
 	}
 	return true;
 }
 
-bool DBHelper::deleteFromDB(const QString& tableName,const QString& sqlWhere)
+bool DBHelper::deleteFromDB(const QString& tableName,const QString& sqlWhere,QString* error)
 {
 	if(tableName.isEmpty() || sqlWhere.isEmpty())
 	{
@@ -81,16 +101,15 @@ bool DBHelper::deleteFromDB(const QString& tableName,const QString& sqlWhere)
 	}
 	
 	QString strSql = QString("delete from %1 %2").arg(tableName).arg(sqlWhere);
-	return execSql(strSql);
+	return execSql(strSql,error);
 }
 
-bool DBHelper::updateToDB(const QString& tableName,const DBRecord_t& record,const QString& sqlWhere)
+bool DBHelper::updateToDB(const QString& tableName,const DBRecord_t& record,const QString& sqlWhere,QString* error)
 {
-	if(tableName.isEmpty() || record.isEmpty())
+	if(tableName.isEmpty() || record.isEmpty() || !reconnectDB(error))
 	{
 		return false;
 	}
-	reconnectDB();
 	
 	QString strSet;
 	for(auto citer = record.constBegin();citer != record.constEnd();++citer)
@@ -112,12 +131,17 @@ bool DBHelper::updateToDB(const QString& tableName,const DBRecord_t& record,cons
 	{
 		QString strError = query.lastError().text();
 		qDebug()<<strError;
+		
+		if(error != nullptr)
+		{
+			*error = strError;
+		}
 		return false;
 	}
 	return true;
 }
 
-bool DBHelper::selectFromDB(const QString& tableName,DBResult_t& result,const QString& sqlWhere)
+bool DBHelper::selectFromDB(const QString& tableName,DBResult_t& result,const QString& sqlWhere,QString* error)
 {
 	if(tableName.isEmpty())
 	{
@@ -125,10 +149,10 @@ bool DBHelper::selectFromDB(const QString& tableName,DBResult_t& result,const QS
 	}
 	
 	QString strSql = QString("select * from %1 %2").arg(tableName).arg(sqlWhere);
-	return execSql(strSql,result);
+	return execSql(strSql,result,error);
 }
 
-bool DBHelper::clearTable(const QString& tableName)
+bool DBHelper::clearTable(const QString& tableName,QString* error)
 {
 	if(tableName.isEmpty())
 	{
@@ -136,40 +160,48 @@ bool DBHelper::clearTable(const QString& tableName)
 	}
 
 	QString strSql = QString("delete from %1").arg(tableName);
-	return execSql(strSql);
+	return execSql(strSql,error);
 }
 
-bool DBHelper::execSql(const QString& strSql)
+bool DBHelper::execSql(const QString& strSql,QString* error)
 {
-	if(strSql.isEmpty())
+	if(strSql.isEmpty() || !reconnectDB(error))
 	{
 		return false;
 	}
-	reconnectDB();
 	
 	QSqlQuery query(m_database);
 	if(!query.exec(strSql))
 	{
 		QString strError = query.lastError().text();
 		qDebug()<<strError;
+		
+		if(error != nullptr)
+		{
+			*error = strError;
+		}
 		return false;
 	}
 	return true;
 }
 
-bool DBHelper::execSql(const QString& strSql,DBResult_t& result)
+bool DBHelper::execSql(const QString& strSql,DBResult_t& result,QString* error)
 {
-	if(strSql.isEmpty())
+	if(strSql.isEmpty() || !reconnectDB(error))
 	{
 		return false;
 	}
-	reconnectDB();
 	
 	QSqlQuery query(m_database);
 	if(!query.exec(strSql))
 	{
 		QString strError = query.lastError().text();
 		qDebug()<<strError;
+		
+		if(error != nullptr)
+		{
+			*error = strError;
+		}
 		return false;
 	}
 	
@@ -187,37 +219,64 @@ bool DBHelper::execSql(const QString& strSql,DBResult_t& result)
 	return true;
 }
 
-bool DBHelper::transaction()
+bool DBHelper::transaction(QString* error)
 {
-	reconnectDB();
+	if(!reconnectDB(error))
+	{
+		return false;
+	}
+	
 	if(!m_database.transaction())
 	{
 		QString strError = m_database.lastError().text();
 		qDebug()<<strError;
+		
+		if(error != nullptr)
+		{
+			*error = strError;
+		}
 		return false;
 	}
 	return true;
 }
 
-bool DBHelper::commit()
+bool DBHelper::commit(QString* error)
 {
-	reconnectDB();
+	if(!reconnectDB(error))
+	{
+		return false;
+	}
+	
 	if(!m_database.commit())
 	{
 		QString strError = m_database.lastError().text();
 		qDebug()<<strError;
+		
+		if(error != nullptr)
+		{
+			*error = strError;
+		}
 		return false;
 	}
 	return true;
 }
 
-bool DBHelper::rollback()
+bool DBHelper::rollback(QString* error)
 {
-	reconnectDB();
+	if(!reconnectDB(error))
+	{
+		return false;
+	}
+	
 	if(!m_database.rollback())
 	{
 		QString strError = m_database.lastError().text();
 		qDebug()<<strError;
+		
+		if(error != nullptr)
+		{
+			*error = strError;
+		}
 		return false;
 	}
 	return true;

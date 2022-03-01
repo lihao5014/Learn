@@ -16,21 +16,21 @@ class DBHelper:public Singleton<DBHelper>
 {
 	friend class Singleton<DBHelper>;
 public:
-	bool openDB(const DBConfig& config);
-	bool reconnectDB();
+	bool openDB(const DBConfig& config,QString* error = nullptr);
+	bool reconnectDB(QString* error = nullptr);
 	
-	bool insertToDB(const QString& tableName,const DBRecord_t& record);
-	bool deleteFromDB(const QString& tableName,const QString& sqlWhere);
-	bool updateToDB(const QString& tableName,const DBRecord_t& record,const QString& sqlWhere = "");
-	bool selectFromDB(const QString& tableName,DBResult_t& result,const QString& sqlWhere = "");
-	bool clearTable(const QString& tableName);
+	bool insertToDB(const QString& tableName,const DBRecord_t& record,QString* error = nullptr);
+	bool deleteFromDB(const QString& tableName,const QString& sqlWhere,QString* error = nullptr);
+	bool updateToDB(const QString& tableName,const DBRecord_t& record,const QString& sqlWhere = "",QString* error = nullptr);
+	bool selectFromDB(const QString& tableName,DBResult_t& result,const QString& sqlWhere = "",QString* error = nullptr);
+	bool clearTable(const QString& tableName,QString* error = nullptr);
 	
-	bool execSql(const QString& strSql);
-	bool execSql(const QString& strSql,DBResult_t& result);
+	bool execSql(const QString& strSql,QString* error = nullptr);
+	bool execSql(const QString& strSql,DBResult_t& result,QString* error = nullptr);
 	
-	bool transaction();
-	bool commit();
-	bool rollback();
+	bool transaction(QString* error = nullptr);
+	bool commit(QString* error = nullptr);
+	bool rollback(QString* error = nullptr);
 	
 private:
 	DBHelper();
