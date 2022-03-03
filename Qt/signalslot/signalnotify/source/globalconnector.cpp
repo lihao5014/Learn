@@ -5,6 +5,10 @@ QMutex GlobalConnector::m_mutex;
 
 GlobalConnector* volatile GlobalConnector::m_instance = nullptr;
 
+QMultiMap<QString,GlobalConnector::Message_t> GlobalConnector::m_msgMap;
+
+GlobalConnector::Garbo GlobalConnector::gc;
+
 GlobalConnector* GlobalConnector::getInstance()
 {
 	if(m_instance == nullptr)

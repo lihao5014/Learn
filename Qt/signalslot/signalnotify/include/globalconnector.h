@@ -24,6 +24,31 @@ class GlobalConnector:public QObject
 		QObject* m_reciever;
 		SignalAdapter* m_sender;
 	};
+	
+	struct Garbo
+	{
+		~Garbo()
+		{
+			if(m_instance != nullptr)
+	        {
+	        	m_mutex.lock();
+	        	if(m_instance != nullptr)
+	        	{
+	        		delete m_instance;
+	        	}
+				m_mutex.unlock();
+	        }
+	        
+	        foreach(Message_t msg,m_msgMap)
+	        {
+	        	if(msg.m_sender != nullptr)
+	        	{
+	        		delete msg.m_sender;
+	        		msg.m_sender = nullptr;
+	        	}
+	        }	
+		}
+	};
 public:
 	static GlobalConnector* getInstance();
 	static void release();
@@ -40,7 +65,8 @@ private:
 	static QMutex m_mutex;
 	static GlobalConnector* volatile m_instance;
 	
-	QMultiMap<QString,Message_t> m_msgMap;     //消息映射表，key - 消息类型，value - 消息结构体
+	static QMultiMap<QString,Message_t> m_msgMap;     //消息映射表，key - 消息类型，value - 消息结构体
+	static Garbo gc;
 };
 
 #endif  //_GLOBAL_CONNECTOR_H

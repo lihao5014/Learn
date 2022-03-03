@@ -6,7 +6,7 @@
 class Singleton
 {
 public:
-//	~Singleton();       错误，会造成析构函数的递归调用,直接使用编译器生产的默认析构函数
+//	~Singleton();       //错误，会造成析构函数的递归调用,直接使用编译器生产的默认析构函数
 	static Singleton& getInstance(const int data=0);
 	static void destroyInstance();
 	
