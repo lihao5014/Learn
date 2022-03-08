@@ -1,4 +1,4 @@
-.PHONY:all c++98 c++11 c++ 14 clean run
+.PHONY:all c++98 c++11 c++14 clean run
 
 CXX := g++
 

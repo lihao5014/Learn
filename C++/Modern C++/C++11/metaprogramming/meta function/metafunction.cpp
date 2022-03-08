@@ -79,7 +79,7 @@
  *     又能通过标签派发匹配可枚举的有限情况。
  */
 
-/*11.替换失败不是错误SFINAE：(Substitution Failure Is Not An Error)
+/*11.SFINAE：(Substitution Failure Is Not An Error——替换失败不是错误)
  *（1）为了更好的支持SFINAE，C++11的type_traits类型特征头文件中除了提供类型检查的谓词模板is_*和has_*，
  *     还提供了两个重要的辅助模板std::enable_if和std::void_t。
  *（2）std::enable_if：将对条件的判断转化为常量表达式，类似测试表达式实现重载的选择，
@@ -93,11 +93,6 @@
 
 using namespace std;
 
-/*C++的模板元编程是函数式编程，所以函数是一等公民。一切在编译期间执行的函数都可以称为元函数。
- *元函数有struct/class和constexpr两种定义方式。C++98/03之前只能使用struct/class模板定义元函数，
- *从C++11标准后可以使用constexpr常量表达式函数的方式定义元函数。constexpr字面意思是常量表达式，
- *因此表达式内部不允许出现运行期可以改变的量。
- */
 #ifndef HAS_CPP_11
 template <int N,int M>
 struct MetaFunc
