@@ -261,7 +261,7 @@
 	alter table employee add foreign key(deptId) references department(id);
 	
 52.删除外键约束：（当一个表中不需要外键约束时，就需要从表中将其删除。外键一旦删除，就会解除主表和从表间的关联关系）
-	alter table employee drop foreign key(deptId);   -- 由于外键约束在一个表中可以有多个，因此需要指定外键名来删除一个表中的外键约束
+	alter table employee drop foreign key employee_ibfk_1;   -- 由于外键约束在一个表中可以有多个，因此需要指定外键名来删除一个表中的外键约束
 
 53.在创建表时设置唯一约束：（唯一约束可以在创建表时直接设置，通常设置在除了主键以外的其它列上）
 	create table students(id integer primary key,name varchar(20) unique);
