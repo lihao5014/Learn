@@ -78,7 +78,7 @@ IntProc compose(IntProc f, IntProc g)
 
 using namespace std;
 
-//元函数可惜连double类型都不能计算，只能计算int或bool类型参数。
+//可惜元函数连double类型都不能计算，只能计算int或bool类型参数。
 template <int N>
 struct Foo
 {
