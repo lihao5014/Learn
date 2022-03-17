@@ -53,6 +53,32 @@
 
 using namespace std;
 
+typedef double data_t;
+
+template <typename T>
+void print(const T& num)
+{
+	cout<<num<<" ";
+}
+
+class Display
+{
+public:
+	void operator ()(double num)
+	{
+		cout<<num<<" ";
+	}
+};
+
+void showArray(data_t arr[],int len)
+{
+	for(int i=0;i<len;++i)
+	{
+		cout<<arr[i]<<" ";
+	}
+	cout<<endl;
+}
+
 //std::not1要求适配的函数对象拥有名为argument_type的类型，且()运算符重载必须为const类型。
 template <typename T>
 struct IsNegative:public unary_function<T,bool>
@@ -67,17 +93,23 @@ struct IsEven:public unary_function<int,bool>
 {
 	result_type operator ()(const argument_type& num)const
 	{
-		return num%2 == 0;
+		return num % 2 == 1;
 	}
 };
 
-
+struct Compare:public binary_function<double,double,bool>
+{
+	result_type operator ()(const first_argument_type& x,const second_argument_type& y)const
+	{
+		return x < y;
+	}
+};
 
 int main(void)
 {
 	int arr[] = {2,4,5,8,9};
 	int len = sizeof(arr)/sizeof(arr[0]);
-	for_each(arr,arr + len,[](int num){cout<<num<<" ";});
+	for_each(arr,arr + len,print<int>);
 	cout<<endl;
 	
 	if(all_of(arr,arr + len,IsNegative<int>()))
@@ -104,7 +136,42 @@ int main(void)
 	cout<<"There are " << ret << " elements with even values.\n";
 	
 	ret = count_if(arr,arr + len,not1(IsEven()));
-	cout<<"There are " << ret << " elements with odd values.\n";
+	cout<<"There are " << ret << " elements with odd values.\n"<<endl;
 
+	double seq[] = {3.14,0.618,2.718,1.414,1.732};
+	int size = sizeof(seq)/sizeof(double);
+	for_each(seq,seq + size,Display());
+	cout<<endl;
+	
+	sort(seq,seq + size,Compare());
+	for_each(seq,seq + size,[](double num){cout<<num<<" ";});
+	cout<<endl;
+	
+	sort(seq,seq + size,not2(Compare()));
+	showArray(seq,size);
+	cout<<endl;
+	
+	if(all_of(seq,seq + size,bind2nd(less<double>(),5.0)))
+	{
+		cout<<"all the elements are less than 5.0"<<endl;
+	}
+	
+	ret = count_if(seq,seq + size,bind2nd(greater<double>(),2.0));
+	cout<<"There are " << ret << " elements with greater than 2.0.\n";
+	
+	for_each(seq,seq + size,
+		[](double num)
+		{
+			if(bind1st(Compare(),2.0)(num))
+			{
+				cout<<num<<" ";
+			}
+		}
+	);
+	cout<<endl;
+	
+	replace_if(seq,seq + size,bind1st(Compare(),2.0),6.0);
+	for_each(seq,seq + size,Display());
+	
 	return 0;
 }
