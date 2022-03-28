@@ -41,8 +41,24 @@
  *（3）使用对象成员函数的指针时，必须要知道该指针属于哪个对象，因此std::bind的第二个参数为对象的地址。
  */
 
+/*7.std::bind绑定一个引用参数:
+ *（1）默认情况下std::bind()的那些不是占位符的参数，是被直接拷贝到bind()返回的可调用对象中。
+ *     但是与lambda类似，有时希望绑定的参数以引用的方式传递，或是要绑定参数的类型无法拷贝。
+ *     这是就必须使用标准库提供的std::ref()函数。
+ *（2）std::ref()只是尝试模拟引用传递，并不能真正变成引用，在非模板状况下ref()根本无法实现引用传递，
+ *     只有模板自动推导类型时，std::ref()能用包装类型reference_wrapper来代替本来会被识别的值类型，
+ *     而reference_wrapper能隐式转换为被引用的值的引用类型。
+ *（3）C++本身有引用类型&，而又在C++11中引入了std::ref和std::cref，主要是考虑std::bind()在使用时，
+ *     是对参数直接拷贝，而不是引用。
+ *（4）C++中&是类型说明符，std::ref()是一个函数，返回std::reference_wrapper。
+ */
+
 #include <iostream>
-#include <functional>
+#include <sstream>   //ostringstream
+#include <string>
+#include <vector>
+#include <functional>    //function,bind(),ref(),std::plus,std::minus,std::multiplies,std::divides
+#include <algorithm>
 #include "calculator.h"
 
 using namespace std;
@@ -76,6 +92,20 @@ public:
 	}
 };
 
+//引入std::ref主要是考虑函数式编程（如std::bind）在使用时，是对参数直接拷贝，而不是引用。
+void foo(int& x,int& y,const int& z)
+{
+	cout<<"in foo(): "<<x<<" "<<y<<" "<<z<<endl;
+	++x;
+	++y;
+}
+
+ostream& print(ostream& os,const string& str,char ch)
+{
+	os<<str<<ch;
+	return os;
+}
+
 int main(int argc,char** argv)
 {
 	/*add，subtract和mod三种可调用对象虽然类型不同，但是共享了同一种调用形式int(int,int)，
@@ -102,12 +132,45 @@ int main(int argc,char** argv)
 	cout<<"twice(4) ="<<twice(4)<<endl;
 	cout<<"half(6) ="<<half(6)<<endl<<endl;
 
+	/*（1）定义成员函数指针时，必须指定类的作用域。即必须说明成员函数指针指向，那个类中的那个成员函数。
+	 *（2）因为类中的非静态成员函数是对象独有的，所以必须对象来调用成员函数指针。
+	 */
 	Compare compare;
+	bool (Compare::*pfun)(double,double) = &Compare::less;
+	cout<<"5 < 8 = "<<(compare.*pfun)(5,8)<<endl;
+	
+	pfun = &Compare::greater;
+	cout<<"8 > 5 = "<<(&compare->*pfun)(8,5)<<endl;
+	
 	auto isNegative = std::bind(&Compare::less,&compare,_1,0);
 	function<bool(double)> greaterThan_5 = bind(&Compare::greater,&compare,_1,5);
 	
 	cout<<"isNegative(-3.14) ="<<isNegative(-3.14)<<endl;
 	cout<<"greaterThan_5(9.8) ="<<greaterThan_5(9.8)<<endl<<endl;
+	
+	//std::bind默认使用的是参数的拷贝而不是引用。如果需要使用引用传参，加上std::ref即可。
+	int x = 1,y = 2,z = 3;
+	function<void()> bar = bind(foo,x,std::ref(y),std::cref(z));
+	
+	x = 10;
+	y = 11;
+	z = 12;
+	cout<<"before bar(): "<<x<<" "<<y<<" "<<z<<endl;
+	bar();
+	cout<<"after bar(): "<<x<<" "<<y<<" "<<z<<endl;
+	
+	char ch = ' ';
+	ostringstream os;
+	vector<string> words{"hello","world","this","is","c++11"};
+	for_each(words.begin(),words.end(),[&os,ch](const string& str){os<<str<<ch;});
+	cout<<os.str()<<endl;
+	
+	/*若希望传递给bind一个对象，而不拷贝它，就必须使用标准库提供的std::ref()函数。
+	 *因为ostream不能拷贝，所以传递给bind()函数时，只能使用引用传递。
+	 */
+	ostringstream os1;
+	for_each(words.begin(),words.end(),bind(print,std::ref(os1),placeholders::_1,ch));
+	cout<<os1.str()<<endl<<endl;
 	
 	int ret = calculate(4,5,ADD);
 	cout<<"4 + 5 ="<<ret<<endl;
