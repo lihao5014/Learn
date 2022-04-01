@@ -53,6 +53,32 @@
 
 using namespace std;
 
+class Number
+{
+public:
+	Number(int n):m_value(n){}
+	Number(const Number& other):m_value(other.m_value){}
+	
+	void setValue(int num){m_value = num;}
+	int getValue()const{return m_value;}
+	
+	Number add(Number m){return Number(m_value + m.m_value);}
+	Number subtract(Number m){return Number(m_value - m.m_value);}
+	Number multiply(Number m){return Number(m_value * m.m_value);}
+	
+	friend Number add(Number x,Number y);
+	friend Number subtract(Number x,Number y);
+	friend Number multiply(Number x,Number y);
+	
+	friend ostream& operator <<(ostream &os,const Number& num)
+	{
+		os << num.m_value;
+		return os;
+	}
+private:
+	int m_value;
+};
+
 int add(int x,int y)
 {
 	return x + y;
@@ -66,6 +92,21 @@ int subtract(int x,int y)
 int multiply(int x,int y)
 {
 	return x * y;
+}
+
+Number add(Number x,Number y)
+{
+	return Number(x.m_value + y.m_value);
+}
+
+Number subtract(Number x,Number y)
+{
+	return Number(x.m_value - y.m_value);
+}
+
+Number multiply(Number x,Number y)
+{
+	return Number(x.m_value * y.m_value);
 }
 
 typedef int data_t;
@@ -119,11 +160,15 @@ int main(void)
 	int a = 1 + 2;
 	int b = a * 3;
 	int c = b - 4;
-	printf("c =%d\n",c);
+	printf("(1 + 2) * 3 - 4 =%d\n",c);
 	
 	//函数式编程要求使用函数，我们可以把运算过程定义为不同的函数，即把最基础的表达式操作都封装成函数。
 	int ret = subtract(multiply(add(1,2),3),4);
-	printf("ret =%d\n",ret);
+	printf("(1 + 2) * 3 - 4 =%d\n",ret);
+	
+	//因为使用add(1,2)会调用add(int,int)重载函数，为了显示调用add(Number,Number)只能使用add(Number(1),2)。
+	Number num = add(Number(1),2).multiply(3).subtract(4);
+	cout<<"(1 + 2) * 3 - 4 ="<<num<<endl;
 	
 	data_t arr[] = {2,4,6,7,0,8,1,5,9,3};
 	foreach(arr,arr + sizeof(arr)/sizeof(arr[0]),print);
