@@ -3,12 +3,12 @@
 CXX := g++
 
 SOURCE := $(wildcard *.cpp)
-TARGET := calculator.exe
+TARGET:=$(patsubst %.cpp,%.exe,$(SOURCE))
 
 all:$(TARGET)
 
 ${TARGET}:$(SOURCE) 
-	$(CXX) -o $@ $^
+	$(CXX) -o $@ $^ -D_CHANGE_WAY_
 
 clean:
 	del /f ${TARGET}

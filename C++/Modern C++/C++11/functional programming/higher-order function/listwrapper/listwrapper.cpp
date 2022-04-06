@@ -49,6 +49,54 @@ ListWraper<T>::ListWraper(const ListWraper& other)
 	
 }
 
+#ifndef _CHANGE_WAY_
+template <typename T>
+ListWraper<T> ListWraper<T>::map(function<T(T)> fn)
+{
+	std::list<T> out;
+	for(const T& val : m_ls)
+	{
+		out.push_back(fn(val));
+	}
+	return ListWraper<T>(out);
+}
+
+template <typename T>
+ListWraper<T> ListWraper<T>::filter(function<bool(T)> fn)
+{
+	std::list<T> out;
+	for(const T& val : m_ls)
+	{
+		if(fn(val))
+		{
+			out.push_back(val);
+		}
+	}
+	return ListWraper<T>(out);
+}
+
+template <typename T>
+T ListWraper<T>::fold(T init)
+{
+	T ret = init;
+	for(const T& val : m_ls)
+	{
+		ret += val;
+	}
+	return ret;
+}
+
+template <typename T>
+T ListWraper<T>::fold(T init,function<T(T,T)> fn)
+{
+	T ret = init;
+	for(const T& val : m_ls)
+	{
+		ret = fn(ret,val);
+	}
+	return ret;
+}
+#else
 template <typename T>
 ListWraper<T> ListWraper<T>::map(function<T(T)> fn)
 {
@@ -76,13 +124,30 @@ T ListWraper<T>::fold(T init,function<T(T,T)> fn)
 {
 	return accumulate(m_ls.begin(),m_ls.end(),init,fn);
 }
+#endif
 
+/*（1）for each(in)语法是msvc编译器扩展的C++语法，而非C++标准，gcc编译器不支持，
+ *     所以不推荐使用。标准C++中支持的是范围for(:)循环。
+ *（2）cl编译器使用/Ze选项启用C++语言扩展(默认)，/Za禁用语言扩展。
+ */
+#ifndef _CHANGE_WAY_
+template <typename T>
+void ListWraper<T>::display()const
+{
+	for each(const T& val in m_ls)
+	{
+		cout<<val<<" ";
+	}
+	cout<<endl;
+}
+#else
 template <typename T>
 void ListWraper<T>::display()const
 {
 	for_each(m_ls.begin(),m_ls.end(),[](const T& n){cout<<n<<" ";});    //C++14标准才支持lambda模板
 	cout<<endl;
 }
+#endif
 
 int main(void)
 {
