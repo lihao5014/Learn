@@ -1,6 +1,6 @@
 /*函数式编程最常见的技术就是对一个集合做Map和Reduce操作，它们很像C++中的STL中的for_each()、
  *transform()、copy_if()、remove_if()、accumulate()、find_if()、count_if()之流的函数的玩法。
- *使用map&reduce技术后比起过程式的语言来说，在代码上要更容易阅读。传统过程式的语言需要使用
+ *使用map & reduce技术后比起过程式的语言来说，在代码上要更容易阅读。传统过程式的语言需要使用
  *for/while/do循环，然后在各种变量中把数据倒过来倒过去的。
  */
 
@@ -90,6 +90,9 @@ int main(void)
 	map(unaryFunctionPtr,seq,size);
 	displayArray(seq,size);
 	
+	/*在函数式编程中我们不应该用循环迭代的方式，而应该用更为高级的map & reduce方法。
+	 *Map和Reduce操作可以让代码更易读，因为它们是在描述要干什么，而不是怎么干。
+	 */
 	pBinaryFunc binaryFunctionPtr = add;
 	data_t result = reduce(binaryFunctionPtr,seq,size);
 	printf("result =%d\n",result);
