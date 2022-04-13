@@ -170,11 +170,11 @@ string stringReverse(string str)
 
 int main(void)
 {
-	increment();    //非函数式编程范式中的函数是不可重入的。
+	increment();    //有状态函数是不可重入的，非函数式编程范式中推荐使用的函数类型。
 	cout<<"g_count ="<<g_count<<endl;
 	
 	int count = 5;
-	int ret = increment(count);     //函数式编程范式中的函数都是可重入的。所以函数式编程都便于并发设计。
+	int ret = increment(count);    //无状态函数都是可重入的，便于并发程序设计，是函数式编程范式中推荐使用的函数类型。
 	cout<<"ret ="<<ret<<endl<<endl;
 	
 	//传统的过程式编程中，使用函数式编程思想计算(1 + 2) * 3 - 4表达式，
@@ -184,11 +184,11 @@ int main(void)
 	printf("(1 + 2) * 3 - 4 =%d\n",c);
 	
 	//函数式编程要求使用函数，我们可以把运算过程定义为不同的函数，即把最基础的表达式操作都封装成函数。
-	ret = subtract(multiply(add(1,2),3),4);
+	ret = subtract(multiply(add(1,2),3),4);       //C语言函数式编程中的pipeline表现形式。
 	printf("(1 + 2) * 3 - 4 =%d\n",ret);
 	
 	//因为使用add(1,2)会调用add(int,int)重载函数，为了显示调用add(Number,Number)只能使用add(Number(1),2)。
-	Number num = add(Number(1),2).multiply(3).subtract(4);
+	Number num = add(Number(1),2).multiply(3).subtract(4);     //函数式编程中的pipeline表现形式。
 	cout<<"(1 + 2) * 3 - 4 ="<<num<<endl<<endl;
 	
 	data_t arr[] = {2,4,6,7,0,8,1,5,9,3};
