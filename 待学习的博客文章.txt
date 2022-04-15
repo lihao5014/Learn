@@ -1,0 +1,102 @@
+=============正在阅读文章============
+
+一步步学习Linux多任务编程_秋叶原 && Mike || 麦克-CSDN博客_linux下多任务处理
+https://blog.csdn.net/tennysonsky/article/details/45847551
+
+Linux系统编程——文件描述符的复制：dup()和dup2()_秋叶原 && Mike || 麦克-CSDN博客_2.采用dup/dup2/fcntl复制一个新的文件描述符
+https://blog.csdn.net/tennysonsky/article/details/45870459
+
+linux系统编程之文件与I/O（五）：fcntl 函数与文件锁_125096-CSDN博客_#define err_exit(m) \\
+https://blog.csdn.net/qq125096885/article/details/51706011
+
+linux系统编程（一）文件编程_qq_42519524的博客-CSDN博客_linux系统编程的(一)
+https://blog.csdn.net/qq_42519524/article/details/99477666
+
+C语言多线程编程 - 小时候挺菜 - 博客园
+https://www.cnblogs.com/zzdbullet/p/9526130.html
+
+Linux线程详解_小虾米编程-CSDN博客_linux 线程
+https://blog.csdn.net/qq_22847457/article/details/89371217
+
+
+=============C++函数式编程============
+为什么要学习函数式编程？因为如果你手里只有锤子，看什么都像钉子 - 我是程序员 - 知乎
+https://zhuanlan.zhihu.com/p/36601068
+
+从零开始的简单函数式C++（〇）前言&目录 - 假装C++很好学 - 知乎
+https://zhuanlan.zhihu.com/p/44772722
+
+中的partial_C++中柯里化(curry)与偏应用(partial)的实现_weixin_39795065的博客-CSDN博客
+https://blog.csdn.net/weixin_39795065/article/details/112721743
+
+How can currying be done in C++? - stackoverflow
+https://stackoverflow.com/questions/152005/how-can-currying-be-done-in-c
+
+
+=============待阅读文章============
+
+【C++设计技巧】C++中的RAII机制 - gnuhpc - 博客园
+https://www.cnblogs.com/gnuhpc/archive/2012/12/04/2802307.html
+
+【原创】利用C++ RAII技术自动回收堆内存 - 流镡 - 博客园
+https://www.cnblogs.com/chinsonliu/p/3603168.html
+
+C++中的RAII机制_wozhengtao的博客-CSDN博客_raii机制
+https://blog.csdn.net/wozhengtao/article/details/52187484
+
+C++11实现模板化(通用化)RAII机制 - 程序园
+http://www.voidcn.com/article/p-osbngvxv-ca.html
+
+C++ —— RAII编程思想_C/C++_谁允许你直视本大叔的？-CSDN博客
+https://blog.csdn.net/noahzuo/article/details/51139940
+
+一种通用 RAII 对象模板类_C/C++_lif12345的专栏-CSDN博客
+https://blog.csdn.net/lif1234567890/article/details/94470338
+
+C++ Rall机制详解_C/C++_越努力越幸运—liupu-CSDN博客
+https://blog.csdn.net/ac_hell/article/details/69213969
+
+C++ —— RAII编程思想_weixin_30905133的博客-CSDN博客_用了c++比较倡导的 raii思想
+https://blog.csdn.net/weixin_30905133/article/details/99076725
+
+C++惯用法之RAII_C/C++_晴天的专栏-CSDN博客
+https://blog.csdn.net/rain_qingtian/article/details/10585029
+
+minunit/minunit.h at master · siu/minunit
+https://github.com/siu/minunit/blob/master/minunit.h
+
+zhuangbo/MiniUnit: 一个 C/C++ 迷你单元测试框架
+https://gitee.com/zhuangbo/MiniUnit
+
+minunit-extended/minunit_ext.h at master · ValiValpas/minunit-extended
+https://github.com/ValiValpas/minunit-extended/blob/master/minunit_ext.h#L124
+
+状态机编程实例及适用范围_三向板砖-CSDN博客
+https://blog.csdn.net/shuzhe66/article/details/26154891
+
+C++有限状态机实现计算器小程序_C 语言_脚本之家
+https://m.jb51.net/article/115993.htm
+
+C++状态机实现V1.0_c/c++_neustar1的专栏-CSDN博客
+https://blog.csdn.net/neustar1/article/details/7518059
+
+C语言实现简单的状态机_c/c++_wangpan0330的博客-CSDN博客
+https://blog.csdn.net/wangpan0330/article/details/101170801
+
+C语言实现简单状态机 - 为瞬间停留 - 简书
+https://www.jianshu.com/p/917c0fb8778b
+
+Linux内核链表的移植与使用_zhangge3663的博客-CSDN博客
+https://blog.csdn.net/zhangge3663/article/details/91412426?utm_medium=distribute.wap_relevant.none-task-blog-baidujs_title-6
+
+C++类与类之间的关系_u014694510的博客-CSDN博客_c++类的关系
+https://blog.csdn.net/u014694510/article/details/88316605?utm_medium=distribute.pc_relevant.none-task-blog-BlogCommendFromMachineLearnPai2-2.control&depth_1-utm_source=distribute.pc_relevant.none-task-blog-BlogCommendFromMachineLearnPai2-2.control
+
+面向对象的类关系及其C++实现 - Abnor - 博客园
+https://www.cnblogs.com/xiaojiang1025/p/6677978.html
+
+C++实现类与类之间简单关系（依赖，关联，聚合，组合，继承）_killfat的博客-CSDN博客_c++依赖关系
+https://blog.csdn.net/killfat/article/details/81275798?depth_1-utm_source=distribute.wap_relevant.none-task-blog-BlogCommendFromBaidu-1&utm_source=distribute.wap_relevant.none-task-blog-BlogCommendFromBaidu-1
+
+类之间的关系【泛化关系、实现关系、依赖关系、关联关系、聚合关系、组合关系】_wyqwilliam的博客-CSDN博客
+https://blog.csdn.net/wyqwilliam/article/details/92013382?utm_medium=distribute.wap_relevant.none-task-blog-BlogCommendFromMachineLearnPai2-6.nonecase&depth_1-utm_source=distribute.wap_relevant.none-task-blog-BlogCommendFromMachineLearnPai2-6.nonecase

@@ -82,6 +82,15 @@ function<int(int)> add(int x)
 	return [=](int y){return add(x,y);};
 }
 
+//使用C++14实现的通用函数柯里化函数
+template<typename Function, typename... Arguments>
+auto curry(Function fun, Arguments... args) 
+{
+    return [=](auto... rest) {
+        return fun(args..., rest...);
+    };
+}
+
 int main(void)
 {
 	int ret = func(4,5,6);
@@ -126,14 +135,25 @@ int main(void)
 	ret = add(2)(3);
 	cout<<"currying add(): 2 + 3 ="<<ret<<endl;
 	
-	auto add2 = add(2);
-	ret = add2(3);
-	cout<<"add2(): 2 + 3 ="<<ret<<endl;
+	auto inc2 = add(2);
+	ret = inc2(3);
+	cout<<"inc2(): 2 + 3 ="<<ret<<endl;
 	
 	//函数式编程的理念：是把函数当成变量来用，关注于描述问题而不是怎么实现，这样可以让代码更易读。
-	function<int(int)> add3 = add(3);
-	ret = add3(2);
-	cout<<"add3(): 3 + 2 ="<<ret<<endl;
+	function<int(int)> inc3 = add(3);
+	ret = inc3(2);
+	cout<<"inc3(): 3 + 2 ="<<ret<<endl;
+	
+	auto adder = [=](int x,int y){return add(x,y);};
+	auto inc4 = curry(adder,4);
+	ret = inc4(5);
+	cout<<"inc4(): 4 + 5 ="<<ret<<endl;
+	
+	//使用函数指针显示的指向add(int,int)重载函数，以避免curry(pfun,5)函数调用时产生歧义。
+	int (*pfun)(int,int) = add;      //或int (*pfun)(int,int) = &add
+	auto inc5 = curry(pfun,5);
+	ret = inc5(4);
+	cout<<"inc5(): 5 + 4 ="<<ret<<endl;
 	
 	return 0;
 }
