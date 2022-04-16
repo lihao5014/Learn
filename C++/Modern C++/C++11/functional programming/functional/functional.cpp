@@ -44,9 +44,21 @@
  *     状态下直接升级代码，不需要重启，也不需要停机。
  */
 
+/*4.纯函数：（纯函数又称为无状态函数，是函数式编程中推荐使用的函数类型）
+ *（1）对于相同的输入，永远得到相同的输出。它不依赖于程序执行期间函数外部任何状态或数据的变化，
+ *     只依赖于输入参数。
+ *（2）除了纯函数以外的任何变动，都不影响纯函数。
+ *（3）纯函数还使得维护和重构代码变得更加容易，你可以放心的修改某个纯函数，不必关心改动会影响其它地方。
+ *（4）由于对于相同的输入，永远得到相同的输出，所以纯函数可以缓存，之后调用传入相同参数是不用执行，
+ *     直接获取之前计算的值。
+ */
+
 #include <stdio.h>
 #include <iostream>
 #include <string>
+#include <map>
+#include <utility>     //pair
+#include <functional>
 
 #define _CHANGE_WAY_
 #undef _CHANGE_WAY_
@@ -168,6 +180,26 @@ string stringReverse(string str)
 	}
 }
 
+function<int(int,int)> memorize(function<int(int,int)> fun)
+{
+	map<pair<int,int>,int> caches;
+	return [=](int x,int y)mutable{
+				if(caches.find(pair<int,int>(x,y)) != caches.end())
+				{
+					cout<<" return caches data - ";
+					return caches[pair<int,int>(x,y)];
+				}
+				else
+				{
+					cout<<"call fun()"<<endl;
+					
+					int ret = fun(x,y);
+					caches[pair<int,int>(x,y)] = ret;
+					return ret;
+				}
+		   };
+}
+
 int main(void)
 {
 	increment();    //有状态函数是不可重入的，非函数式编程范式中推荐使用的函数类型。
@@ -197,6 +229,13 @@ int main(void)
 	
 	string str = "hello world";
 	cout<<"str ="<<str<<" , reverse: "<<stringReverse(str)<<endl;
+	
+	int (*pfun)(int,int) = &add;
+	function<int(int,int)> memAdd = memorize(pfun);      //memAdd为带计算缓存功能的加法函数对象。
+	memAdd(2,3);
+	memAdd(2,4);
+	memAdd(2,5);
+	cout<<"2 + 3 ="<<memAdd(2,3)<<endl;
 	
 	return 0;
 }
