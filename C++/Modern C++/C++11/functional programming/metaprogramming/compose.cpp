@@ -27,7 +27,7 @@
  *因为C语言禁止在函数中定义函数，所以是不能通过编译的。
  */
 
-/*4.C语言进行函数式编程，但遗憾的是该例子不能编译通过的。
+/*4.C语言进行函数式编程，但遗憾的是下面的例子不能编译通过的。
 typedef int(*IntProc) (int); 
 
 IntProc compose(IntProc f, IntProc g)  
