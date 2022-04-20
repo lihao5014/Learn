@@ -20,6 +20,10 @@ https://blog.csdn.net/qq_22847457/article/details/89371217
 
 
 =============C++函数式编程============
+
+现代C++函数式编程_历史上的今天的博客-CSDN博客
+https://blog.csdn.net/byeweiyang/article/details/80124921?utm_medium=distribute.wap_relevant.none-task-blog-2~default~baidujs_baidulandingword~default-1.wap_blog_relevant_default&spm=1001.2101.3001.4242.2&utm_relevant_index=4
+
 为什么要学习函数式编程？因为如果你手里只有锤子，看什么都像钉子 - 我是程序员 - 知乎
 https://zhuanlan.zhihu.com/p/36601068
 

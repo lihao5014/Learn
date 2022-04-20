@@ -169,13 +169,13 @@ int main(void)
 	typeReplace<char> c = 'a';
 	typeReplace<int> d = -5;
 	cout<<"a ="<<a<<" , "<<"b ="<<b<<" , "<<"c ="<<c<<" , "<<"d ="<<d<<endl;
-	
-	//定义一个指定字节数长度类型的变量。如果没有指定长度的类型，则编译报错。
+
 	IF<true,int,double>::type x = 10;
 	IF<false,int,double>::type y = 0.618;
 	cout<<"x ="<<x<<" , "<<typeid(x).name()<<endl;
 	cout<<"y ="<<y<<" , "<<typeid(y).name()<<endl;
 	
+	//定义一个类型为指定字节数长度的变量。如果没有指定长度的类型，则编译报错。
 	const int len = 4;
     typedef
 		IF<sizeof(char) == len, char,

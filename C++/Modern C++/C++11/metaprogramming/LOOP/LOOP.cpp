@@ -52,8 +52,11 @@ constexpr auto Accumulate()    //Accumulate()函数没有参数的重载。
 	return T(0);
 }
 
+/*函数Accumulate()有两个重载：一个是对没有函数参数的情况，一个是对函数参数个数至少为1的情况。
+ *和定长模板的迭代类似，这里也是通过递归调用实现参数遍历。
+ */
 template <typename T,typename... Ts>
-constexpr auto Accumulate(T arg,Ts... args)   //Accumulate()函数至少有1个参数的重载。
+constexpr auto Accumulate(T arg,Ts... args)
 {
 	return arg + Accumulate<T>(args...);
 }
