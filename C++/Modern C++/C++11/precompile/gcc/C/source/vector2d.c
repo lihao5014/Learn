@@ -40,3 +40,15 @@ int dotProductVector2D(const Vector2D vec1,const Vector2D vec2)
 	assert(vec1 != NULL && vec2 != NULL);
 	return vec1[0] * vec2[0] + vec1[1] * vec2[1];
 }
+
+bool crossProductVector2D(const Vector2D vec1,const Vector2D vec2,Vector3D retVec)
+{
+	if(vec1 == NULL || vec2 == NULL || retVec == NULL)
+	{
+		return false;
+	}
+	
+	retVec[0] = 0;
+	retVec[1] = 0;
+	retVec[2] = vec1[0] * vec2[1] - vec1[1] * vec2[0];
+}

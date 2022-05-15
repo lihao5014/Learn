@@ -16,13 +16,16 @@ int main(void)
 	int num = dotProductVector2D(vec2d_x,vec2d_y);
 	printf("num =%d\n",num);
 	
+	Vector3D vec3d_ret = {0,0,0};
+	crossProductVector2D(vec2d_x,vec2d_y,vec3d_ret);
+	displayVector3D(vec3d_ret);
+	
 	puts("");
 	
 	Vector3D vec3d_x = {7,8,9};
 	displayVector3D(vec3d_x);
 	
 	Vector3D vec3d_y = {3,2,1};
-	Vector3D vec3d_ret = {0,0,0};
 	addVector3D(vec3d_x,vec3d_y,vec3d_ret);
 	displayVector3D(vec3d_ret);
 	
@@ -31,6 +34,9 @@ int main(void)
 	
 	num = dotProductVector3D(vec3d_x,vec3d_y);
 	printf("num =%d\n",num);
+	
+	crossProductVector3D(vec3d_x,vec3d_y,vec3d_ret);
+	displayVector3D(vec3d_ret);
 	
 	return 0;
 }

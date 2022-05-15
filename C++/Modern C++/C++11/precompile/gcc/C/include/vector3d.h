@@ -13,5 +13,6 @@ bool addVector3D(const Vector3D vec1,const Vector3D vec2,Vector3D retVec);
 bool subVector3D(const Vector3D vec1,const Vector3D vec2,Vector3D retVec);
 
 int dotProductVector3D(const Vector3D vec1,const Vector3D vec2);
+bool crossProductVector3D(const Vector3D vec1,const Vector3D vec2,Vector3D retVec);
 
 #endif  //_VECTOR_3D_H_
