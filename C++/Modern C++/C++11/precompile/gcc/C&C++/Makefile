@@ -4,13 +4,14 @@ CC := gcc
 CXX := g++
 TARGET := main.exe
 
-#如果项目既包含C语言源文件，也包含C++语言源文件，就需要为两种语言分别维护一个预编译头文件。
+#对于老旧的gcc编译器，如果项目既包含C语言源文件，也包含C++语言源文件，就需要为两种语言分别
+#维护一个预编译头文件。而现代gcc编译器中C和C++混合编程时，只需要维护一个.gch预编译头即可。
 GCH_H := inc.h
 GCH := inc.h.gch
 
 #inc.h是供C语言源文件使用的预编译头文件，而predefine.h是供C++语言文件使用的预编译头文件。
-PCH_H := predefine.h
-PCH := predefine.h.gch
+#PCH_H := predefine.h
+#PCH := predefine.h.gch
 
 SRC := $(wildcard *.c)
 OBJ := $(patsubst %.c,%.o,$(SRC))
@@ -31,8 +32,8 @@ ${GCH}:$(GCH_H)
 	$(CXX) -o $@ $<
 
 #通过为g++指令添加-x c++-header选项，表明当前predefine.h为C头文件。
-${PCH}:$(PCH_H)
-	$(CXX) -o $@ -x c++-header $<
+#${PCH}:$(PCH_H)
+#	$(CXX) -o $@ -x c++-header $<
 
 $(TARGET):$(OBJ) $(OBJECT)
 	$(CXX) -o $@ $^

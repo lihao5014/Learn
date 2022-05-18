@@ -5,7 +5,7 @@
  */
 
 #include "inc.h"
-#include "predefine.h"
+// #include "predefine.h"    //现代gcc编译器中，不需要为C和C++分别维护一个预编译头文件。
 
 using namespace std;
 

@@ -8,5 +8,6 @@
 #define _INC_H_
 
 #include "person.h"
+#include "matrix.h"
 
 #endif  //_INC_H_
