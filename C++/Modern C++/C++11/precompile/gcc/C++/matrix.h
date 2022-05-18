@@ -41,12 +41,12 @@ public:
 	Matrix(Matrix&& other);
 	virtual ~Matrix();
 	
-	int row();
-	int column();
+	int row()const;
+	int column()const;
 	
 	Matrix& operator =(const Matrix& other);
 	
-	Matrix operator -();
+	Matrix operator -()const;
 	
 	double& operator ()(int i,int j);
 	double operator ()(int i,int j)const;
@@ -65,7 +65,7 @@ public:
 	friend std::ostream& operator <<(std::ostream& os,const Matrix& m);
 
 private:
-	double* m_pdata;
+	double* m_pdata;      //使用一级指针实现动态二维数组
 	int m_row;
 	int m_column;
 };

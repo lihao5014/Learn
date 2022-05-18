@@ -1,43 +1,28 @@
 #include "matrix.h"
-#include <string.h>
-#include <iomanip>
-
-#define _CHANGE_WAY_
-#undef _CHANGE_WAY_
 
 using namespace std;
 
 Matrix::Matrix(int row,int column)
-	:m_row(row)
-	,m_column(column)
 {
 	if(row < 1 || column < 1)
 	{
 		throw "Matrix() error: row or column is less than one";
 	}
 	
-	int size = m_row * m_column;
-	m_pdata = new double[size]{0};
+	initialize(row,column);
 }
 
 Matrix::Matrix(const Matrix& other)
-	:m_row(other.m_row)
-	,m_column(other.m_row)
 {
-	delete[] m_pdata;
-	m_pdata = new double[m_row * m_column]{0};
+	initialize(other.m_row,other.m_row);
 	
-#ifndef _CHANGE_WAY_
 	for(int i=0;i<m_row;++i)
 	{
 		for(int j=0;j<m_column;++j)
 		{
-			 *(m_pdata + i * m_column + j) = other.m_pdata[i * m_column + j];
+			 m_pdata[i][j] = other.m_pdata[i][j];
 		}
 	}
-#else
-	memcpy(m_pdata,other.m_pdata,sizeof(double) * m_row * m_column);
-#endif
 }
 
 Matrix::Matrix(Matrix&& other)
@@ -52,7 +37,31 @@ Matrix::Matrix(Matrix&& other)
 
 Matrix::~Matrix()
 {
+	release();
+}
+
+void Matrix::initialize(int row,int column)
+{
+	m_row = row;
+	m_column = column;
+	
+	m_pdata = new double*[m_row];    //new的数组类型是double*指针类型
+	for(int i=0;i<m_row;++i)
+	{
+		m_pdata[i] = new double[m_column]{0};   //new的数组类型是double数据类型
+	}
+}
+
+void Matrix::release()
+{
+	for(int i=0;i<m_row;++i)
+	{
+		delete[] m_pdata[i];
+		m_pdata[i] = nullptr;
+	}
+	
 	delete[] m_pdata;
+	m_pdata = nullptr;
 }
 	
 int Matrix::row()const
@@ -67,24 +76,16 @@ int Matrix::column()const
 
 Matrix& Matrix::operator =(const Matrix& other)
 {
-	m_row = other.m_row;
-	m_column = other.m_column;
-	int size = m_row * m_column;
+	release();
+	initialize(other.m_row,other.m_column);
 	
-	delete[] m_pdata;
-	m_pdata = new double[size]{0};
-	
-#ifndef _CHANGE_WAY_
 	for(int i=0;i<m_row;++i)
 	{
 		for(int j=0;j<m_column;++j)
 		{
-			 *(m_pdata + i * m_column + j) = other.m_pdata[i * m_column + j];
+			 m_pdata[i][j] = other.m_pdata[i][j];
 		}
 	}
-#else
-	memcpy(m_pdata,other.m_pdata,sizeof(double) * size);
-#endif
 
 	return *this;
 }
@@ -96,11 +97,11 @@ Matrix Matrix::operator -()const
 	{
 		for(int j=0;j<m_column;++j)
 		{
-			 result(i,j) = -1 * m_pdata[i * m_column + j];
+			 result.m_pdata[i][j] = -1 * m_pdata[i][j];
 		}
 	}
 	
-	return *this;
+	return result;
 }
 
 double& Matrix::operator ()(int i,int j)
@@ -110,7 +111,7 @@ double& Matrix::operator ()(int i,int j)
 		throw "operator() error: row or column is illegal";
 	}
 	
-	return m_pdata[i * m_column + j];
+	return m_pdata[i][j];
 }
 
 double Matrix::operator ()(int i,int j)const
@@ -120,7 +121,7 @@ double Matrix::operator ()(int i,int j)const
 		throw "operator() error: row or column is illegal";
 	}
 	
-	return m_pdata[i * m_column + j];
+	return m_pdata[i][j];
 }
 
 Matrix Matrix::operator +(const Matrix& other)const
@@ -135,7 +136,7 @@ Matrix Matrix::operator +(const Matrix& other)const
 	{
 		for(int j=0;j<m_column;++j)
 		{
-			 result.m_pdata[i * m_column + j] = *(m_pdata + i * m_column + j) + other.m_pdata[i * m_column + j];
+			 result.m_pdata[i][j] = m_pdata[i][j] + other.m_pdata[i][j];
 		}
 	}
 	
@@ -154,7 +155,7 @@ Matrix Matrix::operator -(const Matrix& other)const
 	{
 		for(int j=0;j<m_column;++j)
 		{
-			 result(i,j) = (*this)(i,j) - other(i,j);
+			 result.m_pdata[i][j] = m_pdata[i][j] - other.m_pdata[i][j];
 		}
 	}
 	
@@ -194,7 +195,7 @@ Matrix& Matrix::operator +=(const Matrix& other)
 	{
 		for(int j=0;j<m_column;++j)
 		{
-			 *(m_pdata + i * m_column + j) += other.m_pdata[i * m_column + j];
+			 m_pdata[i][j] += other.m_pdata[i][j];
 		}
 	}
 	
@@ -219,13 +220,27 @@ Matrix& Matrix::operator -=(const Matrix& other)
 	return *this;
 }
 
-void Matrix::display()const
+void Matrix::input()
+{
+	cout<<"Please input matrix("<<m_row<<","<<m_column<<") data: "<<endl;
+	
+	for(int i=0;i<m_row;++i)
+	{
+		for(int j=0;j<m_column;++j)
+		{
+			 cin>>m_pdata[i][j];
+		}
+	}
+	cout<<endl;
+}
+
+void Matrix::output()const
 {
 	for(int i=0;i<m_row;++i)
 	{
 		for(int j=0;j<m_column;++j)
 		{
-			 cout<<m_pdata[i * m_column + j]<<"\t ";
+			 cout<<m_pdata[i][j]<<"\t ";
 		}
 		cout<<endl;
 	}
@@ -240,7 +255,7 @@ std::istream& operator >>(std::istream& is,Matrix& m)
 	{
 		for(int j=0;j<m.m_column;++j)
 		{
-			 is>>m.m_pdata[i * m.m_column + j];
+			 is>>m(i,j);
 		}
 	}
 	cout<<endl;
@@ -254,7 +269,7 @@ std::ostream& operator <<(std::ostream& os,const Matrix& m)
 	{
 		for(int j=0;j<m.m_column;++j)
 		{
-			 os<<m.m_pdata[i * m.m_column + j]<<setw(4)<<" ";
+			 os<<m.m_pdata[i][j]<<"\t";
 		}
 		os<<endl;
 	}

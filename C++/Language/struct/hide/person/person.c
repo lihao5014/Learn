@@ -30,7 +30,7 @@ void destroyPerson(Person** ppperson)
 	if(*ppperson != NULL)
 	{
 		free(*ppperson);
-		ppperson = NULL;
+		*ppperson = NULL;
 	}
 }
 
