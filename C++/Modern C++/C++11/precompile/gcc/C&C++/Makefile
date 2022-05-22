@@ -4,14 +4,13 @@ CC := gcc
 CXX := g++
 TARGET := main.exe
 
-#对于老旧的gcc编译器，如果项目既包含C语言源文件，也包含C++语言源文件，就需要为两种语言分别
-#维护一个预编译头文件。而现代gcc编译器中C和C++混合编程时，只需要维护一个.gch预编译头即可。
+#如果项目既包含C语言源文件，也包含C++语言源文件，就需要为两种语言分别维护一个预编译头文件。
 GCH_H := inc.h
 GCH := inc.h.gch
 
 #inc.h是供C语言源文件使用的预编译头文件，而predefine.h是供C++语言文件使用的预编译头文件。
-#PCH_H := predefine.h
-#PCH := predefine.h.gch
+PCH_H := predefine.h
+PCH := predefine.h.gch
 
 SRC := $(wildcard *.c)
 OBJ := $(patsubst %.c,%.o,$(SRC))
@@ -29,11 +28,11 @@ all:$(GCH) $(PCH) $(TARGET)
 
 #通过为gcc指令添加-x c-header选项，表明当前inc.h为C头文件。
 ${GCH}:$(GCH_H)
-	$(CXX) -o $@ $<
+	$(CC) -o $@ -x c-header $<
 
 #通过为g++指令添加-x c++-header选项，表明当前predefine.h为C头文件。
-#${PCH}:$(PCH_H)
-#	$(CXX) -o $@ -x c++-header $<
+${PCH}:$(PCH_H)
+	$(CXX) -o $@ -x c++-header $<
 
 $(TARGET):$(OBJ) $(OBJECT)
 	$(CXX) -o $@ $^
@@ -42,7 +41,10 @@ $(TARGET):$(OBJ) $(OBJECT)
 #（2）-Winvalid-pch选项：用于打开.gch预编译头不可用，编译器只好用原有的.h头文件警告。
 %.o:%.c
 	$(CC) -o $@ -c $<
-	
+
+test.o:test.c
+	$(CC) -H -Winvalid-pch -o $@ -c $<
+
 %.o:%.cpp
 	$(CXX) -o $@ -c $<
 

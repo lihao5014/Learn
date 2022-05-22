@@ -4,25 +4,13 @@
  *（3）C++语言可以使用工厂方法模式，隐藏class类的实现细节。
  */
 
-#include "inc.h"
-// #include "predefine.h"    //现代gcc编译器中，不需要为C和C++分别维护一个预编译头文件。
+#include "predefine.h"
 
 using namespace std;
 
 int main(void)
 {
-	Person* personPtr = createPerson("lisa");	
-	setPersonAge(personPtr,25);
-	setPersonSex(personPtr,GIRL);
-	showPerson(personPtr);
-	putc('\n',stdout);
-	
-	setPersonName(personPtr,"jorden");
-	cout<<"name: "<<getPersonName(personPtr)<<endl
-		<<"age: "<<getPersonAge(personPtr)<<endl
-		<<"Sex: "<<getPersonSex(personPtr)<<endl;
-	
-	destroyPerson(&personPtr);
+	test_person();
 	
 	Matrix m33_a(3,3);
 	cin>>m33_a;

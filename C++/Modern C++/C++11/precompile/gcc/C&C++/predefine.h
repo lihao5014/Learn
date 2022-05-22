@@ -25,6 +25,7 @@
 #ifndef _PRE_DEFINE_H_
 #define _PRE_DEFINE_H_
 
+#include "test.h"
 #include "matrix.h"
 
 #endif  //_PRE_DEFINE_H_
