@@ -170,6 +170,7 @@ int main(void)
 	typeReplace<int> d = -5;
 	cout<<"a ="<<a<<" , "<<"b ="<<b<<" , "<<"c ="<<c<<" , "<<"d ="<<d<<endl;
 
+    //元函数IF是模板元编程中最简单但运用得最多的基础设施。
 	IF<true,int,double>::type x = 10;
 	IF<false,int,double>::type y = 0.618;
 	cout<<"x ="<<x<<" , "<<typeid(x).name()<<endl;
