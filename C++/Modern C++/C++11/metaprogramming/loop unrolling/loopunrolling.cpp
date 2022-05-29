@@ -16,10 +16,13 @@
  *可读性的同时，又能享受到循环展开对我们程序性能的提高。
  */
 
+#include <limits.h>
 #include <iostream>
 #include <chrono>
 
 #define _CHANGE_WAY_ 1<<2   //1<<0 = 0b001, 1<<1 = 0b010, 1<<2 = 0b100
+
+#define INFINITY INT_MIN
 
 using namespace std;
 
@@ -99,6 +102,45 @@ int sum(int num)
 }
 #endif
 
+/*定义一个模板函数sumArray()来做循环展开。然后比较传统循环累加和循环展开后累加的时间。
+ *不展开循环用时比循环展开用时更少。可见做这个展开意义不是特别大。而且当长度变大之后，
+ *编译器处理不了，展开会直接报编译错误。
+ */
+int totalArray(int* parr,int size)
+{
+	if(parr == nullptr || size < 0)
+	{
+		cout<<"totalArray() error: parr is null or size<0"<<endl;
+		return INFINITY;
+	}
+	
+	int ret = 0;
+	while(size-->0)
+	{
+		ret += parr[size];
+	}
+	
+	return ret;
+}
+
+template <int N>
+int sumArray(int arr[])
+{
+	if(arr == nullptr)
+	{
+		cout<<"sumArray() error: arr is null"<<endl;
+		return INFINITY;
+	}
+	
+	return arr[0] + sumArray<N - 1>(arr + 1);
+}
+
+template <>
+int sumArray<1>(int arr[])
+{
+	return arr[0];
+}
+
 void print(int n)
 {
 	cout<<n<<" ";
@@ -134,6 +176,65 @@ struct Loop<0>
 	}
 };
 
+/*对于性能要求极高并大量使用点乘的应用程序，也许想再节省一点开销。如果能减少循环的计数，对性能也有
+ *比较可观的提升。这样代码应该展开以直接计算：result=a[0]*b[0]+a[1]*b[1]+a[2]*b[2]+a[3]*b[3]表达式。
+ *但是我们希望泛化这个表达式，以便应用于不同维数的向量计算，这里模板元编程正好可以发挥出它编译时计算
+ *和生成代码的能力。
+ */
+int dotProduct(int dim,int vec1[],int vec2[])
+{
+	if(dim < 0)
+	{
+		cout<<"dotProduct() warn: dimension is less than zero"<<endl;
+		return INFINITY;
+	}
+	
+	int result = 0;
+	for(int i=0;i<dim;++i)     //如果直接将循环展开为a[0]*b[0]+a[1]*b[1]+a[2]*b[2]表达式进行计算性能更好。
+	{
+		result += vec1[i] * vec2[i];
+	}
+	
+	return result;
+}
+
+/*使用模板元编程进行向量点乘的方法是定义一个类模板DotProduct作为元函数，通过递归调用
+ *不断展开表达式。还定义了一个局部特化的版本，使它在维数递减到1时能够终结递归。
+ */
+template <int DIM>
+struct DotProduct
+{
+	static int result(int* pvec1,int* pvec2)
+	{
+		return pvec1[0] * pvec2[0] + DotProduct<DIM - 1>::result(pvec1 + 1,pvec2 + 1);
+	}
+};
+
+template <>
+struct DotProduct<1>    //作为递归结束条件的局部特化
+{
+	static int result(int* pvec1,int* pvec2)
+	{
+		return pvec1[0] * pvec2[0];
+	}
+};
+
+/*dot_product()包装函数的接口相较于dotProduct()已经改变，这是原因模板参数必须在编译时确定，
+ *所以DIM必须是一个常量，而可以是一个变量。这是模板元编程技术在数值计算方面的一个重大限制。
+ *当然对于点乘计算而言，向量的维数一般都能在编译时确定。
+ */
+template <int DIM>
+int dot_product(int* pvec1,int* pvec2)
+{
+	if(pvec1 == nullptr || pvec2 == nullptr)
+	{
+		cout<<"dot_product() warn: pvec1 or pvec2 is null"<<endl;
+		return INFINITY;
+	}
+	
+	return DotProduct<DIM>::result(pvec1,pvec2);
+}
+
 int main(void)
 {
 	int ret = sum(50000);
@@ -144,6 +245,33 @@ int main(void)
 	
 	Loop<6>::run(show);
 	cout<<endl;
+	
+	int seq[] = {8,5,0,9,3,1,2,6,4,7};
+	{
+		Timer timer;
+		ret = totalArray(seq,sizeof(seq)/sizeof(int));
+	}
+	cout<<"totalArray(): "<<ret<<endl;
+	
+	{
+		Timer timer;
+		ret = sumArray<sizeof(seq)/sizeof(seq[0])>(seq);
+	}
+	cout<<"sumArray(): "<<ret<<endl;
+	
+	int arr[] = {1,2,3};
+	int vec[] = {3,4,5};
+	{
+		Timer timer;
+		ret = dotProduct(sizeof(arr)/sizeof(int),arr,vec);
+	}
+	cout<<"dotProduct(): "<<ret<<endl;
+	
+	{
+		Timer timer;
+		ret = dot_product<sizeof(arr)/sizeof(arr[0])>(arr,vec);
+	}
+	cout<<"dot_Product(): "<<ret<<endl;
 	
 	return 0;
 }

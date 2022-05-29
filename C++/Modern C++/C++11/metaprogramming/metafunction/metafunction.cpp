@@ -74,6 +74,9 @@
 
 using namespace std;
 
+/*元函数都用struct而不是用class定义，这是因为struct中的成员可见性默认为public，
+ *在编写元函数时可以省却public:这个声明。
+ */
 #ifndef HAS_CPP_11
 template <int N,int M>
 struct MetaFunc
