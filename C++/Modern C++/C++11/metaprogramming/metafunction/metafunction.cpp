@@ -132,7 +132,10 @@ int main(void)
 #elif defined(_MSC_VAR)
 	cout<<"C++ version: "<<__MSVC_LANG<<endl;
 #endif
-	
+
+/*元函数MetaFunc的执行过程是在编译期完成的，实际执行程序时，是没有计算动作而是
+ *直接使用编译期的计算结果。元函数只处理元数据，元数据是编译期常量和类型。
+ */
 #ifndef HAS_CPP_11
 #pragma message("Don't have C++11 standard!")
 	int arr[MetaFunc<2,3>::value] = {0};

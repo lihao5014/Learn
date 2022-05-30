@@ -7,6 +7,7 @@
 
 using namespace std;
 
+//C++98/03中只能使用模板元编程技巧，实现编译期数值计算。
 #ifndef _CHANGE_WAY_
 template <int N>
 struct Fibonacii

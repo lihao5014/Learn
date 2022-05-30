@@ -30,6 +30,7 @@
  */
 
 #include <iostream>
+#include <type_traits>
 #include "cppstd.h"
 
 #define _CHANGE_WAY_
@@ -178,13 +179,22 @@ int main(void)
 	
 	//定义一个类型为指定字节数长度的变量。如果没有指定长度的类型，则编译报错。
 	const int len = 4;
+#ifndef _CHANGE_WAY_
     typedef
 		IF<sizeof(char) == len, char,
 		IF<sizeof(short)==len, short,
         IF<sizeof(int)==len, int,
         IF<sizeof(long)==len, long,
         void>::type>::type>::type>::type lenType;
-	
+#else
+    typedef
+		std::conditional<sizeof(char) == len, char,
+		std::conditional<sizeof(short)==len, short,
+        std::conditional<sizeof(int)==len, int,
+        std::conditional<sizeof(long)==len, long,
+        void>::type>::type>::type>::type lenType;
+#endif
+
 	lenType var = 20;
-	cout<<"var ="<<var<<" , sizeof(var) ="<<sizeof(var)<<endl;
+	cout<<"var ="<<var<<" , sizeof(var) ="<<sizeof(var)<<endl;		
 }
