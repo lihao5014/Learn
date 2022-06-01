@@ -90,6 +90,18 @@ constexpr int metaFunc(int x,int y)     //constexpr是C++11标准中新添加的关键字
 }
 #endif
 
+//编译期数值计算，不会对运行期产生时间消耗。
+template <int X,int Y>
+struct Calculator
+{
+	enum{
+		ADD = X + Y,
+		SUB = X - Y,
+		MUL = X * Y,
+		DIV = X / Y
+	};
+};
+
 /*只有vs2015 update3以上版本的编译器才支持使用/std选项指定C++标准，且msvc编译器只能指定C++14以上标准。
  *无法指定C++98、C++03和C++11标准。
  */
@@ -125,6 +137,21 @@ void print<1>()
 	cout<<1<<endl;
 }
 
+//编译期类型计算，C++11中using关键字可以用来代替typedef定义类型别名。
+#ifndef HAS_CPP_11
+template <typename T>
+struct PointerOf
+{
+	typedef T* type;
+};
+#else
+template <typename T>
+struct PointerOf
+{
+	using type = T*;
+};
+#endif
+
 int main(void)
 {
 #if defined(__GNUC__) || defined(__clang__)
@@ -145,6 +172,14 @@ int main(void)
 #endif
 	cout<<"arr len ="<<sizeof(arr)/sizeof(arr[0])<<endl;
 
+	enum {
+		a = Calculator<6,3>::ADD,
+		b = Calculator<6,3>::SUB,
+		c = Calculator<6,3>::MUL,
+		d = Calculator<6,3>::DIV,
+	};
+	cout<<"a ="<<a<<" , "<<"b ="<<b<<" , "<<"c ="<<c<<" , "<<"d ="<<d<<endl;
+
 #ifndef HAS_CPP_14
 #pragma message("Don't have C++14 standard!")
 	bool ret = IsOdd<17>::value;
@@ -156,6 +191,13 @@ int main(void)
 
 	const int num = 10;
 	print<num>();
+	
+	PointerOf<const char>::type str = "hello world";
+	cout<<"str ="<<str<<endl;
+	
+	PointerOf<double>::type p = new double(3.14);
+	cout<<"*p ="<<*p<<endl;
+	delete p;
 	
 	return 0;
 }
