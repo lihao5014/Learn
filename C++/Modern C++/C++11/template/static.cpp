@@ -2,13 +2,16 @@
 
 #include <iostream>
 
+#define _CHANGE_WAY_
+#undef _CHANGE_WAY_
+
 using namespace std;
 
 template <typename T>
 class Sample
 {
 public:
-	Sample(T x=0,T y=0){this->x = x;this->y = y;}
+	Sample(T x=0,T y=0):x(x),y(y){};
 	~Sample(){}
 	
 	void setX(const T x);
@@ -23,8 +26,7 @@ private:
 	static int y;
 };
 
-
-#if 0
+#ifndef _CHANGE_WAY_
 template <typename T>
 T Sample<T>::x = 0;
 
@@ -35,7 +37,7 @@ template<>
 int Sample<int>::x = 0;
 
 template<>
-double Sample<double>::x = 0;
+double Sample<double>::x = 0.0;
 
 template<>
 int Sample<int>::y = 0;
