@@ -45,7 +45,7 @@ struct Traits
 };
 
 template <typename T>
-struct Traits<T*>
+struct Traits<T*>         //局部特例化、偏特化
 {
 	typedef T value_type;
 };
