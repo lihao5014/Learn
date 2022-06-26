@@ -19,7 +19,7 @@ using namespace std;
 template <typename Iterator,typename T>
 void swap_impl_98(Iterator iter1,Iterator iter2,T t)
 {
-	T temp = *iter1;
+	T temp = *iter1;     //利用函数模板的参数推导机制，声明一个以“迭代器所指对象的类型”为类型的变量，
 	*iter1 = *iter2;
 	*iter2 = temp;
 }
@@ -27,9 +27,12 @@ void swap_impl_98(Iterator iter1,Iterator iter2,T t)
 template <typename Iterator>
 void swap_98(Iterator iter1,Iterator iter2)
 {
-	swap_impl_98(iter1,iter2,*iter1);     //通过自动推导iter类型和*iter类型
+	swap_impl_98(iter1,iter2,*iter1);     //传入iter和*iter所指的值，类型自动推导。
 }
 #else
+/*如果没有一层swap_impl_98()函数的封装的话，每次都要显式地说明迭代器指向对象的类型，
+ *才能新建temp变量。加一层封装显得清爽很多。
+ */
 template <typename Iterator,typename T>
 void swap_98(Iterator iter1,Iterator iter2)
 {
@@ -48,6 +51,7 @@ void swap_03(Iterator iter1,Iterator iter2)
 	*iter2 = temp;
 }
 #else
+//使用iterator_traits类型特性萃取技术，可以统一迭代器和原始指针的调用接口。
 template <typename Iterator>
 void swap_03(Iterator iter1,Iterator iter2)
 {
@@ -75,6 +79,7 @@ void swap_11(Iterator iter1,Iterator iter2)
 }
 #endif
 
+//返回值类型推导：函数模板的参数推导机制推导的只是参数，无法推导函数的返回值类型。
 template <typename Iterator,typename T>
 T sum_98(Iterator begin,Iterator end)
 {
@@ -88,6 +93,10 @@ T sum_98(Iterator begin,Iterator end)
 }
 
 #ifndef _CHANGE_WAY_
+/*Iterator中声明内嵌类型value_type，使我们可以直接获取迭代器所指对象的类型。
+ *这样就可以轻易推导函数的返回值类型。但是并不是所有迭代器都是class type，
+ *原生指针就不是类类型。如果不是class type，就无法为它定义内嵌类型。
+ */
 template <typename Iterator>
 typename Iterator::value_type sum_03(Iterator begin,Iterator end)
 {
@@ -100,6 +109,9 @@ typename Iterator::value_type sum_03(Iterator begin,Iterator end)
 	return result;
 }
 #else
+/*通过定义内嵌类型，我们获得了知晓iterator所指元素类型的方法，通过traits技法，
+ *将函数模板对于原生指针和自定义iterator的定义实现了统一。
+ */
 template <typename Iterator>
 typename iterator_traits<Iterator>::value_type sum_03(Iterator begin,Iterator end)
 {
@@ -166,7 +178,8 @@ auto main(int argc,char** argv) -> int
 	UNUSED(argc);
 	UNUSED(argv);
 	
-	list<double> mylist = {3.14,2.718,0.618,1.414,1.732};
+	double arr[] = {3.14,2.718,0.618,1.414,1.732};
+	list<double> mylist(arr,arr + sizeof(arr)/sizeof(double));
 	for_each(mylist.begin(),mylist.end(),print<double>);
 	cout<<endl;
 	
@@ -182,6 +195,11 @@ auto main(int argc,char** argv) -> int
 	for_each(mylist.begin(),mylist.end(),[](double n){cout<<n<<" ";});
 	cout<<endl;
 
+#ifdef _CHANGE_WAY_
+	swap_03(arr,arr + 2);
+	for_each(arr,arr + sizeof(arr)/sizeof(arr[0]),[](double n){cout<<n<<" ";});
+	cout<<endl;
+#endif
 	swap_03(moveTo(mylist.begin(),1),++listIter);
 	for_each(mylist.begin(),mylist.end(),[](double n){cout<<n<<" ";});
 	cout<<endl;
@@ -199,6 +217,9 @@ auto main(int argc,char** argv) -> int
 	cout<<"vec[4] ="<<*vecIter<<endl;
 
 	cout<<"sum_98() ="<<sum_98<vector<int>::iterator,int>(vec.begin(),vec.end())<<endl;
+#ifdef _CHANGE_WAY_
+	cout<<"sum_03() ="<<sum_03(arr,arr + sizeof(arr)/sizeof(arr[0]))<<endl;
+#endif
 	cout<<"sum_03() ="<<sum_03(vec.begin(),vec.end())<<endl;
 	cout<<"sum_11() ="<<sum_11(vec.begin(),vec.end())<<endl;
 	cout<<"sum_14() ="<<sum_11(vec.begin(),vec.end())<<endl;

@@ -1,3 +1,19 @@
+/*1.traits特性萃取技术：
+ *（1）在STL中容器与算法是分开的，彼此独立设计，容器与算法之间通过迭代器联系在一起。
+ *     算法正是通过traits技术，从迭代器类中获取出容器元素的类型的。
+ *（2）在C++中traits习惯上总是被实现为struct，它们被称为traits class。traits class的
+ *     作用主要是用来为使用者提供类型信息。
+ *（3）traits技术展现的是一种思想，将相同的操作复用，不同的操作进一步抽象成接口复用。
+ *     traits技术是一种编译期实现技术。
+ *（4）traits特性萃取技术的本质是加上一层间接性，换来一定的灵活性。
+ */
+
+/*2.traits class的实现步骤：
+ *（1）确认若干我们希望将来可取得的类型相关信息，如迭代器所指元素的类型。
+ *（2）为该信息选择一个名称，如迭代器所指元素的类型起名为value_type。
+ *（3）提供一个template和一组特化版本，内容包含我们希望支持的类型相关信息。
+ */
+
 #include <iostream>
 #include <vector>
 
@@ -5,7 +21,7 @@ using namespace std;
 
 //利用迭代器可以实现很多通用算法，迭代器在容器与算法之间搭建了一座桥梁。
 template <typename Iterator>
-typename Iterator::value_type sum(Iterator begin,Iterator end)
+typename Iterator::value_type sum(Iterator begin,Iterator end)   //迭代器所指对象的类型，称为该迭代器的value_type。
 {
 	typename Iterator::value_type result(0);
 	for(Iterator iter=begin;iter != end;++iter)
@@ -41,7 +57,7 @@ T sum(T* begin,T* end)
 template <typename Iter>
 struct Traits
 {
-	using value_type = typename Iter::value_type;
+	using value_type = typename Iter::value_type;    //内嵌类型声明
 };
 
 template <typename T>
@@ -50,6 +66,11 @@ struct Traits<T*>         //局部特例化、偏特化
 	typedef T value_type;
 };
 
+/*total()函数在传入Iter类型参数的时候，会首先把Iter类型传到萃取器中，然后萃取器就
+ *匹配最适合的value_type。萃取器会先匹配最特别的版本，当你传进一个原生指针的时候，
+ *首先匹配的是带<T*>的偏特化版本，这样value_type就是T类型，而不是没有事先声明的
+ *Iter::value_type。这样就可以使用typename Traits<Iter>::value_type来知道返回类型。
+ */
 template <typename Iter>
 typename Traits<Iter>::value_type total(Iter begin,Iter end)
 {

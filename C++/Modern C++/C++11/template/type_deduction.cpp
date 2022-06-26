@@ -7,7 +7,7 @@
 #undef _ERROR_
 
 #define _CHANGE_WAY_
-#undef _CHANGE_WAY_
+// #undef _CHANGE_WAY_
 
 #define UNUSED(x) (void)x;
 
@@ -18,7 +18,7 @@ using namespace std;
 template <typename Iterator,typename T>
 void printTwice_impl_98(Iterator iter)
 {
-	T temp = *iter + *iter;
+	T temp = *iter + *iter;        //使用迭代器所指对象的类型，创建新的对象。
 	cout<<"printTwice_98(): "<<*iter<<"x 2 ="<<temp<<endl;
 }
 #else
@@ -40,7 +40,7 @@ void printTwice_98(Iterator iter)
 	 */
 	printTwice_impl_98<Iterator,*iter>(iter);
 #else
-	printTwice_impl_98(iter,*iter);
+	printTwice_impl_98(iter,*iter);   //利用函数模板的参数推导机制，自动推导iter类型和*iter类型
 #endif  //_ERROR_
 }
 #else  //_CHANGE_WAY_
@@ -60,6 +60,7 @@ void printTwice_03(Iterator iter)
 	cout<<"printTwice_03(): "<<*iter<<" x 2 ="<<temp<<endl;
 }
 #else
+//使用iterator_traits类型特性萃取技术，可以统一迭代器和原始指针的调用接口。
 template <typename Iterator>
 void printTwice_03(Iterator iter)
 {
@@ -130,7 +131,8 @@ int main(int argc,char** argv)
 	UNUSED(argc);
 	UNUSED(argv);
 	
-	list<double> mylist = {3.14,2.718,0.618,1.414,1.732};
+	double arr[] = {3.14,2.718,0.618,1.414,1.732};
+	list<double> mylist(arr,arr + sizeof(arr)/sizeof(double));
 	list<double>::iterator listIter = mylist.begin();
 	
 #ifndef _CHANGE_WAY_
@@ -139,6 +141,7 @@ int main(int argc,char** argv)
 	printTwice_11(listIter++);
 #else
 	printTwice_98<list<double>::iterator,double>(++listIter);
+	printTwice_03(arr + 2);
 	printTwice_03(++listIter);
 	printTwice_11(++listIter);
 #endif
@@ -151,6 +154,9 @@ int main(int argc,char** argv)
 	cout<<"add_98("<<*vecIter<<","<<*(vecIter + 1)<<") ="<<add_98<vector<int>::iterator,int>(vecIter,vecIter + 1)<<endl;
 #endif
 	
+#ifdef _CHANGE_WAY_
+	cout<<"add_03("<<arr[0]<<","<<arr[4]<<") ="<<add_03(arr,arr + 4)<<endl;
+#endif
 	cout<<"add_03("<<*(vecIter + 2)<<","<<*(vecIter + 3)<<") ="<<add_03(vecIter + 2,vecIter + 3)<<endl;
 	cout<<"add_11("<<*(vecIter + 4)<<","<<*(vecIter + 5)<<") ="<<add_11(vecIter + 4,vecIter + 5)<<endl;
 	cout<<"add_14("<<*(vecIter + 6)<<","<<*(vecIter + 7)<<") ="<<add_14(vecIter + 6,vecIter + 7)<<endl;
