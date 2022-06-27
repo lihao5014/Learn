@@ -5,6 +5,9 @@
 #include <iostream>
 #include <mutex>
 
+#define _CHANGE_WAY_
+#undef _CHANGE_WAY_
+
 class Singleton
 {
 public:
@@ -30,7 +33,7 @@ private:
 Singleton* Singleton::instance = nullptr;
 std::mutex Singleton::m_mutex;
 
-#if 0
+#ifndef _CHANGE_WAY_
 Singleton& Singleton::getInstance(const int data)
 {
 	if(instance == nullptr){
@@ -42,6 +45,20 @@ Singleton& Singleton::getInstance(const int data)
 	}
 	return *instance;
 }
+
+void Singleton::destroyInstance()
+{
+	if(instance != NULL)
+	{
+		m_mutex.lock();
+		if(instance != NULL)
+		{
+			delete instance;
+			instance = NULL;		
+		}
+		m_mutex.unlock();
+	}	
+}
 #else
 Singleton& Singleton::getInstance(const int data)
 {
@@ -52,16 +69,21 @@ Singleton& Singleton::getInstance(const int data)
 		}
 	}
 	return *instance;
-}	
-#endif
+}
 
 void Singleton::destroyInstance()
 {
-	if(instance != NULL){	
-		delete instance;
-		instance = NULL;
+	if(instance != NULL)
+	{
+		std::lock_guard<std::mutex> lock(m_mutex);
+		if(instance != NULL)
+		{
+			delete instance;
+			instance = NULL;		
+		}
 	}	
 }
+#endif
 
 /*
 Singleton::~Singleton()

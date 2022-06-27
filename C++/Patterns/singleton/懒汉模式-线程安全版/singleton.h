@@ -40,10 +40,12 @@ Singleton& Singleton::getInstance(const int data)
 
 void Singleton::destroyInstance()
 {
+	pthread_mutex_lock(&mutex);
 	if(instance != NULL){	
 		delete instance;
 		instance = NULL;
-	}	
+	}
+	pthread_mutex_unlock(&mutex);
 }
 
 /*

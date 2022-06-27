@@ -31,11 +31,11 @@ template <typename T>
 T* Singleton<T>::getInstance()
 {
     if(m_instance == nullptr){
-         pthread_mutex_lock(&m_mutex);
+        pthread_mutex_lock(&m_mutex);
         if(m_instance == nullptr){
             m_instance = new T();
         }
-         pthread_mutex_unlock(&m_mutex);
+        pthread_mutex_unlock(&m_mutex);
     }
     
     return m_instance;
@@ -44,11 +44,16 @@ T* Singleton<T>::getInstance()
 template <typename T>
 void Singleton<T>::release()
 {
-    std::cout<<"release()"<<std::endl;
-    if(m_instance != nullptr){
-        delete m_instance;
-        m_instance = nullptr;
-    }
+    if(m_instance != nullptr)
+	{
+		pthread_mutex_lock(&m_mutex);
+		if(m_instance != nullptr)
+		{
+			delete m_instance;
+			m_instance = nullptr;
+		}
+		pthread_mutex_unlock(&m_mutex);
+	}
 }
 
 #endif //_SINGLETON_H
