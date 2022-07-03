@@ -1,58 +1,120 @@
-template<class T>
-class Auto_ptr {
-private:
-    T *ptr;        //真正的指针值
-    mutable bool owns;    //是否拥有该指针
-public:
-    //不可以隐式转化的构造函数
-    explicit Auto_ptr(T *p = 0):ptr(p),owns((bool)p){}    //不能隐式转化，例如Auto_ptr<int> Ap = new int(1024) //error
-    //复制构造函数
-    //Auto_ptr(const Auto_ptr& a):ptr(a.ptr),owns(a.owns){ a.owns = 0;}
-    //泛化版的复制构造函数
-    template <class U>
-    Auto_ptr(const Auto_ptr<U>& a):ptr(a.ptr),owns(a.owns){ a.owns = 0;}
+#ifndef _AUTO_PTR_H
+#define _AUTO_PTR_H
 
-    //重载赋值操作符
-    Auto_ptr& operator=(const Auto_ptr& a)
-    {
-        if(&a != this)    //防止自身赋值
-        {
-            if(owns)
-                delete ptr;
-            owns = a.owns;
-            ptr  = a.ptr;
-            a.owns = 0;
-        }
-		return *this;
-    }
-    //泛化版的重载赋值操作符
-    template<class U>
-    Auto_ptr& operator=(Auto_ptr<U>& a)
-    {
-        if (&a != this)
-        {
-            if(owns)
-                delete ptr;
-            owns = a.owns;
-            ptr  = a.ptr;
-            a.owns = false;
-        }
-        return *this;
-    }
-    T& operator  *() const {return *ptr;} 
-    T* operator ->() const {return ptr;}
-    T* get() const { return ptr;}
-    void reset(T *p = 0)
-    {
-        if(owns)
-        {
-            if(ptr != p)    //如果p 和 ptr的值不同    
-            {
-                delete ptr;    //删除原来指向的对象
-            }                //else付过相同肯定不能删除啊
-        }
-        ptr = p;            //这里赋值时安全的，机试ptr和p原来相等
-    }
-    T* release() const{ owns = false;return ptr;}
-    ~Auto_ptr(){if(owns) {cout << "析构！"<< endl;delete ptr;}}
+template <typename T>
+class Auto_ptr
+{
+public:
+	explicit Auto_ptr(T *ptr = 0);
+	Auto_ptr(const Auto_ptr<T>& pAuto);
+	
+	template <typename Y>
+	Auto_ptr(const Auto_ptr<Y>& pAuto);
+	~Auto_ptr();
+	
+	Auto_ptr<T>& operator =(const Auto_ptr<T>& pAuto);
+	
+	template <typename Y>
+	Auto_ptr<T>& operator =(const Auto_ptr<Y>& pAuto);
+	
+	T& operator *()const;
+	T* operator ->()const;
+	T* get()const;
+	void reset(T* ptr = 0);
+	T* release()const;
+private:
+	T* ptr;
+	mutable bool owns;
 };
+
+template <typename T>
+Auto_ptr<T>::Auto_ptr(T *ptr):ptr(ptr),owns((bool)ptr)
+{
+	
+}
+
+template <typename T>
+Auto_ptr<T>::Auto_ptr(const Auto_ptr<T>& pAuto):ptr(pAuto.ptr),owns(pAuto.owns)
+{
+	pAuto.owns = false;
+}
+
+template <typename T>
+template <typename Y>
+Auto_ptr<T>::Auto_ptr(const Auto_ptr<Y>& pAuto):ptr(pAuto.ptr),owns(pAuto.owns)
+{
+	pAuto.owns = false;
+}
+
+
+template <typename T>
+Auto_ptr<T>::~Auto_ptr()
+{
+	if(owns){
+		delete ptr;
+		ptr = nullptr;
+	}
+}
+
+template <typename T>
+Auto_ptr<T>& Auto_ptr<T>::operator =(const Auto_ptr<T>& pAuto)
+{
+	if(&pAuto != this){
+		if(owns) delete ptr;
+		owns = pAuto.owns;
+		ptr = pAuto.ptr;
+		pAuto.owns = false;
+	}
+	return *this;
+}
+
+template <typename T>
+template <typename Y>
+Auto_ptr<T>& Auto_ptr<T>::operator =(const Auto_ptr<Y>& pAuto)
+{
+	if(&pAuto != this){
+		if(owns) delete ptr;
+		owns = pAuto.owns;
+		ptr = pAuto.ptr;
+		pAuto.owns = false;
+	}
+	return *this;	
+}
+
+template <typename T>
+T& Auto_ptr<T>::operator *()const
+{
+	return *ptr;
+}
+
+template <typename T>
+T* Auto_ptr<T>::operator ->()const
+{
+	return ptr;
+}
+
+template <typename T>
+T* Auto_ptr<T>::get()const
+{
+	return ptr;
+}
+
+template <typename T>
+void Auto_ptr<T>::reset(T* ptr)
+{
+	if(owns){
+		if(this->ptr != ptr) delete ptr;
+	}
+	this->ptr = ptr; 
+}
+
+template <typename T>
+T* Auto_ptr<T>::release()const
+{
+	if(owns){
+		delete ptr;
+		ptr = nullptr;
+	}
+}
+
+#endif  //_AUTO_PTR_H

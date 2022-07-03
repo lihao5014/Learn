@@ -1,4 +1,4 @@
-#include "Auto_ptr.h"
+#include "auto_ptr.h"
 #include <iostream>
 
 using namespace std;

@@ -28,17 +28,17 @@
  */
 
 /*4.C语言进行函数式编程，但遗憾的是下面的例子不能编译通过的。
-typedef int(*IntProc) (int); 
-
-IntProc compose(IntProc f, IntProc g)  
-{  
-    int tempProc(int x)    //C语言禁止在函数中定义函数，即不能实现函数式编程中的闭包。
-    {  
-        return f(g(x));  
-    }  
-    return tempProc;  
-}
-*/
+ *  typedef int(*IntProc) (int); 
+ *  
+ *  IntProc compose(IntProc f, IntProc g)  
+ *  {  
+ *      int tempProc(int x)    //C语言禁止在函数中定义函数，即不能实现函数式编程中的闭包。
+ *      {  
+ *          return f(g(x));  
+ *      }  
+ *      return tempProc;  
+ *  }
+ */
 
 /*5.C++中进行函数式编程的方法：
  *（1）仿函数：在C++中可以利用类和模板来解决，C语言函数内不能再定义其他函数的问题，因为C++允许重载
