@@ -71,11 +71,11 @@
 #include <vector>
 #include <iterator>
 
-#define _CHANGE_WAY_
-// #undef _CHANGE_WAY_
-
 #define _ERROR_
 #undef _ERROR_
+
+#define _CHANGE_WAY_
+// #undef _CHANGE_WAY_
 
 #define _DEBUG_
 #undef _DEBUG_
