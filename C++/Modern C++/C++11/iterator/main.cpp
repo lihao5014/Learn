@@ -67,13 +67,16 @@
  *（3）struct forward_iterator_tag : public input_iterator_tag {};
  *（4）struct bidirectional_iterator_tag : public forward_iterator_tag {};
  *（5）struct random_access_iterator_tag : public bidirectional_iterator_tag {};
+ *
+ *（6）使用继承的好处是，当函数需要用input_iterator_tag的时候，假设你传进一个forward_iterator_tag，
+ *     它会沿继承向上找，知道符合条件。
  */
 
 /*5.使用tag标签区分迭代器种类的原因：
  *因为我们在设计算法时，应该针对某种强化的迭代器提供另一种定义，这样才能提供最大的效率。
- *任何一个迭代器，其类型应该落在"该迭代器所隶属的各种类型中最强化的那个"，例如int*既是
- *RandomAccess Iterator，又是Bidirectional Iterator，同时也是Forward Iterator，而且也是
- *Input Iterator，那么其类型应该归属为RandomAccess iterator。
+ *任何一个迭代器，其类型应该落在“该迭代器所隶属的各种类型中最强化的那个”，例如原始指针
+ *int*既是RandomAccess Iterator，又是Bidirectional Iterator，同时也是Forward Iterator，
+ *而且也是Input Iterator，那么其类型应该归属为RandomAccess iterator。
  */
 
 #include <iostream>
