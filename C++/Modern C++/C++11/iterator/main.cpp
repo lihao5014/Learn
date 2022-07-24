@@ -17,8 +17,8 @@
 
 /*2.iteratorµü´úÆ÷Ô´Âë£º
  *	template <typename Category,                 // iterator::iterator_category
- *            typename T,                        // iterator::difference_type
- *            typename Distance = ptrdiff_t,     // iterator::value_type
+ *            typename T,                        // iterator::value_type
+ *            typename Distance = ptrdiff_t,     // iterator::difference_type
  *			  typename Pointer = T*,             // iterator::pointer
  *            typename Reference = T&>           // iterator::reference
  *  struct iterator

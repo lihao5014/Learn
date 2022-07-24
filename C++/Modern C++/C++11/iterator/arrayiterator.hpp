@@ -97,7 +97,7 @@ public:
 
 	U& operator [](int index)const;
 	
-	/*（1）对继承自std::iterator的迭代器进行模板化时，因为编译器不能排除您尝试提供std::iterator的特殊化，
+	/*（1）对继承自std::iterator的迭代器进行模板化时，因为编译器不能排除您尝试提供std::iterator的特例化，
 	 *     所以编译器会认为你正在对继承的std::iterator模板进行特例化，而difference_type不属于它的类型定义，
 	 *     所以在模板定义时，从属名称永远不能解释为typedef。
 	 *（2）使用typename ArrayIterator<U>::difference_type向编译器指示difference_type是成员类型。

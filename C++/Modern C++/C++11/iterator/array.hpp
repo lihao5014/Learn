@@ -64,7 +64,7 @@ Array<T,N>::Array(const std::initializer_list<T>& ls)
 {
 	if(ls.size() > N)
 	{
-		throw "Array constructor error: initializer list is to long!";
+		throw "Array constructor error: initializer list is too long!";
 	}
 	
 	auto iter = ls.begin();

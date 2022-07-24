@@ -25,31 +25,31 @@
  *  template<typename Iterator>
  *  struct iterator_traits         //使用iterator提供的信息
  *  {
- *    typedef typename Iterator::iterator_category iterator_category;
- *    typedef typename Iterator::value_type        value_typep;
- *    typedef typename Iterator::difference_type   difference_type;
- *    typedef typename Iterator::pointer           pointer;
- *    typedef typename Iterator::reference         reference;
+ *      typedef typename Iterator::iterator_category iterator_category;
+ *      typedef typename Iterator::value_type        value_typep;
+ *      typedef typename Iterator::difference_type   difference_type;
+ *      typedef typename Iterator::pointer           pointer;
+ *      typedef typename Iterator::reference         reference;
  *  };
  *  
  *  template<typename T>
  *  struct iterator_traits<T*>           //由于无法使用iterator的信息，所以traits自己提供了。针对原生指针而设计的"偏特化版"
  *  {
- *    typedef random_access_iterator_tag iterator_category;
- *    typedef T                          value_type;
- *    typedef ptrdiff_t                  difference_type;
- *    typedef T*                         pointer;
- *    typedef T&                         reference;
+ *      typedef random_access_iterator_tag iterator_category;
+ *      typedef T                          value_type;
+ *      typedef ptrdiff_t                  difference_type;
+ *      typedef T*                         pointer;
+ *      typedef T&                         reference;
  *  };
  *    
  *  template<typename T>
  *  struct iterator_traits<const T*>     //由于无法使用iterator的信息，所以traits自己提供了。针对原生的pointer-to-const而设计的"偏特化"
  *  {
- *    typedef random_access_iterator_tag iterator_category;
- *    typedef T                          value_type;          //注意这里不是const T。如果是const T，算法拿到这个类型，用该类型定义变量后却无法改变其值，那就没有作用了，所以是T。
- *    typedef ptrdiff_t                  difference_type;
- *    typedef const T*                   pointer;
- *    typedef const T&                   reference;
+ *      typedef random_access_iterator_tag iterator_category;
+ *      typedef T                          value_type;          //注意这里不是const T。如果是const T，算法拿到这个类型，用该类型定义变量后却无法改变其值，那就没有作用了，所以是T。
+ *      typedef ptrdiff_t                  difference_type;
+ *      typedef const T*                   pointer;
+ *      typedef const T&                   reference;
  *  };
  */
 
