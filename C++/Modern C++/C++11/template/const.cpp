@@ -78,10 +78,29 @@ auto main(void) -> int
 	Data<const int> cdata4 = data1.to_const();
 	cdata4.print();
 	
-	shared_ptr<Data<int>> dataPtr = make_shared<Data<int>>(17);
-	dataPtr->print();
+	//Data<int>*裸指针到Data<const int>*原始指针之间的强制转换。
+	Data<int> *pdata = new Data<int>(17);
+	pdata->print();
 	
+#ifdef _ERROR_
+	//static_cast不能实现Data<int>*指针到Data<const int>*的强制转换。
+	Data<const int> *pcdata = static_cast<Data<const int>*>(pdata);
+	displayData(*pcdata);
+#else
+	//C风格的类型强制转换，可以实现Data<int>*指针到Data<const int>*的强制转换。
+	Data<const int> *pcdata = (Data<const int>*)pdata;
+	displayData(*pcdata);
+#endif
+	
+    //shared_ptr<Data<int>>智能指针到shared_ptr<Data<const int>>智能指针之间的强制转换。
+	shared_ptr<Data<int>> dataPtr = make_shared<Data<int>>(19);
+	dataPtr->print();
+#ifdef _ERROR_
+	//虽然类型强转成功，但是这样转换会造成两个智能指针析构时，释放同一内存地址问题。
+	shared_ptr<Data<const int>> cdataPtr((Data<const int>*)dataPtr.get());
+#else
 	shared_ptr<Data<const int>> cdataPtr(new Data<const int>(*dataPtr));
+#endif
 	displayData(*cdataPtr);
 	
 	return 0;
