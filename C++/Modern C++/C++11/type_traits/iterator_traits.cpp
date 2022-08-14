@@ -317,7 +317,7 @@ auto main(int argc,char* argv[]) -> int
 	::advance(random_access_iter,3);
 	cout<<"*random_access_iter ="<<*random_access_iter<<endl;
 	
-	::advance(random_access_iter,2);
+	::advance(random_access_iter,-2);
 	cout<<"*random_access_iter ="<<*random_access_iter<<endl;
 	
 	//原始指针也属于随机访问迭代器

@@ -80,17 +80,19 @@ auto main(void) -> int
 	
 	//Data<int>*裸指针到Data<const int>*原始指针之间的强制转换。
 	Data<int> *pdata = new Data<int>(17);
-	pdata->print();
+	displayData(*pdata);
+	
+	//C风格的类型强制转换，可以实现Data<int>*指针到Data<const int>*的强制转换。
+	Data<const int> *pcdata = (Data<const int>*)pdata;
+	pcdata->print();
 	
 #ifdef _ERROR_
 	//static_cast不能实现Data<int>*指针到Data<const int>*的强制转换。
-	Data<const int> *pcdata = static_cast<Data<const int>*>(pdata);
-	displayData(*pcdata);
+	Data<const int> *pcdata1 = static_cast<Data<const int>*>(pdata);
 #else
-	//C风格的类型强制转换，可以实现Data<int>*指针到Data<const int>*的强制转换。
-	Data<const int> *pcdata = (Data<const int>*)pdata;
-	displayData(*pcdata);
+	Data<const int> *pcdata1 = reinterpret_cast<Data<const int>*>(pdata);
 #endif
+	displayData(*pcdata1);
 	
     //shared_ptr<Data<int>>智能指针到shared_ptr<Data<const int>>智能指针之间的强制转换。
 	shared_ptr<Data<int>> dataPtr = make_shared<Data<int>>(19);
