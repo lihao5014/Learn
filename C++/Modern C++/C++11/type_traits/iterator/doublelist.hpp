@@ -31,7 +31,7 @@ public:
     using typename base::reference;
 	
 	explicit DoubleListIterator(DoubleListNode<T>* pNode):m_pNode(pNode){}
-	DoubleListIterator(const DoubleListNode<T>& other):m_pNode(other.m_pNode){}
+	DoubleListIterator(const DoubleListIterator& other):m_pNode(other.m_pNode){}
 	
 	DoubleListIterator& operator =(const DoubleListIterator& other)
 	{

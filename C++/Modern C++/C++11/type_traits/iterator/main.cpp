@@ -8,6 +8,7 @@
 #include "array.hpp"
 #include "linklist.hpp"
 #include "doublelist.hpp"
+#include "circularlist.hpp"
 #include "algorithm.hpp"
 
 #define _ERROR_
@@ -35,6 +36,7 @@ struct
 static void test_Array();
 static void test_LinkList();
 static void test_DoubleList();
+static void test_CircularList();
 static void test_advance();
 static void test_distance();
 
@@ -45,8 +47,9 @@ auto main(int argc,char* argv[]) -> int
 	// test_Array();
 	// test_LinkList();
 	// test_DoubleList();
+	 test_CircularList();
 	// test_advance();
-	test_distance();
+	// test_distance();
 	
 	return 0;
 }
@@ -267,7 +270,6 @@ void test_DoubleList()
 	iter = ls.erase(iter);
 	++iter;
 	iter = ls.erase(iter);
-	cout<<"debug: *iter ="<<*iter<<endl;
 	*iter *= 10;
 	iter = ls.insert(iter,10);
 	iter = ls.insert(iter,11);
@@ -337,6 +339,125 @@ void test_DoubleList()
 	cout<<"\n";
 	
 	// ::getchar();     //阻塞test_DoubleList()函数返回，以调试DoubleList的析构函数。
+}
+
+void test_CircularList()
+{
+	struct
+	{
+		void operator ()(const int& n)
+		{
+			cout<<n<<" ";
+		}
+	}show;
+	
+	CircularList<int> ls;
+	ls.push_back(1);
+	ls.push_back(2);
+	ls.push_back(2);
+	ls.push_back(2);
+	ls.push_front(3);
+	ls.push_front(4);
+	ls.push_front(4);
+	std::for_each(ls.cbegin(),ls.cend(),show);
+	cout<<"\n";
+
+	cout<<"ls.size() ="<<ls.size()<<" ,ls.empty() ="<<ls.empty()<<"\n"
+		<<"ls.front() ="<<ls.front()<<" ,ls.back() ="<<ls.back()<<endl;
+		
+	ls.front() *= 2;
+	ls.back() *= 3;
+	ls.remove(2);
+	CircularList<int>::const_iterator citer = ls.cbegin();
+	for(;citer != ls.cend();++citer)
+	{
+		cout<<*citer<<" ";
+	}
+	cout<<endl;
+	
+	citer = ls.cbegin();
+	citer++;
+	++citer;
+	cout<<"debug: *citer ="<<*citer<<endl;
+#ifdef _ERROR_
+	*citer = 0;
+#endif
+	
+	CircularList<int>::iterator iter = ls.begin();
+	iter++;
+	iter = ls.erase(iter);
+	++iter;
+	iter = ls.erase(iter);
+	*iter *= 10;
+	iter = ls.insert(iter,10);
+	iter = ls.insert(iter,11);
+	iter = ls.insert(iter,12);
+	ls.pop_front();
+	ls.pop_front();
+	ls.pop_back();
+	ls.pop_back();
+	for(iter = ls.begin();iter != ls.end();iter++)
+	{
+		cout<<*iter<<" ";
+	}
+	cout<<"\n";
+/*	
+	ls.clear();
+	cout<<"ls.size() ="<<ls.size()<<" ,ls.empty() ="<<ls.empty()<<endl;
+	
+	CircularList<double> series = {1.25,2.25,3.25,4.25,5.25,6.25,7.25,8.25,9.25};
+	foreach(series.begin(),series.end(),[](const double& n){cout<<n<<" ";});
+	cout<<"\n";
+	
+	series.pop_front();
+	series.push_front(1.50);
+	series.pop_back();
+	series.push_back(9.50);
+	
+	CircularList<double>::iterator itr = series.begin();
+	itr++;
+	itr = series.erase(itr);
+	++itr;
+	itr = series.erase(itr);
+	
+	cout<<"series.size() ="<<series.size()<<" ,series.empty() ="<<series.empty()<<"\n"
+		<<"series.front() ="<<series.front()<<" ,series.back() ="<<series.back()<<endl;
+	
+	CircularList<double> sequence = series;
+	for(const double& n : sequence)
+	{
+		cout<<n<<" ";
+	}
+	cout<<endl;
+	
+	CircularList<double> range;
+	range = series;
+	std::for_each(range.begin(),range.end(),[](const auto& n){cout<<n<<" ";});
+	cout<<endl;
+	
+	CircularList<double> seq(std::move(series));
+	cout<<"series.size() ="<<series.size()<<" ,series.empty() ="<<series.empty()<<endl;
+	foreach(seq.begin(),seq.end(),[](const double& n){cout<<n<<" ";});
+	cout<<"\n";
+	
+	itr = series.begin();
+	itr = series.insert(itr,13.3);
+	itr = series.insert(itr,14.3);
+	series.push_front(15.3);
+	series.push_front(16.3);
+	series.push_back(17.3);
+	series.push_back(18.3);
+	cout<<"series.size() ="<<series.size()<<" ,series.empty() ="<<series.empty()<<endl;
+	std::for_each(series.begin(),series.end(),[](const double& n){cout<<n<<" ";});
+	cout<<"\n";
+	
+	seq = std::move(series);
+	cout<<"series.size() ="<<series.size()<<" ,series.empty() ="<<series.empty()<<endl;
+	foreach(seq.begin(),seq.end(),[](const double& n){cout<<n<<" ";});
+	cout<<"\n";
+	
+	// ::getchar();     //阻塞test_DoubleList()函数返回，以调试DoubleList的析构函数。	
+*/
 }
 
 void test_advance()
