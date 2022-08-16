@@ -1,7 +1,6 @@
 #ifndef _CIRCULAR_LIST_HPP_
 #define _CIRCULAR_LIST_HPP_
 
-#include <iostream>
 #include <cassert>
 #include <initializer_list>
 #include "iterator.hpp"
@@ -139,24 +138,30 @@ public:
 	CircularList(const CircularList& other):m_pHead(new CircularListHeadNode(other.size()))
 	{
 		CircularListNodeBase* pNode = m_pHead;
-		CircularListNode<T>* pTempNode = static_cast<CircularListNode<T>*>(other.m_pHead->m_pNext);
+		CircularListNodeBase* pTempNode = other.m_pHead->m_pNext;
 		while(pTempNode != other.m_pHead)
 		{
-			pNode->m_pNext = new CircularListNode<T>(pTempNode->m_data,pNode,m_pHead);
+			CircularListNode<T>* tempNodePtr = static_cast<CircularListNode<T>*>(pTempNode);
+			pNode->m_pNext = new CircularListNode<T>(tempNodePtr->m_data,pNode,m_pHead);
 			pNode = pNode->m_pNext;
-			pTempNode = static_cast<CircularListNode<T>*>(pTempNode->m_pNext);
+			pTempNode = pTempNode->m_pNext;
 		}
 		m_pHead->m_pPrev = pNode;
 	}
 	
 	CircularList(CircularList&& other):m_pHead(new CircularListHeadNode(other.size()))
 	{
-		m_pHead->m_pNext = other.m_pHead->m_pNext;
-		m_pHead->m_pPrev = other.m_pHead->m_pPrev;
+		if(other.size() != 0)
+		{
+			m_pHead->m_pNext = other.m_pHead->m_pNext;
+			m_pHead->m_pNext->m_pPrev = m_pHead;
+			m_pHead->m_pPrev = other.m_pHead->m_pPrev;
+			m_pHead->m_pPrev->m_pNext = m_pHead;
 		
-		other.m_pHead->m_pNext = other.m_pHead;
-		other.m_pHead->m_size = 0;
-		other.m_pHead->m_pPrev = other.m_pHead;
+			other.m_pHead->m_pNext = other.m_pHead;
+			other.m_pHead->m_size = 0;
+			other.m_pHead->m_pPrev = other.m_pHead;	
+		}
 	}
 	
 	~CircularList()
@@ -171,12 +176,13 @@ public:
 		m_pHead->m_size = other.m_pHead->m_size;
 		
 		CircularListNodeBase* pNode = m_pHead;
-		CircularListNode<T>* pTempNode = static_cast<CircularListNode<T>*>(other.m_pHead->m_pNext);
+		CircularListNodeBase* pTempNode = other.m_pHead->m_pNext;
 		while(pTempNode != other.m_pHead)
 		{
-			pNode->m_pNext = new CircularListNode<T>(pTempNode->m_data,pNode,m_pHead);
+			CircularListNode<T>* tempNodePtr = static_cast<CircularListNode<T>*>(pTempNode);
+			pNode->m_pNext = new CircularListNode<T>(tempNodePtr->m_data,pNode,m_pHead);
 			pNode = pNode->m_pNext;
-			pTempNode = static_cast<CircularListNode<T>*>(pTempNode->m_pNext);
+			pTempNode = pTempNode->m_pNext;
 		}
 		m_pHead->m_pPrev = pNode;
 		
@@ -186,14 +192,19 @@ public:
 	CircularList& operator =(CircularList&& other)
 	{
 		clear();
-		m_pHead->m_pNext = other.m_pHead->m_pNext;
-		m_pHead->m_pPrev = other.m_pHead->m_pPrev;
-		m_pHead->m_size = other.m_pHead->m_size;
 		
-		other.m_pHead->m_pNext = other.m_pHead;
-		other.m_pHead->m_size = 0;
-		other.m_pHead->m_pPrev = other.m_pHead;
-		
+		if(!other.empty())
+		{
+			m_pHead->m_pNext = other.m_pHead->m_pNext;
+			m_pHead->m_pNext->m_pPrev = m_pHead;
+			m_pHead->m_pPrev = other.m_pHead->m_pPrev;
+			m_pHead->m_pPrev->m_pNext = m_pHead;
+			m_pHead->m_size = other.m_pHead->m_size;
+			
+			other.m_pHead->m_pNext = other.m_pHead;
+			other.m_pHead->m_size = 0;
+			other.m_pHead->m_pPrev = other.m_pHead;
+		}		
 		return *this;
 	}
 	
@@ -202,6 +213,12 @@ public:
 	
 	const_iterator cbegin(){return begin().toConstIterator();}
 	const_iterator cend(){return end().toConstIterator();}
+
+	iterator rbegin(){return iterator(m_pHead->m_pPrev);}
+	iterator rend(){return iterator(m_pHead);}
+	
+	const_iterator rcbegin(){return rbegin().toConstIterator();}
+	const_iterator rcend(){return rend().toConstIterator();}
 	
 	bool empty()const {return m_pHead->m_size == 0;}
 	int size()const {return m_pHead->m_size;}
@@ -238,10 +255,7 @@ public:
 	{
 		CircularListNodeBase* pNode = m_pHead->m_pNext;
 		m_pHead->m_pNext = new CircularListNode<T>(val,m_pHead,pNode);	
-		if(pNode != m_pHead)
-		{
-			pNode->m_pPrev = m_pHead->m_pNext;
-		}
+		pNode->m_pPrev = m_pHead->m_pNext;
 		
 		m_pHead->m_size++;
 	}
@@ -281,9 +295,7 @@ public:
 		CircularListNodeBase* pNode = pTail->m_pPrev;
 		pNode->m_pNext = m_pHead;
 		m_pHead->m_pPrev = pNode;
-		
-		std::cout<<"----debug--"<<std::endl;
-		
+
 		delete pTail;
 		m_pHead->m_size--;
 	}
@@ -302,6 +314,7 @@ public:
 		}
 		
 		m_pHead->m_pPrev = m_pHead;
+		m_pHead->m_size = 0;
 	}
 	
 	void remove(const_reference val)
@@ -332,21 +345,11 @@ public:
 	}
 	
 	iterator insert(iterator posIter,const_reference val)
-	{
-		if(posIter == begin())
-		{
-			m_pHead->m_pNext = new CircularListNode<T>(val,m_pHead,m_pHead->m_pNext);			
-			m_pHead->m_size++;
-			return iterator(m_pHead->m_pNext);
-		}
-		
+	{	
 		CircularListNodeBase* pNode = posIter.getNode();
 		CircularListNodeBase* pTempNode = pNode->m_pNext;
 		pNode->m_pNext = new CircularListNode<T>(val,pNode,pNode->m_pNext);
-		if(pTempNode != m_pHead)
-		{
-			pTempNode->m_pPrev = pNode->m_pNext;
-		}
+		pTempNode->m_pPrev = pNode->m_pNext;
 		
 		m_pHead->m_size++;
 		return iterator(pNode->m_pNext);

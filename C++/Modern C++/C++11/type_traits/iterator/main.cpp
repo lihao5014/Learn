@@ -359,21 +359,33 @@ void test_CircularList()
 	ls.push_front(3);
 	ls.push_front(4);
 	ls.push_front(4);
-	std::for_each(ls.cbegin(),ls.cend(),show);
+	std::for_each(ls.cbegin(),ls.cend(),show);         //正序打印
 	cout<<"\n";
 
-	cout<<"ls.size() ="<<ls.size()<<" ,ls.empty() ="<<ls.empty()<<"\n"
-		<<"ls.front() ="<<ls.front()<<" ,ls.back() ="<<ls.back()<<endl;
-		
-	ls.front() *= 2;
-	ls.back() *= 3;
-	ls.remove(2);
-	CircularList<int>::const_iterator citer = ls.cbegin();
-	for(;citer != ls.cend();++citer)
+	CircularList<int>::const_iterator citer = --ls.cend();    //倒序打印
+	for(;citer != --ls.cbegin();--citer)
 	{
 		cout<<*citer<<" ";
 	}
 	cout<<endl;
+	
+	cout<<"ls.size() ="<<ls.size()<<" ,ls.empty() ="<<ls.empty()<<"\n"
+		<<"ls.front() ="<<ls.front()<<" ,ls.back() ="<<ls.back()<<endl;
+	
+	ls.front() *= 2;
+	ls.back() *= 3;
+	ls.remove(2);
+	for(citer = ls.cbegin();citer != ls.cend();++citer)    //正序打印
+	{
+		cout<<*citer<<" ";
+	}
+	cout<<endl;
+	
+	for(citer = ls.rcbegin();citer != ls.rcend();--citer)  //倒序打印
+	{
+		cout<<*citer<<" ";
+	}
+	cout<<"\n";
 	
 	citer = ls.cbegin();
 	citer++;
@@ -391,7 +403,7 @@ void test_CircularList()
 	*iter *= 10;
 	iter = ls.insert(iter,10);
 	iter = ls.insert(iter,11);
-	iter = ls.insert(iter,12);
+	iter = ls.insert(iter,12);	
 	ls.pop_front();
 	ls.pop_front();
 	ls.pop_back();
@@ -400,15 +412,21 @@ void test_CircularList()
 	{
 		cout<<*iter<<" ";
 	}
+	cout<<endl;
+	
+	for(iter = ls.rbegin();iter != ls.rend();--iter)  //倒序打印
+	{
+		cout<<*iter<<" ";
+	}
 	cout<<"\n";
-/*	
+
 	ls.clear();
 	cout<<"ls.size() ="<<ls.size()<<" ,ls.empty() ="<<ls.empty()<<endl;
 	
 	CircularList<double> series = {1.25,2.25,3.25,4.25,5.25,6.25,7.25,8.25,9.25};
-	foreach(series.begin(),series.end(),[](const double& n){cout<<n<<" ";});
+	Learn::foreach(series.begin(),series.end(),[](const double& n){cout<<n<<" ";});
 	cout<<"\n";
-	
+		
 	series.pop_front();
 	series.push_front(1.50);
 	series.pop_back();
@@ -437,10 +455,11 @@ void test_CircularList()
 	
 	CircularList<double> seq(std::move(series));
 	cout<<"series.size() ="<<series.size()<<" ,series.empty() ="<<series.empty()<<endl;
-	foreach(seq.begin(),seq.end(),[](const double& n){cout<<n<<" ";});
+	::foreach(seq.begin(),seq.end(),[](const double& n){cout<<n<<" ";});
 	cout<<"\n";
 	
 	itr = series.begin();
+	itr = series.insert(itr,12.3);
 	itr = series.insert(itr,13.3);
 	itr = series.insert(itr,14.3);
 	series.push_front(15.3);
@@ -448,16 +467,21 @@ void test_CircularList()
 	series.push_back(17.3);
 	series.push_back(18.3);
 	cout<<"series.size() ="<<series.size()<<" ,series.empty() ="<<series.empty()<<endl;
-	std::for_each(series.begin(),series.end(),[](const double& n){cout<<n<<" ";});
+	foreach(series.begin(),series.end(),[](const double& n){cout<<n<<" ";});
 	cout<<"\n";
 	
 	seq = std::move(series);
 	cout<<"series.size() ="<<series.size()<<" ,series.empty() ="<<series.empty()<<endl;
-	foreach(seq.begin(),seq.end(),[](const double& n){cout<<n<<" ";});
+	std::for_each(seq.begin(),seq.end(),[](const double& n){cout<<n<<" ";});
 	cout<<"\n";
 	
+	for(itr = seq.rbegin();itr != seq.rend();itr--)
+	{
+		cout<<*itr<<" ";
+	}
+	cout<<endl;
+	
 	// ::getchar();     //阻塞test_DoubleList()函数返回，以调试DoubleList的析构函数。	
-*/
 }
 
 void test_advance()
