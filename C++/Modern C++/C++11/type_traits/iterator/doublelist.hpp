@@ -140,13 +140,18 @@ public:
 		m_pTail = pNode;
 	}
 	
-	DoubleList(DoubleList&& other):m_pHead(new DoubleListNode<T>),m_pTail(other.m_pTail),m_length(other.m_length)
+	DoubleList(DoubleList&& other):m_pHead(new DoubleListNode<T>),m_pTail(m_pHead),m_length(other.m_length)
 	{
-		m_pHead->m_pNext = other.m_pHead->m_pNext;
+		if(!other.empty())
+		{
+			m_pHead->m_pNext = other.m_pHead->m_pNext;
+			m_pHead->m_pNext->m_pPrev = m_pHead;
+			m_pTail = other.m_pTail;
 		
-		other.m_pHead->m_pNext = nullptr;
-		other.m_pTail = other.m_pHead;
-		other.m_length = 0;
+			other.m_pHead->m_pNext = nullptr;
+			other.m_pTail = other.m_pHead;
+			other.m_length = 0;
+		}
 	}
 	
 	~DoubleList()
@@ -185,13 +190,18 @@ public:
 	DoubleList& operator =(DoubleList&& other)
 	{
 		clear();
-		m_pHead->m_pNext = other.m_pHead->m_pNext;
-		m_pTail = other.m_pTail;
-		m_length = other.m_length;
 		
-		other.m_pHead->m_pNext = nullptr;
-		other.m_pTail = other.m_pHead;
-		other.m_length = 0;
+		if(other.size() != 0)
+		{
+			m_pHead->m_pNext = other.m_pHead->m_pNext;
+			m_pHead->m_pNext->m_pPrev = m_pHead;
+			m_pTail = other.m_pTail;
+			m_length = other.m_length;
+		
+			other.m_pHead->m_pNext = nullptr;
+			other.m_pTail = other.m_pHead;
+			other.m_length = 0;	
+		}
 		return *this;
 	}
 	
@@ -200,6 +210,12 @@ public:
 	
 	const_iterator cbegin(){return begin().toConstIterator();}
 	const_iterator cend(){return end().toConstIterator();}
+
+	iterator rbegin(){return iterator(m_pTail);}
+	iterator rend(){return iterator(m_pHead);}
+	
+	const_iterator rcbegin(){return rbegin().toConstIterator();}
+	const_iterator rcend(){return rend().toConstIterator();}
 	
 	bool empty()const {return m_length == 0;}
 	int size()const {return m_length;}
@@ -332,14 +348,14 @@ public:
 			else
 			{
 				pNode = pNode->m_pNext;
-				pTempNode = pNode->m_pNext;
+				pTempNode = pTempNode->m_pNext;
 			}
 		}
 	}
 	
 	iterator insert(iterator posIter,const_reference val)
 	{
-		if(posIter == begin())
+		if(posIter == begin() && begin() == end())
 		{
 			m_pHead->m_pNext = new DoubleListNode<T>(val,m_pHead,m_pHead->m_pNext);
 			if(m_pTail == m_pHead)

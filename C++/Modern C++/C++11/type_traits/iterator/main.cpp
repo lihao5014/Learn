@@ -47,8 +47,8 @@ auto main(int argc,char* argv[]) -> int
 	// test_Array();
 	// test_LinkList();
 	// test_DoubleList();
-	 test_CircularList();
-	// test_advance();
+	 // test_CircularList();
+	test_advance();
 	// test_distance();
 	
 	return 0;
@@ -244,14 +244,26 @@ void test_DoubleList()
 	std::for_each(ls.cbegin(),ls.cend(),show);
 	cout<<"\n";
 	
+	DoubleList<int>::const_iterator citer = ls.rcbegin();    //µ¹Ğò´òÓ¡
+	for(;citer != ls.rcend();--citer)
+	{
+		cout<<*citer<<" ";
+	}
+	cout<<endl;
+	
 	cout<<"ls.size() ="<<ls.size()<<" ,ls.empty() ="<<ls.empty()<<"\n"
 		<<"ls.front() ="<<ls.front()<<" ,ls.back() ="<<ls.back()<<endl;
 	
 	ls.front() *= 2;
 	ls.back() *= 3;
 	ls.remove(2);
-	DoubleList<int>::const_iterator citer = ls.cbegin();
-	for(;citer != ls.cend();++citer)
+	for(citer = ls.cbegin();citer != ls.cend();++citer)
+	{
+		cout<<*citer<<" ";
+	}
+	cout<<"\n";
+	 
+	for(citer = ls.rcbegin();citer != ls.rcend();--citer)    //µ¹Ğò´òÓ¡
 	{
 		cout<<*citer<<" ";
 	}
@@ -283,12 +295,18 @@ void test_DoubleList()
 		cout<<*iter<<" ";
 	}
 	cout<<"\n";
+
+	for(iter = ls.rbegin();iter != ls.rend();--iter)    //µ¹Ğò´òÓ¡
+	{
+		cout<<*iter<<" ";
+	}
+	cout<<endl;
 	
 	ls.clear();
 	cout<<"ls.size() ="<<ls.size()<<" ,ls.empty() ="<<ls.empty()<<endl;
 	
 	DoubleList<double> series = {1.25,2.25,3.25,4.25,5.25,6.25,7.25,8.25,9.25};
-	foreach(series.begin(),series.end(),[](const double& n){cout<<n<<" ";});
+	Learn::foreach(series.begin(),series.end(),[](const double& n){cout<<n<<" ";});
 	cout<<"\n";
 	
 	series.pop_front();
@@ -304,6 +322,12 @@ void test_DoubleList()
 	
 	cout<<"series.size() ="<<series.size()<<" ,series.empty() ="<<series.empty()<<"\n"
 		<<"series.front() ="<<series.front()<<" ,series.back() ="<<series.back()<<endl;
+
+	for(itr = series.rbegin();itr != series.rend();itr--)
+	{
+		cout<<*itr<<" ";
+	}
+	cout<<endl;
 	
 	DoubleList<double> sequence = series;
 	for(const double& n : sequence)
@@ -337,6 +361,12 @@ void test_DoubleList()
 	cout<<"series.size() ="<<series.size()<<" ,series.empty() ="<<series.empty()<<endl;
 	foreach(seq.begin(),seq.end(),[](const double& n){cout<<n<<" ";});
 	cout<<"\n";
+
+	for(itr = seq.rbegin();itr != seq.rend();itr--)
+	{
+		cout<<*itr<<" ";
+	}
+	cout<<endl;
 	
 	// ::getchar();     //×èÈûtest_DoubleList()º¯Êı·µ»Ø£¬ÒÔµ÷ÊÔDoubleListµÄÎö¹¹º¯Êı¡£
 }
@@ -440,7 +470,13 @@ void test_CircularList()
 	
 	cout<<"series.size() ="<<series.size()<<" ,series.empty() ="<<series.empty()<<"\n"
 		<<"series.front() ="<<series.front()<<" ,series.back() ="<<series.back()<<endl;
-	
+
+	for(itr = series.rbegin();itr != series.rend();itr--)
+	{
+		cout<<*itr<<" ";
+	}
+	cout<<endl;
+
 	CircularList<double> sequence = series;
 	for(const double& n : sequence)
 	{
@@ -494,11 +530,31 @@ void test_advance()
 	
 	//²âÊÔË«Ïòµü´úÆ÷
 	DoubleList<int> seq = {30,31,32,33,34,35,36,37,38,39};
-	DoubleList<int>::const_iterator bidirectional_iter = seq.cbegin();
+	DoubleList<int>::const_iterator bidirectional_citer = seq.cbegin();
+	::advance(bidirectional_citer,5);
+	cout<<"*bidirectional_citer ="<<*bidirectional_citer<<endl;
+	
+	advance(bidirectional_citer,-2);
+	cout<<"*bidirectional_citer ="<<*bidirectional_citer<<endl;
+	
+	bidirectional_citer = seq.rcbegin();
+	advance(bidirectional_citer,-3);
+	cout<<"*bidirectional_citer ="<<*bidirectional_citer<<endl;
+
+	CircularList<int> series = {40,41,42,43,44,45,46,47,48,49};
+	CircularList<int>::iterator bidirectional_iter = series.begin();
 	::advance(bidirectional_iter,5);
 	cout<<"*bidirectional_iter ="<<*bidirectional_iter<<endl;
 	
 	advance(bidirectional_iter,-2);
+	cout<<"*bidirectional_iter ="<<*bidirectional_iter<<endl;
+
+	bidirectional_iter = series.end();
+	advance(bidirectional_iter,-3);
+	cout<<"*bidirectional_iter ="<<*bidirectional_iter<<endl;
+	
+	bidirectional_iter = series.rbegin();
+	advance(bidirectional_iter,-3);
 	cout<<"*bidirectional_iter ="<<*bidirectional_iter<<endl;
 	
 	//²âÊÔËæ»ú·ÃÎÊµü´úÆ÷
