@@ -536,6 +536,12 @@ void test_advance()
 	
 	advance(bidirectional_citer,-2);
 	cout<<"*bidirectional_citer ="<<*bidirectional_citer<<endl;
+
+#ifdef _ERROR_
+	bidirectional_citer = seq.cend();      //DoubleList的cend()迭代器是一个指向nullptr的虚位置，不能执行"--"操作。
+	advance(bidirectional_citer,-3);
+	cout<<"*bidirectional_citer ="<<*bidirectional_citer<<endl;
+#endif
 	
 	bidirectional_citer = seq.rcbegin();
 	advance(bidirectional_citer,-3);

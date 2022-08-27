@@ -1,0 +1,2 @@
+---- setMajor Matches (1 in 1 files) ----
+clazz.cpp line 89 : void Clazz::setMajor(const string& major)
