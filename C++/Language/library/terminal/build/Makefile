@@ -4,7 +4,7 @@ CC := g++
 LD := g++
 AR := ar
 
-TARGET := bin/app.out
+TARGET := ../bin/app.out
 
 CINLUDE := -I ../mymath
 
@@ -19,7 +19,7 @@ OBJS := $(patsubst ../mymath/%.cpp,%.o,$(OBJS))
 
 VPATH = ../bin ../bin/lib ../mymath ../app
 
-app:$(TARGET) mymath
+app:mymath $(TARGET)
 
 mymath:$(OBJS)
 	$(CC) -shared -o ../bin/lib/libmymath.so mymath.o
