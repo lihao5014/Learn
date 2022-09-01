@@ -21,7 +21,7 @@ if "%cmd%" == "static" (
 	lib /out:bin\lib\mymath.lib bin\obj\mymath.obj
 )
 
-set flag=change way
+set flag=
 if "%cmd%" == "shared" (
 	echo ---compile mymath.cpp to mymath.dll---
 	if "%flag%" == "change way" (

@@ -42,7 +42,7 @@
  *  ① constant iterator：不允许改变“所指对象之内容者”称为constant iterator。
  *  ② mutable iterator；允许改变“所指对象之内容者”称为mutable iterator。
  *（5）pointer：表示迭代器所指之物的地址。
- *（6）iterator_category：表示迭代器的种类。根据移动特性与施行操作迭代器被分为5类。
+ *（6）iterator_category：表示迭代器的种类。根据移动特性与施行操作，迭代器被分为5类。
  *  ① Input Iterator输入迭代器：所指的对象，不允许外界改变，只读。
  *  ② Output Iterator输出迭代器：所指的对象，不允许外界读取，只写。
  *  ③ Forward Iterator前向迭代器：允许写入型算法在此种迭代器所形成的区间上进行读写操作。
