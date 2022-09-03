@@ -1,6 +1,8 @@
 #ifndef _POINT_H_
 #define _POINT_H_
 
+#include "common.h"
+
 typedef struct Point_t
 {
 	int m_x;
