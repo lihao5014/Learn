@@ -1,0 +1,13 @@
+1.gdb交叉编译命令：
+（1）tar -vxf gdb-8.2.1.tar.gz
+（2）mkdir arm-gdb
+（3）./configure  CC=aarch64-linux-gnu-gcc  AR=aarch64-linux-gnu-ar --target=aarch64-linux-gnu --host=aarch64-linux-gnu --program-prefix=aarch64-linux-gnu- --prefix=/home/linux/Share/arm-gdb/gdb8.2.1_install --disable-werror
+（4）make -j4
+（5）make install -j4
+
+2.gdbserver交叉编译命令：
+（1）cd gdb/gdbserver
+（2）./configure CC=aarch64-linux-gnu-gcc AR=aarch64-linux-gnu-ar --target=aarch64-linux-gnu --host=aarch64-linux-gnu --program-prefix=aarch64-linux-gnu- --prefix=/home/linux/Share/arm-gdb/gdbserver8.2.1_install
+（3）make -j4
+（4）make install -j4
+
