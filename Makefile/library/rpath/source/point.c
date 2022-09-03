@@ -67,5 +67,5 @@ void showPoint(const PointPtr ppoint)
 		return ;
 	}
 	
-	printf("(%d,%d)\n",ppoint->m_x,ppoint->m_y);
+	printf("(%f,%f)\n",ppoint->m_x,ppoint->m_y);
 }
