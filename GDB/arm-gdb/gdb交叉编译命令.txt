@@ -1,13 +1,21 @@
 1.gdb交叉编译命令：
-（1）tar -vxf gdb-8.2.1.tar.gz
-（2）mkdir arm-gdb
-（3）./configure  CC=aarch64-linux-gnu-gcc  AR=aarch64-linux-gnu-ar --target=aarch64-linux-gnu --host=aarch64-linux-gnu --program-prefix=aarch64-linux-gnu- --prefix=/home/linux/Share/arm-gdb/gdb8.2.1_install --disable-werror
-（4）make -j4
-（5）make install -j4
+（1）mkdir arm-gdb
+（2）cp gdb-8.2.1.tar.gz ~/Share/arm-gdb
+（3）tar -vxf gdb-8.2.1.tar.gz
+（4）cd gdb-8.2.1
+（5）mkdir build
+（6）cd build
+（7）../configure  CC=aarch64-linux-gnu-gcc  AR=aarch64-linux-gnu-ar --target=aarch64-linux-gnu --host=aarch64-linux-gnu --program-prefix=aarch64-linux-gnu- --prefix=/home/linux/Share/arm-gdb/gdb8.2.1_install --disable-werror
+（8）make -j4
+（9）make install -j4
+（10）make distclean            //清空所有编译文件
 
 2.gdbserver交叉编译命令：
 （1）cd gdb/gdbserver
-（2）./configure CC=aarch64-linux-gnu-gcc AR=aarch64-linux-gnu-ar --target=aarch64-linux-gnu --host=aarch64-linux-gnu --program-prefix=aarch64-linux-gnu- --prefix=/home/linux/Share/arm-gdb/gdbserver8.2.1_install
-（3）make -j4
-（4）make install -j4
+（2）mkdir build
+（3）cd build
+（4）../configure CC=aarch64-linux-gnu-gcc AR=aarch64-linux-gnu-ar --target=aarch64-linux-gnu --host=aarch64-linux-gnu --program-prefix=aarch64-linux-gnu- --prefix=/home/linux/Share/arm-gdb/gdbserver8.2.1_install
+（5）make -j4
+（6）make install -j4
+（7）make distclean            //清空所有编译文件
 
