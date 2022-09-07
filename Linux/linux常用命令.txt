@@ -1,6 +1,8 @@
 1.ubuntu用户名与密码：
-（1）用户名：root    密码：123456
-（2）用户名：linux    密码：123456
+（1）设置root用户密码：sudo passwd
+（2）用户名：root     密码：123456
+（3）用户名：linux    密码：123456
+（4）用户名：lihao    密码：123456
 
 2.linux软件安装与卸载：
 	sudo apt-get update                      //更新软件安装源列表：
@@ -9,6 +11,7 @@
 	dpkg --list                              //显示的是你电脑上安装的所有软件。
 	sudo apt-get --purge remove 软件名       //彻底删除软件，包括配置文件一起删除
 	sudo apt-get remove 软件名               //删除软件时保留配置文件
+	sudo apt autoremove                      //清空卸载残留
 
 3.打开ssh服务以允许SecureCRT连接：
     sudo apt install openssh-server
@@ -20,7 +23,61 @@
 4.vim使用环境快速配置：
 （1）http://www.cnblogs.com/ma6174/archive/2011/12/10/2283393.html                     //参考博客
 （2）sudo wget -qO- https://raw.github.com/ma6174/vim/master/setup.sh | sh -x          //下载命令，不过现在好像过时了
+（3）wget https://files.cnblogs.com/ma6174/vimrc.zip            //"vim配置文件"目录中的vimrc.zip压缩包，也是从这个网站上下载的。
+	 unzip vimrc.zip -d ~/                                      //下载vimrc.zip压缩包后最好在Linux系统下解压，windows下解压怕换行符这些会变
 	
 5.使用git统计代码行数命令：
 （1）git log --author="username" start_commit_id..end_commit_id --pretty=tformat: --numstat | gawk '{ add += $1 ; subs += $2 ; loc += $1 - $2 } END { printf "added lines: %s removed lines : %s total lines: %s\n",add,subs,loc }'
 （2）将'start_commit_id'改为第一次提交的id，'end_commit_id'改为最后一次提交的id，'username'改为git用户名。就可以统计出两次提交间代码的变化行数。
+
+
+6.Ubuntu依赖包安装时的报错处理:
+（1）sudo apt-get -f install     #用来升级一些互相依赖的包
+	 sudo apt-get autoremove     #用来删除一些过时的包
+
+7.ubuntu清除缓存以及不用的安装包
+（1）清理旧版本的软件缓存：
+	 sudo apt-get autoclean
+（2）清理所有软件缓存：
+	 sudo apt-get clean
+（3）删除系统不再使用的孤立软件
+	 sudo apt-get autoremove
+（4）不要轻易使用aptitude命令，他有可能会卸载apt-get
+	(X)sudo apt-get install aptitude
+
+8.Ubuntu和Windows直接共享文件夹：
+（1）Ubuntu上安装VMware Tools工具。
+（2）VMware虚拟机设置 -> 选项Tab -> 共享文件夹 -> 添加一个共享文件夹— -> 总是启用 -> 确定。
+（3）可进入设置的共享目录： cd /mnt/hgfs/share/
+（4）在主目录下创建共享文件夹的软连接（相当于快捷方式）：ln -s /mnt/hgfs/share/ ~/
+
+9.查询磁盘空间：
+（1）df -hl                                #查看当前目录的磁盘占用
+（2）du -sh 文件名                         #查看某一文件的磁盘占用
+（3）sudo du -sh ./* --exclude proc        #查看某一目录下所有文件夹的磁盘占用
+
+10.查询内存使用情况：
+	free -m
+
+11.查询cpu使用情况：
+	top
+
+12.查看分区
+	fdisk -l
+
+13.Linux中配置第三方库：
+（1）sudo mkdir /usr/local/arm-gcc
+（2）sudo cp -f sysroot-glibc-linaro-2.25-2019.12-aarch64-linux-gnu.tar /usr/local/arm-gcc
+（3）sudo tar -vxf /usr/local/arm-gcc/sysroot-glibc-linaro-2.25-2019.12-aarch64-linux-gnu.tar
+（4）sudo nano ~/.bashrc
+（5）export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/arm-gcc/sysroot-glibc-linaro-2.25-2019.12-aarch64-linux-gnu/lib
+（6）source ~/.bashrc
+
+14.解决Linux配置/etc/profile环境变量每次都要执行source命令：
+（1）vim ~/.bashrc
+（2）source /etc/profile
+
+15.Linux批量替换文件名：
+（1）C语言版本格式：rename oldName newName oldName_*.txt
+（2）Perl语言版本格式：rename "s/oldName/newName/" oldName_*.txt
+（3）例子：sudo rename "s/aarch64-linux-gnu-/aarch64-/" aarch64-linux-gnu-*
