@@ -1,4 +1,8 @@
-1.arm-gcc交叉编译器安装：（https://blog.csdn.net/lzsm_/article/details/126118519）
+1.gcc交叉编译工具安装指南：
+（1）https://blog.csdn.net/lzsm_/article/details/126118519
+（2）linaro gcc交叉编译工具下载地址：https://releases.linaro.org/components/toolchain/binaries/latest-7/aarch64-linux-gnu/
+
+2.arm-gcc交叉编译器安装：
 （1）sudo mkdir /usr/local/arm-gcc
 （2）sudo cp -f gcc-linaro-7.5.0-2019.12-x86_64_aarch64-linux-gnu.rar /usr/local/arm-gcc
 （3）sudo tar -vxf /usr/local/arm-gcc/gcc-linaro-7.5.0-2019.12-x86_64_aarch64-linux-gnu
@@ -6,7 +10,7 @@
 （4）export PATH=$PATH:/usr/local/arm-gcc/gcc-linaro-7.5.0-2019.12-x86_64_aarch64-linux-gnu/bin         #将可执行文件添加到环境变量。
 （5）source /etc/profile                                                                                #使用source命令，使修改的文件生效。
 
-2.arm-gcc交叉编译器动态衔接库安装：
+3.arm-gcc交叉编译器动态衔接库安装：
 （1）sudo mkdir /usr/local/arm-gcc
 （2）sudo cp -f sysroot-glibc-linaro-2.25-2019.12-aarch64-linux-gnu.tar /usr/local/arm-gcc
 （3）sudo tar -vxf /usr/local/arm-gcc/sysroot-glibc-linaro-2.25-2019.12-aarch64-linux-gnu.tar
@@ -15,7 +19,11 @@
 （6）source ~/.bashrc
 （5）sudo ln -s /usr/local/arm-gcc/sysroot-glibc-linaro-2.25-2019.12-aarch64-linux-gnu/lib/ld-linux-aarch64.so.1 /lib/ld-linux-aarch64.so.1
 
-3.gdb交叉编译命令：
+4.gdb和gdbserver交叉编译教程：
+（1）https://blog.csdn.net/xya644/article/details/120722573
+（2）gdb源码下载地址：http://ftp.gnu.org/gnu/gdb/
+
+5.gdb交叉编译命令：
 （1）mkdir arm-gdb
 （2）cp gdb-8.2.1.tar.gz ~/Share/arm-gdb
 （3）tar -vxf gdb-8.2.1.tar.gz
@@ -27,7 +35,7 @@
 （9）make install -j4
 （10）make distclean            //清空所有编译文件
 
-4.gdbserver交叉编译命令：
+6.gdbserver交叉编译命令：
 （1）cd gdb/gdbserver
 （2）mkdir build
 （3）cd build
@@ -36,14 +44,14 @@
 （6）make install -j4
 （7）make distclean            //清空所有编译文件
 
-5.arm-gdb安装：
+7.arm-gdb安装：
 （1）sudo mkdir /usr/local/arm-gdb
 （2）sudo cp -r gdb8.2.1_install /usr/local/arm-gdb/gdb-8.2.1
 （3）sudo nano /etc/profile
 （4）export PATH=$PATH:/usr/local/arm-gdb/gdb-8.2.1/bin         #将可执行文件添加到环境变量。
 （5）source /etc/profile                                        #使用source命令，使修改的文件生效。
 
-6.arm-gdbserver安装：（arm-gdb目录中已经包含了arm-gdbserver，所以arm-gdbserver不需要另行安装）
+8.arm-gdbserver安装：（arm-gdb目录中已经包含了arm-gdbserver，所以arm-gdbserver不需要另行安装）
 （1）sudo mkdir /usr/local/arm-gdbserver
 （2）sudo cp -r gdbserver8.2.1_install /usr/local/arm-gdbserver/gdbserver-8.2.1
 （3）sudo nano /etc/profile
