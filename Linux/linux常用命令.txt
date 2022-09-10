@@ -1,5 +1,4 @@
 1.ubuntu用户名与密码：
-（1）设置root用户密码：sudo passwd
 （2）用户名：root     密码：123456
 （3）用户名：linux    密码：123456
 （4）用户名：lihao    密码：123456
@@ -8,7 +7,13 @@
 （1）reboot              //重启linux
 （2）shutdown now        //关闭linux
 
-3.linux软件安装与卸载：
+3.Linux用户切换：
+（1）切换到root用户：su
+（2）切换到lihao用户：su lihao
+（3）设置root用户密码：sudo passwd
+（4）设置lihao用户密码：sudo passwd lihao
+
+4.linux软件安装与卸载：
 	sudo apt-get update                      //更新软件安装源列表：
 	sudo apt install 软件名
 	sudo apt-get install 软件名
@@ -17,29 +22,29 @@
 	sudo apt-get remove 软件名               //删除软件时保留配置文件
 	sudo apt autoremove                      //清空卸载残留
 
-4.打开ssh服务以允许SecureCRT连接：
+5.打开ssh服务以允许SecureCRT连接：
     sudo apt install openssh-server
 	sudo service sshd start
 	sudo service sshd restart
 	sudo service sshd stop
     ps -e|grep sshd                          //查看是否打开sshd服务
 
-5.vim使用环境快速配置：
+6.vim使用环境快速配置：
 （1）http://www.cnblogs.com/ma6174/archive/2011/12/10/2283393.html                     //参考博客
 （2）sudo wget -qO- https://raw.github.com/ma6174/vim/master/setup.sh | sh -x          //下载命令，不过现在好像过时了
 （3）wget https://files.cnblogs.com/ma6174/vimrc.zip            //"vim配置文件"目录中的vimrc.zip压缩包，也是从这个网站上下载的。
 	 unzip vimrc.zip -d ~/                                      //下载vimrc.zip压缩包后最好在Linux系统下解压，windows下解压怕换行符这些会变
 	
-6.使用git统计代码行数命令：
+7.使用git统计代码行数命令：
 （1）git log --author="username" start_commit_id..end_commit_id --pretty=tformat: --numstat | gawk '{ add += $1 ; subs += $2 ; loc += $1 - $2 } END { printf "added lines: %s removed lines : %s total lines: %s\n",add,subs,loc }'
 （2）将'start_commit_id'改为第一次提交的id，'end_commit_id'改为最后一次提交的id，'username'改为git用户名。就可以统计出两次提交间代码的变化行数。
 
 
-7.Ubuntu依赖包安装时的报错处理:
+8.Ubuntu依赖包安装时的报错处理:
 （1）sudo apt-get -f install     #用来升级一些互相依赖的包
 	 sudo apt-get autoremove     #用来删除一些过时的包
 
-8.ubuntu清除缓存以及不用的安装包
+9.ubuntu清除缓存以及不用的安装包
 （1）清理旧版本的软件缓存：
 	 sudo apt-get autoclean
 （2）清理所有软件缓存：
@@ -49,33 +54,46 @@
 （4）不要轻易使用aptitude命令，他有可能会卸载apt-get
 	(X)sudo apt-get install aptitude
 
-9.Ubuntu和Windows直接共享文件夹：
+10.Ubuntu和Windows直接共享文件夹：
 （1）Ubuntu上安装VMware Tools工具。
 （2）VMware虚拟机设置 -> 选项Tab -> 共享文件夹 -> 添加一个共享文件夹— -> 总是启用 -> 确定。
 （3）可进入设置的共享目录： cd /mnt/hgfs/share/
 （4）在主目录下创建共享文件夹的软连接（相当于快捷方式）：ln -s /mnt/hgfs/share/ ~/
 
-10.查询磁盘空间：
+11.查询磁盘空间：
 （1）df -hl                                #查看当前目录的磁盘占用
 （2）du -sh 文件名                         #查看某一文件的磁盘占用
 （3）sudo du -sh ./* --exclude proc        #查看某一目录下所有文件夹的磁盘占用
 
-11.查询内存使用情况：
+12.查询内存使用情况：
 	free -m
 
-12.查询cpu使用情况：
+13.查询cpu使用情况：
 	top
 
-12.查看分区
+14.查看分区：
 	fdisk -l
 
-13.tar压缩与解压：
+15.杀死后台进程：
+	kill -9 进程号                        #进程号可以通过"ps -ef | grep 程序名"命令得到
+
+16.tar压缩与解压：
 （1）tar -vfx  packageName.tar               //解压到当前目录下
 （2）tar -vfx packageName.tar.gz -C dstPath  //解压到指定目录下
 （3）tar -vft packageName.tar.gz             //查看压缩包结构，不解压
 （4）tar -czvf packageName.tar.gz files      //打包并压缩
 
-20.Linux中配置第三方库：
+17.vim命令：
+（1）vim hello.c                 #打开/创建hello.c文件，并允许编辑
+（2）vim hello.c +10             #打开hello.c文件，并定位到第10行的位置
+（3）set number（set nu）        #命令行模式下输入set number/set nu命令，临时显示行号
+（4）set nonumber（set nonu）    #命令行模式下输入set nonumber/set nonu命令，取消显示行号
+
+18.cat命令：
+（1）cat hello.c            #查看hello.c文件
+（2）cat hello.c -n         #查看hello.c文件，并显示行号
+
+30.Linux中配置第三方库：
 （1）sudo mkdir /usr/local/arm-gcc
 （2）sudo cp -f sysroot-glibc-linaro-2.25-2019.12-aarch64-linux-gnu.tar /usr/local/arm-gcc
 （3）sudo tar -vxf /usr/local/arm-gcc/sysroot-glibc-linaro-2.25-2019.12-aarch64-linux-gnu.tar
@@ -83,11 +101,29 @@
 （5）export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/arm-gcc/sysroot-glibc-linaro-2.25-2019.12-aarch64-linux-gnu/lib
 （6）source ~/.bashrc
 
-21.解决Linux配置/etc/profile环境变量每次都要执行source命令：
+31.解决Linux配置/etc/profile环境变量每次都要执行source命令：
 （1）vim ~/.bashrc
 （2）source /etc/profile
 
-22.Linux批量替换文件名：
+32.Linux批量替换文件名：
 （1）C语言版本格式：rename oldName newName oldName_*.txt
 （2）Perl语言版本格式：rename "s/oldName/newName/" oldName_*.txt
 （3）例子：sudo rename "s/aarch64-linux-gnu-/aarch64-/" aarch64-linux-gnu-*
+
+33.命令行中使用git提交代码流程：
+（1）git pull                         //同步远程仓库代码，以避免代码提交上库后造成冲突。
+（2）git status                       //查看当前本地仓库状态。
+（3）git add *.h *.c main.cpp         //提交代码到本地git缓冲区。
+（4）git commit -m "提交代码修改"     //推送代码到本地git仓库。
+（5）git push                         //提交本地代码到远程仓库。
+（6）git log                          //查看代码提交日志，保证代码已经提交成功。
+
+34.git提交大于100M的文件：
+（1）git lfs install                                                      #git bash命令行中切换到本地仓库目录，开启LFS功能
+（2）git lfs track "*.tar" "*.tar.bz2" "*.tar.xz" "*.rar" "*.tar.gz"      #设置LFS要管理的文件类型
+（3）git add .gitattributes                                               #配置远程仓库。执行完上面的命令后，会生成一个.gitattributes文件，要将其上传到远程gitee仓库。。
+（4）git commit -m "提交.gitattributes文件"                               #这里把.gitattributes和大文件分开上传
+（5）git push origin master                                               #如果提交不了，后面可以加一个-f
+（6）git add linux-5.4.212.tar.xz                                         #上传大文件。也可以使用TortoiseGit提交大文件。
+（7）git commit -m "提交linux-5.4.212源码"
+（8）git push origin master -f                                            #如果报“batch response: LFS only supported repository in paid enterprise”错，可以删除./git/hooks/pre-push文件再试
