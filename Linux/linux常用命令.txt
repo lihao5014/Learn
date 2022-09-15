@@ -90,8 +90,60 @@
 （4）set nonumber（set nonu）    #命令行模式下输入set nonumber/set nonu命令，取消显示行号
 
 18.cat命令：
-（1）cat hello.c            #查看hello.c文件
-（2）cat hello.c -n         #查看hello.c文件，并显示行号
+（1）cat hello.c               #查看hello.c文件
+（2）cat hello.c -n            #查看hello.c文件，并显示行号
+（3）cat > test.txt            #如果手动用cat创建文件时，结束需要按Ctrl+D组合键。如果不用手动结束编辑，则用EOF符号即可。   
+（4）cat > test.txt << EOF     #cat创建文件时，需要使用EOF结束。当第一行用<<EOF的时候，结束也需要用EOF。
+     hello world               #">"符号是重定向的意思，会覆盖原来文件的内容，没有文件时会自动创建。
+	 aaaaa bbbbb               #如果用">>"符号，则表示追加内容，不会覆盖原文件内容，只会在原文件内容下面追加你所输入的内容。
+	 11111 22222               
+	 EOF
+（5）cat >> test.txt << EOF    #向test.txt文件中追加内容。
+	 hello
+	 world
+	 Linux
+	 C++
+	 EOF
+
+19.echo命令：
+（1）echo hello world               #echo命令用于字符串的输出。如果输出内容中没有特殊含义，则原内容输出到屏幕；如果输出内容有特殊含义，则输出打印其含义。
+（2）echo 'hello world'             #使用单引号时，转义字符会按照字面量输出。
+（3）echo "hello world"             #建议使用双引号以避免任何意外行为。
+（4）echo $PATH                     #打印环境变量PATH的值。
+（5）echo hello world > test.txt    #如果没有test.txt文件，则创建并写入字符串。如果有test.txt文件，则清空文件并写入字符串。
+（6）echo hello world >> test.txt   #向test.txt文件中追加字符串。
+
+20.export命令：
+（1）在shell中执行程序时，shell会提供一组环境变量。export命令可新增，修改或删除环境变量，
+     供后续执行的程序使用。export的效力仅限于该次登陆操作。
+（2）export命令用于将shell变量输出为环境变量，或者将shell函数输出为环境变量。一个变量创建时，
+     它不会自动地为在它之后创建的shell进程所知。而命令export可以向后面的shell传递变量的值。
+（1）export -p                      #显示所有拥有导出属性的环境变量。
+（2）export ENV_VAR_NAME            #定义环境变量。
+（3）export ENV_VAR_NAME=./lib      #定义环境变量并赋值。
+
+21.让导出的变量永久生效的方法：
+（1）在命令行导出的各种变量、函数只是临时有效，下次重新登录，之前定义的变量、函数都将不存在。
+     如果想让我们定义的变量、函数每次登录系统都可以用，那么就需要把变量的定义和导出都定义在
+	 一个文件里面，然后每次登录系统都会执行一遍该文件就可以达到目的。
+（2）正常登录配置文件顺序加载过程（所谓正常登录指用户通过输入用户名和密码登录的状态）：
+	 /etc/profile -> ~/.bash_profile -> ~/.bashrc -> /etc/bashrc
+（3）如果想对系统所有用户都生效，可以把变量和导出定义在以下3个文件：（修改完后需要使用source /etc/profile命令，使修改立即生效）
+	 /etc/profile
+     /etc/profile.d/*.sh
+     /etc/bashrc
+（4）如果只想对某个用户生效，可以在用户的家目录的以下2个文件中定义变量和导出：（修改完后需要使用source ~/.bashrc命令，使修改立即生效）
+     ~/.bash_profile
+     ~/.bashrc
+
+22.mount命令：
+（1）
+
+23.cpio命令：
+（1）
+
+24.dd命令：
+（1）
 
 30.Linux中配置第三方库：
 （1）sudo mkdir /usr/local/arm-gcc
