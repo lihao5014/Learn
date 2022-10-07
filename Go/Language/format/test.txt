@@ -1,0 +1,4 @@
+date: 2022/10/6 12:30
+amy 123456 125.25
+hello go(1.19.1)
+study fmt package
