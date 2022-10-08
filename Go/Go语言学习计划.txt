@@ -1,0 +1,5 @@
+1.菜鸟教程-Go语言教程：https://www.runoob.com/go/go-tutorial.html
+2.C语言中文网：http://c.biancheng.net/golang/intro/
+3.Go语言超全详解（入门级）：https://blog.csdn.net/weixin_50941083/article/details/125590486?spm=1001.2014.3001.5506
+4.Go语言中文网：https://studygolang.com/pkgdoc
+5.Go语言标准库：http://books.studygolang.com/The-Golang-Standard-Library-by-Example/

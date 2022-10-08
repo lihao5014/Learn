@@ -1,4 +1,17 @@
 @echo off
+
+set cmd=%1
+
+if "%cmd%" == "clean" (
+	del /Q /f bin\main.exe
+	exit /b
+)
+
+if "%cmd%" == "run" (
+	bin\main.exe
+	exit /b
+)
+
 echo set GOPATH environment variable
 set GOPATH_BACKUP=%GOPATH%
 set GOPATH=%GOPATH%;%cd%
