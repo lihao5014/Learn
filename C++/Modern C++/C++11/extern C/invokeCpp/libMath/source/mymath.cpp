@@ -6,15 +6,17 @@
 
 using namespace std;
 
-double power(double m,int n)
+extern "C" double power(double m,int n)
 {	
+	cout<<"["<<__TIME__<<" "<<__FILE__<<"] "<<__func__<<" (line:"<<__LINE__<<") -- "<<m<<"^"<<n<<" =";
+	
 	double ret = 1;
 	while(n-->0)
 	{
 		ret *= m;
 	}
 	
-	cout<<"["<<__TIME__<<" "<<__FILE__<<"] "<<__func__<<" (line:"<<__LINE__<<") -- "<<m<<"^"<<n<<" ="<<ret<<endl;
+	cout<<ret<<endl;
 	return ret;
 }
 

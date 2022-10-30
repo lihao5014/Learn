@@ -7,7 +7,7 @@
 int main(int argc,char** argv)
 {
 	double data = power(10,2);
-	printf("power(10,2) =%f\n",power(10,2));
+	printf("power(10,2) =%f\n",data);
 	
 	printf("add(3,7) =%f\n",add(3,7));
 	printf("sub(3,7) =%f\n",sub(3,7));
@@ -65,7 +65,15 @@ int main(int argc,char** argv)
 	intToString(654321,buf);
 	printf("buf =%s\n",buf);
 	
+	memset(buf,0,sizeof(buf));
+	intToString(-1234,buf);
+	printf("buf =%s\n",buf);
+	
+	memset(buf,0,sizeof(buf));
 	floatToString(123.1415926,buf);
+	printf("buf =%s\n",buf);
+
+	floatToString(-981.414,buf);
 	printf("buf =%s\n",buf);
 	
 	return 0;

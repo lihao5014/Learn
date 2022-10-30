@@ -7,7 +7,7 @@
 
 #define EPS 0.000001
 
-#define _CHANGE_WAY_  1<<2   // 1<<0 = 0b001,1<<2 = 0b010,1<<3 = 0b100
+#define _CHANGE_WAY_  1<<3   // 1<<0 = 0b001,1<<2 = 0b010,1<<3 = 0b100
 
 using namespace std;
 
@@ -68,6 +68,7 @@ bool toString(double n,char* str)
 	return true;
 }
 #else
+#pragma message("---custom toString---")
 bool toString(int n,char* str)
 {
 	if(str == NULL)
@@ -101,7 +102,7 @@ bool toString(int n,char* str)
 	str[len] = '\0';
 	
 	char ch;
-	for(int i=1;i<len/2;++i)      //头尾一一对称交换
+	for(int i=1;i<len/2 + 1;++i)      //头尾一一对称交换
 	{
 		ch = str[i];
 		str[i] = str[len - i];
@@ -146,7 +147,7 @@ bool toString(double n,char* str)
 	
 	int len=1;
 	do{
-		if(len == 6)
+		if(len == 7)
 		{
 			str[len] = '.';        //因为只精确到6位小数，所以第6位就是小数点位
 		}
@@ -160,7 +161,7 @@ bool toString(double n,char* str)
 	str[len] = '\0';
 	
 	char ch;
-	for(int i=1;i<len/2;++i)      //头尾一一对称交换
+	for(int i=1;i<len/2 + 1;++i)      //头尾一一对称交换
 	{
 		ch = str[i];
 		str[i] = str[len - i];
