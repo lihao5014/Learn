@@ -23,5 +23,6 @@ if "%cmd%" == "libadd_gcc.a" (
 	exit /B
 )
 
-nm -a a.exe
+rem objdump命令是用查看目标文件或者可执行的目标文件的构成的gcc工具。
+objdump -t a.exe
 

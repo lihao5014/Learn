@@ -13,18 +13,18 @@ build:libadd_g++.a main.o
 	$(CXX) main.o libadd_g++.a -o $(TARGET)
 
 libadd_gcc.a:
-	$(CC) -c add.c -o add.o
-	ar rcs -o libadd_gcc.a add.o
+	$(CC) -c add.c -o add_c.o
+	ar rcs -o libadd_gcc.a add_c.o
 	
 libadd_g++.a:
-	$(CXX) -c add.c -o add.o
-	ar rcs -o libadd_g++.a add.o
+	$(CXX) -c add.c -o add_cpp.o
+	ar rcs -o libadd_g++.a add_cpp.o
 
 main.o:
 	$(CXX) -c main.cpp -o main.o
 
 clean:
-	del /f libadd*.a add.o main.o $(TARGET)
+	del /f libadd*.a add*.o main.o $(TARGET)
 
 run:
 	${TARGET}
