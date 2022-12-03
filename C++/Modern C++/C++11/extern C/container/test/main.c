@@ -1,11 +1,14 @@
 #include <stdio.h>
 #include "clist.h"
+#include "cvector.h"
 #include "common.h"
+
+#define EPS 0.000001
+
+#define UNUSED(x) (void)x
 
 #define _ERROR_
 #undef _ERROR_
-
-#define UNUSED(x) (void)x
 
 static bool lessThan10(const ListData_t n)
 {
@@ -17,14 +20,37 @@ static bool greaterThan10(const ListData_t n)
 	return n > 10;
 }
 
+static bool isLessf2(VectorData_t n)
+{
+	return n < 2.0;
+}
+
+static bool isGreaterf2(VectorData_t n)
+{
+	return n > 2.0;
+}
+
+static void square(VectorData_t* pdata)
+{
+	if(pdata == NULL)
+	{
+		return;
+	}
+	
+	*pdata *= *pdata;
+}
+
 static void test_clist();
+static void test_cvector();
+static void test_cmap();
 
 int main(int argc,char** argv)
 {
 	UNUSED(argc);
 	UNUSED(argv);
 	
-	test_clist();
+	// test_clist();
+	test_cvector();
 	
 	return 0;
 }
@@ -142,4 +168,111 @@ void test_clist()
 	}
 	
 	list_destroy(&plist);
+}
+
+void test_cvector()
+{
+	CVecterPtr pvec = vector_create_default();
+	printf("vector_empty(pvec) =%d, vector_size(pvec) =%d\n",vector_empty(pvec),vector_size(pvec));	
+	
+	vector_assign_with_size(pvec,5,0.125);
+	vector_print(pvec);
+	
+	double arr[] = {1.0,1.1,1.2,1.3,1.4,1.5,1.6,1.7,1.8,1.9};
+	vector_assign_with_array(pvec,arr,sizeof(arr)/sizeof(arr[0]));
+	vector_print(pvec);
+	printf("vector_empty(pvec) =%d, vector_size(pvec) =%d\n\n",vector_empty(pvec),vector_size(pvec));	
+	
+	vector_pop_back(pvec);
+	vector_pop_back(pvec);
+	vector_pop_back(pvec);
+	vector_push_back(pvec,2.0);
+	vector_push_back(pvec,2.0);
+	vector_push_back(pvec,2.1);
+	
+	VectorData_t* pfrontData = vector_front(pvec);
+	*pfrontData *= 2;
+	
+	VectorData_t* pbackData = vector_back(pvec);
+	*pbackData += 0.7;
+	
+	VectorData_t* pData = vector_at(pvec,5);
+	*pData = 3.14;
+	
+	vector_print(pvec);
+	printf("vector_empty(pvec) =%d, vector_size(pvec) =%d\n\n",vector_empty(pvec),vector_size(pvec));	
+	
+	vector_insert(pvec,2,2.718);
+	vector_insert(pvec,0,0.618);
+	vector_replace(pvec,5,1.414);
+	vector_change(pvec,2,1.732);
+	vector_print(pvec);
+	
+	int index = vector_find(pvec,3.14);
+	printf("3.14 pos =%d\n",index);
+	
+	vector_erase(pvec,1);
+	vector_erase(pvec,vector_size(pvec) - 1);
+	vector_remove(pvec,1.732);
+	vector_remove_if(pvec,isGreaterf2);
+	vector_sort_default(pvec);
+	vector_print(pvec);
+	
+	vector_sort(pvec,greaterThanf);
+	vector_print(pvec);
+	
+	vector_reverse(pvec);
+	vector_print(pvec);
+	putchar('\n');
+	
+	bool flag = vector_all(pvec,isGreaterf2);
+	if(flag)
+	{
+		puts("all number is greater than 2.0");
+	}
+	else
+	{
+		fputs("don't all number is greater than 2.0\n",stdout);
+	}
+
+	flag = vector_any(pvec,isLessf2);
+	if(flag)
+	{
+		puts("have any number is less than 2.0");
+	}
+	else
+	{
+		fputs("don't have any number is less than 2.0\n",stdout);
+	}
+	
+	vector_foreach(pvec,square);
+	vector_print(pvec);
+	
+	vector_clear(pvec);
+	printf("vector_empty(pvec) =%d, vector_size(pvec) =%d\n",vector_empty(pvec),vector_size(pvec));	
+	vector_destroy(&pvec);
+	puts("");
+	
+	pvec = vector_create_by_size(10,4.4);
+	vector_print(pvec);
+	printf("vector_empty(pvec) =%d, vector_size(pvec) =%d\n",vector_empty(pvec),vector_size(pvec));	
+	vector_destroy(&pvec);
+	putc('\n',stdout);
+	
+	double seq[] = {0.618,1.414,1.732,2.718,3.14};
+	pvec = vector_create_by_array(seq,sizeof(seq)/sizeof(seq[0]));
+	vector_print(pvec);
+	printf("vector_empty(pvec) =%d, vector_size(pvec) =%d\n",vector_empty(pvec),vector_size(pvec));	
+	
+	CVecterPtr pvec2 = vector_create_by_copy(pvec);
+	vector_print(pvec2);
+	
+	vector_destroy(&pvec);
+	vector_destroy(&pvec2);
+	
+}
+
+static void test_cmap()
+{
+	
 }

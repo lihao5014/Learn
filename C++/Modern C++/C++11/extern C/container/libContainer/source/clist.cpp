@@ -4,7 +4,7 @@
 #include <iostream>
 #include <list>
 #include <iterator>
-#include <algorithm>
+#include <algorithm>    //algorithm头文件中的所有算法，都不能改变容器的实际大小
 
 #define _DEBUG_ON_
 #include "common.h"
@@ -251,6 +251,12 @@ void list_remove_if(CListPtr plist,UnaryPredicate pred)
 	if(plist == nullptr)
 	{
 		Assert_print(plist == nullptr);
+		return;
+	}
+
+	if(pred == nullptr)
+	{
+		Assert_print(pred == nullptr);
 		return;
 	}
 

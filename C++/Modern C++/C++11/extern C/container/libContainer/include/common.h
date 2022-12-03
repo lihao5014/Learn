@@ -24,32 +24,32 @@
 #	define Assert_output(expr)
 #endif
 
-bool isZero(int n)
+static bool isZero(int n)
 {
 	return n == 0;
 }
 
-bool isZerof(double n)
+static bool isZerof(double n)
 {
 	return fabs(n) < EPS ? true : false;
 }
 
-bool greaterThan(int x,int y)
+static bool greaterThan(int x,int y)
 {
 	return x > y;
 }
 
-bool greaterThanf(double x,double y)
+static bool greaterThanf(double x,double y)
 {
 	return x > y;
 }
 
-bool lessThan(int x,int y)
+static bool lessThan(int x,int y)
 {
 	return x < y;
 }
 
-bool lessThanf(double x,double y)
+static bool lessThanf(double x,double y)
 {
 	return x < y;
 }

@@ -10,9 +10,7 @@ TARGET := lib/libContainer.dll
 CINCLUDE := -I include
 CLIB :=
 
-SOURCE := source/clist.cpp
-
-# SOURCE := $(wildcard source/*.cpp)
+SOURCE := $(wildcard source/*.cpp)
 OBJS := $(patsubst source/%.cpp,build/%.o,$(SOURCE))
 
 VPATH = include source build lib

@@ -8,7 +8,7 @@ TARGET := bin/main.out
 
 CINLUDE := -I include
 
-# CLIB := ../bin/lib/libmymath.so 将动态库当成.o二进制目标文件的集合使用了，而没有做到真正的动态衔接。
+# CLIB := ../bin/lib/libmymath.so将动态库当成.o二进制目标文件的集合使用了，而没有做到真正的动态衔接。
 CLIB := -Lbin -lmymath  \
         -L bin -l point
 
