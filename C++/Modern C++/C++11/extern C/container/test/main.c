@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include "clist.h"
 #include "cvector.h"
+#include "cmap.h"
 #include "common.h"
 
 #define EPS 0.000001
@@ -40,6 +41,16 @@ static void square(VectorData_t* pdata)
 	*pdata *= *pdata;
 }
 
+void increment(MapValue_t* pvalue)
+{
+	if(pvalue == NULL)
+	{
+		return;
+	}
+	
+	*pvalue += 1;
+}
+
 static void test_clist();
 static void test_cvector();
 static void test_cmap();
@@ -50,7 +61,8 @@ int main(int argc,char** argv)
 	UNUSED(argv);
 	
 	// test_clist();
-	test_cvector();
+	// test_cvector();
+	test_cmap();
 	
 	return 0;
 }
@@ -274,5 +286,39 @@ void test_cvector()
 
 static void test_cmap()
 {
+	CMapPtr pmap = map_create();
+	printf("map_empty(pmap) =%d, map_size(pmap) =%d\n\n",map_empty(pmap),map_size(pmap));	
 	
+	map_insert(pmap,"aaa",'A');
+	map_insert(pmap,"bbb",'B');
+	map_insert(pmap,"ccc",'C');
+	map_insert(pmap,"ddd",'D');
+	map_print(pmap);
+	fputc('\n',stdout);
+	
+	MapValue_t* pvalue = map_at(pmap,"bbb");
+	printf("map_at(pmap,\"bbb\") =%c\n",*pvalue);
+	
+	*pvalue = 'b';
+	map_print(pmap);
+	
+	bool retFlag = map_find(pmap,"ccc");
+	printf("find \"ccc\" in map: %d\n",retFlag);
+	
+	retFlag = map_find(pmap,"eee");
+	printf("find \"eee\" in map: %d\n",retFlag);
+	putchar('\n');
+	
+	map_foreach(pmap,increment);
+	map_print(pmap);
+	puts("");
+	
+	CMapPtr pmap2 = map_copy(pmap);
+	map_print(pmap2);
+	
+	map_clear(pmap);
+	printf("map_empty(pmap) =%d, map_size(pmap) =%d\n\n",map_empty(pmap),map_size(pmap));	
+	
+	map_destroy(&pmap);
+	map_destroy(&pmap2);
 }
