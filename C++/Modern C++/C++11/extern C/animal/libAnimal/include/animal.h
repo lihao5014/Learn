@@ -6,6 +6,7 @@
 class Animal
 {
 public:
+	Animal();
 	Animal(const std::string& name,int age);
 	Animal(const Animal& other);
 	

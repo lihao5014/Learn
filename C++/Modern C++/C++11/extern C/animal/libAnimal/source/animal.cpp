@@ -3,6 +3,12 @@
 
 using namespace std;
 
+Animal::Animal()
+	:m_age(0)
+{
+	
+}
+
 Animal::Animal(const std::string& name,int age)
 	:m_name(name)
 	,m_age(age)
