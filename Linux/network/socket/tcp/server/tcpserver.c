@@ -9,14 +9,6 @@
 
 #define BUFF_SIZE 256
 
-#define PRINT(str)                              \
-	do{                                         \
-		time_t currentTime = time(NULL);        \
-		char* strTime = ctime(&currentTime);    \
-		printf("%s : %s\n",strTime,str);        \
-	}while(0)
-		
-
 int main()
 {
 	//创建监听套接字
@@ -82,8 +74,7 @@ int main()
 			puts("read error: connect break!");
 			break;
 		}
-		
-		PRINT(buf);
+		printf("%s ,ip =%s ,port =%d\n",buf,inet_ntoa(clnt_addr.sin_addr),clnt_addr.sin_port);
 		
 		if(0 == strcmp(buf,"exit"))
 		{
