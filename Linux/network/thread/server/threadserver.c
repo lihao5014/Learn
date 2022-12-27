@@ -71,7 +71,7 @@ int main()
 			perror("accept");
 			break;
 		}
-		printf("client connect successfully: ip =%s ,port =%d\n",inet_ntoa(clnt_addr.sin_addr),clnt_addr.sin_port);
+		printf("client connect successfully: clnt_sock =%d ,ip =%s ,port =%d\n",clnt_sock,inet_ntoa(clnt_addr.sin_addr),clnt_addr.sin_port);
 		
 		pthread_t th;
 		pthread_create(&th,NULL,service_task,&clnt_sock);
