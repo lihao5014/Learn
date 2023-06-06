@@ -1,10 +1,11 @@
 #ifndef _TIME_H
 #define _TIME_H
 
-/*
-#include <stdio.h>         //头文件中包含其他头文件不是必须的。如果当前头文件中不包含，则使用当前头文件的源文件必须包含，
-#include <string.h>        //切包含的顺序为在当前头文件以前。
-*/
+/*头文件中包含其他头文件不是必须的。如果当前头文件中不包含，则使用当前头文件的源文件必须包含，
+ *且包含的顺序为在当前头文件以前。
+ */
+// #include <stdio.h> 
+// #include <string.h>
 
 #define _CHANGE_WAY_
 // #undef _CHANGE_WAY_

@@ -40,6 +40,15 @@
  *它设置为更高的未指定值。其他情况下则不会定义此宏。从vs2015 Update3开始，提供_MSVC_LANG宏和/std编译器选项。
  */
 
+/*7.宏操作系统判断宏:
+ *（1）UNIX操作系统：_unix或_unix_
+ *（2）Linux操作系统：_linux或_linux_
+ *（3）Windows32操作系统：_WIN32
+ *（4）Windows64操作系统：_WIN64
+ *（5）IOS操作系统：__APPLE__
+ *（6）Android操作系统：__ANDROID__
+ */
+
 #ifndef CPP_STANDARD_H
 #define CPP_STANDARD_H
 

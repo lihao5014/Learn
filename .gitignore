@@ -75,3 +75,5 @@ Release
 
 # SQLite
 *.db
+/Qt/plugin/QLibrary/libsearch/lib/libsearch.dll
+/Qt/plugin/QLibrary/libsearch/lib/liblibsearch.a
