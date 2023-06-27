@@ -30,6 +30,7 @@
 #include <stdarg.h>
 #include <assert.h>
 #include <string.h>
+#include <math.h>      //NAN,isnan(),INFINITY,isinf()
 
 #define _ERROR_
 #undef _ERROR_
@@ -38,8 +39,11 @@ static void foreach_parameter_stack(char ch,int num,double data,const char* str)
 
 static void printArgs(unsigned int count,...);
 
-static int sum(unsigned int count,...);
-static double average(unsigned int arg_cnt,...);
+static int sum_int(unsigned int count,...);
+static double average_int(unsigned int arg_cnt,...);
+
+static double sum_float(double n1,...);
+static double average_float(double num1,...);
 
 void my_printf(const char* format,...);
 void my_fprintf(FILE *fp,const char* format,...);
@@ -57,11 +61,17 @@ int main(void)
 	printArgs(5,10,11,12,13,14);
 	putc('\n',stdout);
 	
-	int ret = sum(5,10,11,12,13,14);
+	int ret = sum_int(5,10,11,12,13,14);
 	printf("10,11 + ... + 15 =%d\n\n",ret);
 	
-	double avg = average(5,3.14,2.718,1.414,0.618,1.732);
-	printf("(3.14 + 2.718 + 1.414 + 0.618 + 1.732)/5 =%f\n\n",avg);
+	double avg = average_int(5,10,11,12,13,14);
+	printf("(10 + 11 + ... + 14)/5 =%f\n\n",avg);
+	
+	double total = sum_float(3.14,2.718,1.414,0.618,1.732,NAN);
+	printf("3.14 + 2.718 + 1.414 + 0.618 + 1.732 =%f\n\n",total);
+	
+	double result = average_float(3.14,2.718,1.414,0.618,1.732,NAN);
+	printf("(3.14 + 2.718 + 1.414 + 0.618 + 1.732)/5 =%f\n\n",result);
 	
 	int num = 5;
 	double value = 3.14;
@@ -91,26 +101,26 @@ int main(void)
 
 /*foreach_parameter_stack()函数的参数栈：
  *（1）32位系统中：
- *  +-----------------+  ->  char*
- *  | 4字节存储char   |
- *  +-----------------+  ->  int*
- *  | 4字节存储int    |
- *  +-----------------+  ->  double*
- *  | 8字节存储double |
- *  +-----------------+  ->  char**
- *  | 4字节存储char*  |
- *  +-----------------+
+ *  +-----------------------+  ->  char*
+ *  | 4字节，存储一个char   |
+ *  +-----------------------+  ->  int*
+ *  | 4字节，存储一个int    |
+ *  +-----------------------+  ->  double*
+ *  | 8字节，存储一个double |
+ *  +-----------------------+  ->  char**
+ *  | 4字节，存储一个char*  |
+ *  +------------------------+
  *
  *（2）64位系统中：
- *  +-----------------+  ->  char*
- *  | 8字节存储char   |
- *  +-----------------+  ->  int*
- *  | 8字节存储int    |
- *  +-----------------+  ->  double*
- *  | 8字节存储double |
- *  +-----------------+  ->  char**
- *  | 8字节存储char*  |
- *  +-----------------+
+ *  +-----------------------+  ->  char*
+ *  | 8字节，存储一个char   |
+ *  +-----------------------+  ->  int*
+ *  | 8字节，存储一个int    |
+ *  +-----------------------+  ->  double*
+ *  | 8字节，存储一个double |
+ *  +-----------------------+  ->  char**
+ *  | 8字节，存储一个char*  |
+ *  +-----------------------+
  */
 void foreach_parameter_stack(char ch,int num,double data,const char* str)
 {
@@ -165,7 +175,7 @@ void printArgs(unsigned int count,...)
 }
 #endif
 
-int sum(unsigned int count,...)
+int sum_int(unsigned int count,...)
 {
 	int result = 0;
 	char* arg_p = (char*)&count + sizeof(int*);
@@ -178,17 +188,49 @@ int sum(unsigned int count,...)
 	return result;
 }
 
-double average(unsigned int arg_cnt,...)
+double average_int(unsigned int arg_cnt,...)
 {
 	double ret = 0;
 	char* argPtr = (char*)&arg_cnt + sizeof(void*);
 	for(int i=1;i<=arg_cnt;++i)
 	{
-		ret = ret + (*(double*)argPtr - ret)/i;
-		argPtr += sizeof(double);
+		ret = ret + (*(int*)argPtr - ret) / i;
+		argPtr += sizeof(int*);
 	}
 	
 	argPtr = NULL;
+	return ret;
+}
+
+double sum_float(double n1,...)
+{
+	va_list p_args;
+	va_start(p_args,n1);
+	
+	double result = n1;
+	double temp = va_arg(p_args,double);
+	while(!isnan(temp))                    //isnan()函数用于判断一个值是不是数字，NAN（not a number）
+	{
+		result += temp;
+		temp = va_arg(p_args,double);
+	};
+	
+	return result;
+}
+
+double average_float(double num1,...)
+{
+	va_list arg_list;
+	va_start(arg_list,num1);
+	
+	double ret = num1;
+	double temp = va_arg(arg_list,double);
+	for(int i=1;!isnan(temp);++i)
+	{
+		ret += (temp - ret) / i;
+		temp = va_arg(arg_list,double);
+	}
+	
 	return ret;
 }
 
