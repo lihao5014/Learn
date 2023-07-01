@@ -25,13 +25,24 @@
  *（4）不建议在C++中使用C语言的省略号形参，应该使用C++11引入的std::initializer_list初始化列表或变长模板代替。
  */
  
+ /*5.可变参数的实现原理：
+  *
+ 
+  */
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdarg.h>     //va_list,va_start(),va_arg(),va_end()
 #include <assert.h>
+#include <string.h>
+
+#define _CHANGE_WAY_
+// #undef _CHANGE_WAY_
+
+#define BUFF_SIZE 1024
 
 typedef unsigned int count_t;
 
+//可变参数函数原型声明，至少需要一个确定的参数，括号内的省略号表示可选参数。
 static int sum_int(count_t len,...);
 static double average_int(count_t len,...);
 
@@ -43,6 +54,9 @@ static int min(count_t len,...);
 
 static double maxf(size_t count,...);  //fmax()/fmin()是C99自带的函数，所以自定义函数不能使用fmax或fmin函数名。
 static double minf(size_t count,...);
+
+static char* concat(char result[],const char* str1,...);
+static char* concat_n(char* result,size_t len,const char* str1,...);
 
 int main(void)
 {
@@ -65,11 +79,29 @@ int main(void)
 	printf("10,11 + ... + 19 min =%d\n",num);
 	
 	double data = maxf(5,3.14,2.718,1.414,0.618,1.732);
-	printf("3.14,2.718,1.414,0.618,1.732 max =%f\n",data);
+	printf("3.14, 2.718, 1.414, 0.618, 1.732 max =%f\n",data);
 	
 	data = minf(5,3.14,2.718,1.414,0.618,1.732);
-	printf("3.14,2.718,1.414,0.618,1.732 min =%f\n",data);
+	printf("3.14, 2.718, 1.414, 0.618, 1.732 min =%f\n",data);
+
+#ifndef _CHANGE_WAY_
+	char buf[BUFF_SIZE] = {0};
+	concat(buf,"hello"," ","variable","-","argument"," function!","\0");
+	printf("buf = %s\n",buf);
 	
+	memset(buf,0,BUFF_SIZE);
+	char* str = concat_n(buf,15,"hello"," ","variable","-","argument"," function!","\0");
+	printf("str = %s\n",str);
+#else
+	char buf[BUFF_SIZE] = {0};
+	concat(buf,"hello"," ","variable","-","argument"," function!",NULL);
+	printf("buf = %s\n",buf);
+	
+	memset(buf,0,BUFF_SIZE);
+	char* str = concat_n(buf,15,"hello"," ","variable","-","argument"," function!",NULL);
+	printf("str = %s\n",str);	
+#endif
+
 	return 0;
 }
 
@@ -229,4 +261,98 @@ double minf(size_t count,...)
 	va_end(argsPtr);
 	return ret;
 }
+
+#ifndef _CHANGE_WAY_
+char* concat(char result[],const char* str1,...)
+{
+	if(result == NULL || str1 == NULL)
+	{
+		return NULL;
+	}
+	strcpy(result,str1);
+	
+	va_list pArg;
+	va_start(pArg,str1);
+	
+	const char* strTemp = va_arg(pArg,char*);
+	while(strcmp(strTemp,"\0") != 0)
+	{
+		strcat(result,strTemp);
+		strTemp = va_arg(pArg,char*);
+	}
+	
+	va_end(pArg);
+	return result;
+}
+
+char* concat_n(char* result,size_t len,const char* str1,...)
+{
+	if(result == NULL || len == 0 || str1 == NULL)
+	{
+		return NULL;
+	}
+	strncpy(result,str1,len);
+	
+	va_list pArgs;
+	va_start(pArgs,str1);
+	
+	size_t remainLen = len - (strlen(result) + 1);
+	const char* strTemp = va_arg(pArgs,char*);
+	while(remainLen != 0 || strncmp(strTemp,"\0",strlen("\0")) != 0)
+	{
+		strncat(result,strTemp,remainLen);
+		strTemp = va_arg(pArgs,char*);
+		remainLen = len - (strlen(result) + 1);
+	}
+	
+	va_end(pArgs);
+	return result;
+}
+#else
+char* concat(char result[],const char* str1,...)
+{
+	if(result == NULL || str1 == NULL)
+	{
+		return NULL;
+	}
+	strcpy(result,str1);
+	
+	va_list pArg;
+	va_start(pArg,str1);
+	
+	const char* strTemp = va_arg(pArg,char*);
+	while(strTemp != NULL)
+	{
+		strcat(result,strTemp);
+		strTemp = va_arg(pArg,char*);
+	}
+	
+	va_end(pArg);
+	return result;
+}
+
+char* concat_n(char* result,size_t len,const char* str1,...)
+{
+	if(result == NULL || len == 0 || str1 == NULL)
+	{
+		return NULL;
+	}
+	strncpy(result,str1,len);
+	
+	va_list pArgs;
+	va_start(pArgs,str1);
+	
+	size_t remainLen = len - (strlen(result) + 1);
+	const char* strTemp = va_arg(pArgs,char*);
+	while(strTemp != NULL || remainLen != 0)
+	{
+		strncat(result,strTemp,remainLen);
+		strTemp = va_arg(pArgs,char*);
+		remainLen = len - (strlen(result) + 1);
+	}
+	
+	va_end(pArgs);
+	return result;
+}
+#endif
 

@@ -1,11 +1,3 @@
-/*
-
-       int vprintf(const char *format, va_list ap);
-       int vfprintf(FILE *stream, const char *format, va_list ap);
-       int vsprintf(char *str, const char *format, va_list ap);
-       int vsnprintf(char *str, size_t size, const char *format, va_list ap);
-*/
-
 /*1.32位和64位机器上各数据类型所占字节数：
  *	C类型		32位机器(字节)		64位机器(字节)
  *	char	  		1					1
@@ -24,6 +16,14 @@
  *     对于指针而言，64位机器可以寻址2^64，每个内存地址长度为64位，即8字节。而32位机器可以寻址2^32，
  *     每个内存地址长度为32位，即4字节。
  */
+
+/*
+
+       int vprintf(const char *format, va_list ap);
+       int vfprintf(FILE *stream, const char *format, va_list ap);
+       int vsprintf(char *str, const char *format, va_list ap);
+       int vsnprintf(char *str, size_t size, const char *format, va_list ap);
+*/
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -175,6 +175,11 @@ void printArgs(unsigned int count,...)
 	}
 }
 #else
+/*每个可变参函数中至少有一个固定的参数，而这个固定参数的存储地址后面，就是一系列参数的指针。
+ *在printArgs()可变参函数中，&count就是函数参数栈的起始地，使用(char*)&count + sizeof(void*)
+ *就可以获取下一个参数的地址。使用parg指针来保存该地址，并依次访问下一个地址，就可以直接打印
+ *传进来的各个实参值了。
+ */
 void printArgs(unsigned int count,...)
 {
 	char* parg = (char*)&count + sizeof(void*);
