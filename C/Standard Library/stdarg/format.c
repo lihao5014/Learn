@@ -35,6 +35,9 @@
 #define _ERROR_
 #undef _ERROR_
 
+#define _CHANGE_WAY_
+// #undef _CHANGE_WAY_
+
 static void foreach_parameter_stack(char ch,int num,double data,const char* str);
 
 static void printArgs(unsigned int count,...);
@@ -66,13 +69,21 @@ int main(void)
 	
 	double avg = average_int(5,10,11,12,13,14);
 	printf("(10 + 11 + ... + 14)/5 =%f\n\n",avg);
-	
+
+#ifndef _CHANGE_WAY_
 	double total = sum_float(3.14,2.718,1.414,0.618,1.732,NAN);
 	printf("3.14 + 2.718 + 1.414 + 0.618 + 1.732 =%f\n\n",total);
 	
 	double result = average_float(3.14,2.718,1.414,0.618,1.732,NAN);
 	printf("(3.14 + 2.718 + 1.414 + 0.618 + 1.732)/5 =%f\n\n",result);
-	
+#else
+	double total = sum_float(3.14,2.718,1.414,0.618,1.732,NULL);
+	printf("3.14 + 2.718 + 1.414 + 0.618 + 1.732 =%f\n\n",total);
+
+	double result = average_float(3.14,2.718,1.414,0.618,1.732,NULL);
+	printf("(3.14 + 2.718 + 1.414 + 0.618 + 1.732)/5 =%f\n\n",result);
+#endif
+
 	int num = 5;
 	double value = 3.14;
 	const char* str = "hello world";
@@ -159,7 +170,7 @@ void printArgs(unsigned int count,...)
 	int* parg = (int*)&count + 1;        //(int*)&count + 1 = (int*)&count + 1 * sizeof(int)
 	for(int i=0;i<count;++i)
 	{
-		printf("address: %p,arg_%d = %d\n",parg,i,*parg);
+		printf("address: %p, arg_%d = %d\n",parg,i,*parg);
 		parg++;
 	}
 }
@@ -169,7 +180,7 @@ void printArgs(unsigned int count,...)
 	char* parg = (char*)&count + sizeof(void*);
 	for(int i=0;i<count;++i)
 	{
-		printf("address: %p,arg_%d = %d\n",parg,i,*((int*)parg));
+		printf("address: %p, arg_%d = %d\n",parg,i,*((int*)parg));
 		parg += sizeof(char*);
 	}
 }
@@ -202,6 +213,7 @@ double average_int(unsigned int arg_cnt,...)
 	return ret;
 }
 
+#ifndef _CHANGE_WAY_
 double sum_float(double n1,...)
 {
 	va_list p_args;
@@ -215,6 +227,7 @@ double sum_float(double n1,...)
 		temp = va_arg(p_args,double);
 	};
 	
+	va_end(p_args);
 	return result;
 }
 
@@ -225,14 +238,48 @@ double average_float(double num1,...)
 	
 	double ret = num1;
 	double temp = va_arg(arg_list,double);
-	for(int i=1;!isnan(temp);++i)
+	for(int i=2;!isnan(temp);++i)
 	{
 		ret += (temp - ret) / i;
 		temp = va_arg(arg_list,double);
 	}
 	
+	va_end(arg_list);
 	return ret;
 }
+#else
+double sum_float(double n1,...)
+{
+	va_list p_args;
+	va_start(p_args,n1);
+	
+	double result = n1;
+	while(*(char**)p_args != NULL)
+	{
+		double temp = va_arg(p_args,double);	
+		result += temp;
+	};
+	
+	va_end(p_args);
+	return result;
+}
+
+double average_float(double num1,...)
+{
+	va_list arg_list;
+	va_start(arg_list,num1);
+	
+	double ret = num1;
+	for(int i=2;*(char**)arg_list != NULL;++i)
+	{
+		double temp = va_arg(arg_list,double);
+		ret += (temp - ret) / i;
+	}
+	
+	va_end(arg_list);
+	return ret;
+}
+#endif
 
 void my_printf(const char* format,...)
 {
