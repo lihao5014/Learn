@@ -1,4 +1,26 @@
-/*1.32位和64位机器上各数据类型所占字节数：
+/*1.可变参数函数：
+ *（1）采用C语言编程的时候，函数中形式参数的数目通常是确定的，在调用时要依次给出与形式参数对应的所有实际参数。
+ *     但在某些情况下希望函数的参数个数可以根据需要确定。
+ *（2）为了实现可变参数函数，C编译器通常提供了一系列宏，以屏蔽不同的硬件平台造成的差异，增加程序的可移植性。
+ *     这些宏包括va_list、va_start()、va_arg()、a_end()和va_copy()。
+ */
+
+/*2.C库中常见的可变参数函数：
+ *（1）int printf(const char* format,...);                                      //除了接受一个固定参数format以外，后面的参数使用"..."省略号来表示。
+ *（2）int scanf(const char *format,...);                                       //除了有一个参数format固定以外，后面的参数类型和个数都是可变的，用三个点"..."作为参数占位符。
+ *（3）int vprintf(const char *format, va_list ap);                             //参数类型和个数由格式化字符串format来指定。
+ *（4）int vfprintf(FILE *stream, const char *format, va_list ap);
+ *（5）int vsprintf(char *str, const char *format, va_list ap);
+ *（6）int vsnprintf(char *str, size_t size, const char *format, va_list ap);
+*/
+
+/*3.Linux操作系统中常见的可变参数函数：
+ *（1）int execl(const char *path, const char *arg, ...);                       //指定的外部可执行程序，必须带上路径名。
+ *（2）int execlp(const char *file, const char *arg, ...);                      //指定的可执行程序可以不带路径名，如果不带路径名的话，会在环境变量PATH指定的目录里寻找这个可执行程序。
+ *（3）int execle(const char *path, const char *arg, ..., char* const envp[]);  //可以改变启动的外部程序的环境变量。
+ */
+
+/*4.32位和64位机器上各数据类型所占字节数：
  *	C类型		32位机器(字节)		64位机器(字节)
  *	char	  		1					1
  *	short	  		2					2
@@ -16,15 +38,7 @@
  *     对于指针而言，64位机器可以寻址2^64，每个内存地址长度为64位，即8字节。而32位机器可以寻址2^32，
  *     每个内存地址长度为32位，即4字节。
  */
-
-/*
-
-       int vprintf(const char *format, va_list ap);
-       int vfprintf(FILE *stream, const char *format, va_list ap);
-       int vsprintf(char *str, const char *format, va_list ap);
-       int vsnprintf(char *str, size_t size, const char *format, va_list ap);
-*/
-
+ 
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdarg.h>
@@ -42,17 +56,17 @@ static void foreach_parameter_stack(char ch,int num,double data,const char* str)
 
 static void printArgs(unsigned int count,...);
 
-static int sum_int(unsigned int count,...);
+static int sum_int(unsigned int count,...);              //第一个参数定义可变参数的个数。
 static double average_int(unsigned int arg_cnt,...);
 
-static double sum_float(double n1,...);
+static double sum_float(double n1,...);                  //最后一个参数指定变参遍历的结束标志。
 static double average_float(double num1,...);
 
-void my_printf(const char* format,...);
-void my_fprintf(FILE *fp,const char* format,...);
+static void my_printf(const char* format,...);
+static void my_fprintf(FILE *fp,const char* format,...);
 
-void my_sprintf(char* str,const char* format,...);
-void my_snprinft(char* str,size_t size,const char* format,...);
+static void my_sprintf(char* str,const char* format,...);
+static void my_snprinft(char* str,size_t size,const char* format,...);
 
 int main(void)
 {
@@ -219,6 +233,7 @@ double average_int(unsigned int arg_cnt,...)
 }
 
 #ifndef _CHANGE_WAY_
+//sum_float()可变参数函数中定义一个结束标记NAN，调用时通过最后一个参数传递该标记，以结束变参的遍历。
 double sum_float(double n1,...)
 {
 	va_list p_args;
@@ -253,6 +268,7 @@ double average_float(double num1,...)
 	return ret;
 }
 #else
+//sum_float()可变参数函数中定义一个结束标记NULL，调用时通过最后一个参数传递该标记，以结束变参的遍历。
 double sum_float(double n1,...)
 {
 	va_list p_args;

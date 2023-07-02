@@ -79,7 +79,7 @@
 		}                      \
 	}while(0)
 
-#define TypeSize(var) ((char*)((&(var)) + 1) - (char*)(&(var)))         //求变量类型的大小
+#define TypeSize(var) ((char*)((&(var)) + 1) - (char*)(&(var)))         //求变量类型的大小，等同于sizeof()
 #define MemberSize(type,member) (sizeof(((type*)0)->member))            //求结构体中成员类型的大小
 #define OffsetSize(type,member) ((size_t)&(((type*)0)->member))         //求成员在结构体中的偏移量，size_t在32位系统上是unsigned int，在64位的系统上位unsigned long
 
