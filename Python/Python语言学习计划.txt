@@ -1,0 +1,73 @@
+1.pip命令的使用：
+（1）pip list                            //打印所有安装的包
+（2）pip show numpy                      //显示numpy包的详细信息
+（3）pip install stable-baselines       //安装stable-baselines3包
+（4）pip uninsatll gym                   //卸载gym包
+（5）pip install stable-baselines -i https://pypi.tuna.tsinghua.edu.cn/simple
+
+pip uninstall stable-baselines3 -y
+
+pip install stable-baselines
+pip install --upgrade tensorflow==1.14.0
+
+pip install -U tensorflow-cpu
+
+2.Anaconda新手使用教程：
+https://blog.csdn.net/weixin_44657714/article/details/120036158?spm=1001.2101.3001.6650.1&utm_medium=distribute.pc_relevant.none-task-blog-2%7Edefault%7ECTRLIST%7ERate-1-120036158-blog-123380393.pc_relevant_layerdownloadsortv1&depth_1-utm_source=distribute.pc_relevant.none-task-blog-2%7Edefault%7ECTRLIST%7ERate-1-120036158-blog-123380393.pc_relevant_layerdownloadsortv1&utm_relevant_index=2
+
+conda --version #查看conda版本，验证是否安装
+conda update conda #更新至最新版本，也会更新其它相关包
+conda update --all #更新所有包
+conda update package_name #更新指定的包
+conda create -n env_name package_name #创建名为env_name的新环境，并在该环境下安装名为package_name 的包，可以指定新环境的版本号，例如：conda create -n python2 python=python2.7 numpy
+pandas，创建了python2环境，python版本为2.7，同时还安装了numpy pandas包
+source activate env_name #切换至env_name环境
+source deactivate #退出环境
+conda info -e #显示所有已经创建的环境
+conda create --name new_env_name --clone old_env_name #复制old_env_name为new_env_name
+conda remove --name env_name –all #删除环境
+conda list #查看所有已经安装的包
+conda install package_name #在当前环境中安装包
+conda install --name env_name package_name #在指定环境中安装包
+conda remove – name env_name package #删除指定环境中的包
+conda remove package #删除当前环境中的包
+conda create -n tensorflow_env tensorflow
+conda activate tensorflow_env #conda 安装tensorflow的CPU版本
+conda create -n tensorflow_gpuenv tensorflow-gpu
+conda activate tensorflow_gpuenv #conda安装tensorflow的GPU版本
+
+  ERROR: HTTP error 403 while getting https://pypi.tuna.tsinghua.edu.cn/packages/4b/48/920cea66177b865663fde5a9390a59de0ef3b642ad98106ac1d8717d7005/gym-0.21.0.tar.gz#sha256=0fd1ce165c754b4017e37a617b097c032b8c3feb8a0394ccc8777c7c50dddff3 (from https://pypi.tuna.tsinghua.edu.cn/simple/gym/) (requires-python:>=3.6)
+  ERROR: Could not install requirement gym==0.21 from https://pypi.tuna.tsinghua.edu.cn/packages/4b/48/920cea66177b865663fde5a9390a59de0ef3b642ad98106ac1d8717d7005/gym-0.21.0.tar.gz#sha256=0fd1ce165c754b4017e37a617b097c032b8c3feb8a0394ccc8777c7c50dddff3 (from stable-baselines3) because of error 403 Client Error: Forbidden for url: https://pypi.tuna.tsinghua.edu.cn/packages/4b/48/920cea66177b865663fde5a9390a59de0ef3b642ad98106ac1d8717d7005/gym-0.21.0.tar.gz
+ERROR: Could not install requirement gym==0.21 from https://pypi.tuna.tsinghua.edu.cn/packages/4b/48/920cea66177b865663fde5a9390a59de0ef3b642ad98106ac1d8717d7005/gym-0.21.0.tar.gz#sha256=0fd1ce165c754b4017e37a617b097c032b8c3feb8a0394ccc8777c7c50dddff3 (from stable-baselines3) because of HTTP error 403 Client Error: Forbidden for url: https://pypi.tuna.tsinghua.edu.cn/packages/4b/48/920cea66177b865663fde5a9390a59de0ef3b642ad98106ac1d8717d7005/gym-0.21.0.tar.gz for URL https://pypi.tuna.tsinghua.edu.cn/packages/4b/48/920cea66177b865663fde5a9390a59de0ef3b642ad98106ac1d8717d7005/gym-0.21.0.tar.gz#sha256=0fd1ce165c754b4017e37a617b097c032b8c3feb8a0394ccc8777c7c50dddff3 (from https://pypi.tuna.tsinghua.edu.cn/simple/gym/) (requires-python:>=3.6)
+
+pip install stable-baselines -i https://pypi.douban.com/simple/
+
+import os
+os.environ["TF_CPP_MIN_LOG_LEVEL"] = '2'
+import tensorflow as tf
+ 
+h = tf.constant("hello tensorflow")
+print(h)
+
+import os
+os.environ["TF_CPP_MIN_LOG_LEVEL"] = '2'
+ 
+h = tf.constant("hello tensorflow")
+print(h)
+
+
+=============Python编程============
+
+https://www.runoob.com/python3/python3-number.html
+
+https://www.w3cschool.cn/python3/
+
+http://c.biancheng.net/view/4228.html
+
+https://www.codersrc.com/archives/4273.html
+
+http://www.pythondoc.com/pythontutorial3/index.html
+
+https://www.runoob.com/python/python-numbers.html
+
+https://www.cnblogs.com/ludx/p/15840716.html
