@@ -77,3 +77,4 @@ Release
 *.db
 /Qt/plugin/QLibrary/libsearch/lib/libsearch.dll
 /Qt/plugin/QLibrary/libsearch/lib/liblibsearch.a
+/C/Standard Library/stdarg/file.txt
