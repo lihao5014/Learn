@@ -102,10 +102,10 @@ static char* add_string(size_t count,va_list pargs);
 
 int main(void)
 {
-	int ret = sum_int(10,10,11,12,13,14,15,16,17,18,19);
+	int ret = sum_int(10,10,11,12,13,14,15,16,17,18,19);    //第一个参数10指定可变参的个数
 	printf("10 + 11 + ... + 19 =%d\n",ret);
 	
-	double result = average_int(10,10,11,12,13,14,15,16,17,18,19);
+	double result = average_int(10,10,11,12,13,14,15,16,17,18,19);   //第一个参数10指定可变参的个数
 	printf("(10 + 11 + ... + 19)/10 =%f\n",result);
 	
 	double total = sum_float(5,3.14,2.718,1.414,0.618,1.732);
@@ -136,7 +136,7 @@ int main(void)
 	printf("str = %s\n\n",str);
 #else
 	char buf[BUFF_SIZE] = {0};
-	concat(buf,"hello"," ","variable","-","argument"," function!",NULL);
+	concat(buf,"hello"," ","variable","-","argument"," function!",NULL);    //最后一个参数NULL作为变参结束符，用于循环获取变参的内容。
 	printf("buf = %s\n",buf);
 	
 	memset(buf,0,BUFF_SIZE);
