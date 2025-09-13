@@ -41,6 +41,7 @@
 # Qt-es
 *.qmake.cache
 *.qmake.stash
+*.txt.user
 *.pro.user
 *.pro.user.*
 *.qbs.user
@@ -78,3 +79,4 @@ Release
 /Qt/plugin/QLibrary/libsearch/lib/libsearch.dll
 /Qt/plugin/QLibrary/libsearch/lib/liblibsearch.a
 /C/Standard Library/stdarg/file.txt
+/CMake/hellocmake/build
