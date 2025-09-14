@@ -1,0 +1,17 @@
+cmake_minimum_required(VERSION 3.8)
+
+project(fibonacci VERSION 1.0 LANGUAGES CXX)
+
+#project命令将会设置一下几个变量的值：
+#（1）PROJECT_NAME
+#（2）PROJECT_SOURCE_DIR / <PROJECT-NAME>_SOURCE_DIR
+#（3）PROJECT_BINARY_DIR / <PROJECT-NAME>_BINARY_DIR
+message(STATUS "PROJECT_NAME: ${PROJECT_NAME}")
+message(STATUS "PROJECT_SOURCE_DIR: ${PROJECT_SOURCE_DIR}")
+message(STATUS "PROJECT_BINARY_DIR: ${PROJECT_BINARY_DIR}")
+
+#TARGET_NAME表示可执行文件fibonacci
+set(TARGET_NAME fibonacci)
+message(STATUS "TARGET_NAME: ${TARGET_NAME}")
+
+add_executable(${TARGET_NAME} fibonacci.cpp)
